@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
-namespace FilmCatalogue.Api.Web.Rest
+namespace FilmCatalogue.Api.GraphQL
 {
     public class Program
     {
@@ -13,7 +19,6 @@ namespace FilmCatalogue.Api.Web.Rest
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices(s => s.AddAutofac())
                 .UseStartup<Startup>();
     }
 }
