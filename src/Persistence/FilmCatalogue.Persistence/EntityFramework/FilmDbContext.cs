@@ -15,7 +15,6 @@ namespace FilmCatalogue.Persistence.EntityFramework
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FilmDbContext).Assembly);
-            Database.EnsureCreated();
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
 using MediatR;
+using System;
 
-namespace FilmCatalogue.Domain.Repositories.Film.Commands
+namespace FilmCatalogue.Domain.Contexts.Film.Commands
 {
-    public class AddFilmView : IRequest
+    public class DeleteFilm : IRequest
     {
         public Id FilmId { get; set; }
     }

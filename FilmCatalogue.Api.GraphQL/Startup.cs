@@ -1,41 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Autofac;
+using FilmCatalogue.Api.GraphQL.Schemas;
+using FilmCatalogue.Persistence.EntityFramework;
+using GraphiQl;
+using GraphQL.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace FilmCatalogue.Api.GraphQL
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddGraphQL(options =>
+            {
+                options.EnableMetrics = true;
+                options.ExposeExceptions = Environment.IsDevelopment();
+            })
+            //.AddUserContextBuilder(httpContext => new { httpContext.User });
+            //.AddWebSockets() // Add required services for web socket support
+            .AddDataLoader(); // Add required services for DataLoader support
+
+
+            services.AddHttpContextAccessor();
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new Persistence.Module());
+            builder.RegisterModule(new Module());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, FilmDbContext context)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            if (Environment.IsDevelopment())
+            {
+                app.UseGraphiQl("/graphql/ui", "/graphql");
+            }
+            app.UseGraphQL<FilmSchema>("/graphql");
+
+            context.Database.EnsureDeleted();
+            if (context.Database.EnsureCreated())
+            {
+                context.SeedDataAsync().Wait();
+            }
         }
     }
 }

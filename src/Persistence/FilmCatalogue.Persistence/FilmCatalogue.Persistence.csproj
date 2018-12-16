@@ -14,8 +14,4 @@
     <ProjectReference Include="..\..\Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EntityFramework\Contexts\Film\Specifications\" />
-  </ItemGroup>
-
 </Project>

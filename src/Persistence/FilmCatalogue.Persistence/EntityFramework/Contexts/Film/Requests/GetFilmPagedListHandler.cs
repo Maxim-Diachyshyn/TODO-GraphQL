@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FilmCatalogue.Domain.DTO;
@@ -11,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
 {
-    public class GetFilmPagedListHandler<T> : IRequestHandler<GetFilmPagedList<T>, PagedResult<T>>
+    public class GetFilmPagedListHandler<T> : IRequestHandler<GetFilmList<T>, IEnumerable<T>>
     {
         private readonly FilmDbContext _context;
         private readonly IProjection<FilmEntity, T> _projection;
@@ -22,12 +23,12 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
             _projection = projection;
         }
 
-        public async Task<PagedResult<T>> Handle(GetFilmPagedList<T> request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<T>> Handle(GetFilmList<T> request, CancellationToken cancellationToken)
         {
             return await _context.Films
                 .AsNoTracking()
                 .Select(_projection.GetExpression())
-                .ToPagedAsync();
+                .ToListAsync();
         }
     }
 }

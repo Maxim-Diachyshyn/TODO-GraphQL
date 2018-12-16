@@ -1,5 +1,4 @@
-﻿using FilmCatalogue.Domain.Contexts.Film.Models;
-using FilmCatalogue.Domain.Repositories.Film.Requests;
+﻿using FilmCatalogue.Domain.Repositories.Film.Requests;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
 using FilmCatalogue.Persistence.EntityFramework.Interfaces;
 using MediatR;
@@ -12,25 +11,25 @@ using System.Threading.Tasks;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
 {
-    public class GetFilmsByIdsHandler : IRequestHandler<GetFilmsByIds, IEnumerable<FilmModel>>
+    public class GetFilmsByIdsHandler<T> : IRequestHandler<GetFilmsByIds<T>, IEnumerable<T>>
     {
         private readonly FilmDbContext _context;
-        private readonly IProjection<FilmEntity, FilmModel> _projection;
+        private readonly IProjection<FilmEntity, T> _projection;
 
-        public GetFilmsByIdsHandler(FilmDbContext context, IProjection<FilmEntity, FilmModel> projection)
+        public GetFilmsByIdsHandler(FilmDbContext context, IProjection<FilmEntity, T> projection)
         {
             _context = context;
             _projection = projection;
         }
 
-        public async Task<IEnumerable<FilmModel>> Handle(GetFilmsByIds request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<T>> Handle(GetFilmsByIds<T> request, CancellationToken cancellationToken)
         {
-            var clearIds = request.FilmIds.Select(x => (Guid)x);
+            var clearIds = request.FilmIds.Select(x => (Guid)x).ToList();
             return await _context.Films
                 .AsNoTracking()
-                .Select(_projection.GetExpression())
                 .Where(x => clearIds.Contains(x.Id))
-                .ToListAsync();
+                .Select(_projection.GetExpression())
+                .ToListAsync(cancellationToken);
         }
     }
 }

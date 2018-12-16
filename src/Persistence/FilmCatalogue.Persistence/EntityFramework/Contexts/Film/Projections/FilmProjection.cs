@@ -18,7 +18,6 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Projections
                 Id = new Id(x.Id),
                 AddedAt = x.AddedAt,
                 Name = x.Name,
-                ProfileViews = x.ProfileViews,
                 ShowedDate = x.ShowedDate
             };
 

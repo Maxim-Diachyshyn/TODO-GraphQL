@@ -2,12 +2,11 @@
 using MediatR;
 using System;
 
-namespace FilmCatalogue.Domain.Repositories.Film.Commands
+namespace FilmCatalogue.Domain.Contexts.Film.Commands
 {
-    public class AddFilm : IRequest<FilmModel>
+    public class UpdateFilm : IRequest<FilmModel>
     {
         public string Name { get; set; }
         public DateTime ShowedDate { get; set; }
-        public DateTime AddedAt { get; set; }
     }
 }
