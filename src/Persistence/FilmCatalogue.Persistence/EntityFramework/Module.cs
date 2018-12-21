@@ -2,7 +2,6 @@
 using Autofac.Extensions.DependencyInjection;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Projections;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests;
-using MediatR.Extensions.Autofac.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +20,8 @@ namespace FilmCatalogue.Persistence.EntityFramework
             builder.Populate(services);
 
             builder.RegisterGeneric(typeof(GetFilmPagedListHandler<>))
+                .AsImplementedInterfaces();
+            builder.RegisterGeneric(typeof(GetFilmsByIdsHandler<>))
                 .AsImplementedInterfaces();
             builder.RegisterType(typeof(FilmProjection))
                 .AsImplementedInterfaces();

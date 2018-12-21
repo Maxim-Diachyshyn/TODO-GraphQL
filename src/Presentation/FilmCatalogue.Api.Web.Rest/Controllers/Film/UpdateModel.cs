@@ -15,6 +15,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         {
             return new UpdateFilm
             {
+                FilmId = model.Id,
                 Name = model.Name,
                 ShowedDate = model.ShowedDate
             };
