@@ -16,7 +16,7 @@ namespace FilmCatalogue.Persistence.EntityFramework
             var services = new ServiceCollection();
 
             services.AddDbContext<FilmDbContext>(options =>
-                options.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Database=Films;Trusted_Connection=True;"));
+                options.UseSqlServer("Data Source=\".\";Initial Catalog=Films;Integrated Security=False;User ID=sa;Password=Password1"));
             builder.Populate(services);
 
             builder.RegisterGeneric(typeof(GetFilmPagedListHandler<>))

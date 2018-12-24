@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj" />
-    <ProjectReference Include="..\src\Persistence\FilmCatalogue.Persistence\FilmCatalogue.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj" />
+    <ProjectReference Include="..\..\Persistence\FilmCatalogue.Persistence\FilmCatalogue.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
