@@ -1,6 +1,5 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FluentValidation;
 using MediatR;
 using System;
 

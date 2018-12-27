@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace FilmCatalogue.Domain.DataTypes
+﻿namespace FilmCatalogue.Domain.DataTypes
 {
     public class Name
     {

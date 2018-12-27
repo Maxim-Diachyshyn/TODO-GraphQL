@@ -47,18 +47,33 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
             return Ok(film);
         }
 
-        [HttpPost("{id:guid}")]
+        [HttpPost]
         public async Task<ActionResult<FilmModel>> CreateAsync(CreateModel model)
         {
-            await _mediator.Send((AddFilmCommand)model);
-            return Ok();
+            return Ok(
+                await _mediator.Send(
+                    new AddFilmCommand
+                    {
+                        Name = model.Name,
+                        ShowedDate = model.ShowedDate
+                    }
+                )
+            );
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<FilmModel>> UpdateAsync(UpdateModel model)
+        public async Task<ActionResult<FilmModel>> UpdateAsync(Guid id, UpdateModel model)
         {
-            await _mediator.Send((UpdateFilmCommand)model);
-            return Ok();
+            return Ok(
+                await _mediator.Send(
+                    new UpdateFilmCommand
+                    {
+                        FilmId = id,
+                        Name = model.Name,
+                        ShowedDate = model.ShowedDate
+                    }
+                )
+            );
         }
 
         [HttpDelete("{id:guid}")]

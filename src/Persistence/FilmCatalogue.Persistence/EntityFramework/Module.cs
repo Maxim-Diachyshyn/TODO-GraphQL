@@ -17,9 +17,6 @@ namespace FilmCatalogue.Persistence.EntityFramework
             services.AddDbContext<FilmDbContext>(options =>
                 options.UseSqlServer("Data Source=\".\";Initial Catalog=Films;Integrated Security=False;User ID=sa;Password=Password1"));
             builder.Populate(services);
-
-            builder.RegisterType<GetFilmPagedListHandler>()
-                .AsImplementedInterfaces();
         }
     }
 }

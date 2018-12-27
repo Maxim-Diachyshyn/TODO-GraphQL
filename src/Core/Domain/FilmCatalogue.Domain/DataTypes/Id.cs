@@ -1,5 +1,4 @@
 ﻿using System;
-using FluentValidation;
 
 namespace FilmCatalogue.Domain.DataTypes
 {

@@ -1,4 +1,5 @@
-﻿using System.Reactive.Subjects;
+﻿using System.Linq;
+using System.Reactive.Subjects;
 using Autofac;
 using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
@@ -13,6 +14,20 @@ namespace FilmCatalogue.Persistence
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
+
+            var interfacesToRegister = new[] {
+                typeof(IRequestHandler<,>)
+            };
+
+            foreach (var interfaceToRegister in interfacesToRegister)
+            {
+                builder.RegisterAssemblyTypes(ThisAssembly)
+                .Where(type => type.GetInterfaces()
+                    .Where(i => i.IsGenericType)
+                    .Select(i => i.GetGenericTypeDefinition())
+                    .Contains(interfaceToRegister))
+                    .As(interfaceToRegister);
+            }
 
             builder.AddMediatR(ThisAssembly);
             builder.RegisterModule(new EntityFramework.Module());

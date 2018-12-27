@@ -38,7 +38,7 @@ namespace FilmCatalogue.Api.Web.Rest
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new Persistence.EntityFramework.Module());
+            builder.RegisterModule(new Persistence.Module());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +68,7 @@ namespace FilmCatalogue.Api.Web.Rest
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoldiLocks API");
             });
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseMvc();
 
             context.Database.EnsureDeleted();
