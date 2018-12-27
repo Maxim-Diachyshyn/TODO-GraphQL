@@ -1,10 +1,9 @@
-﻿using FilmCatalogue.Domain.Repositories.Film.Commands;
+﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
 using GraphQL.Types;
-using MediatR;
 
 namespace FilmCatalogue.Api.GraphQL.Mutations
 {
-    public class AddFilmInput : InputObjectGraphType<AddFilm>
+    public class AddFilmInput : InputObjectGraphType<AddFilmCommand>
     {
         public AddFilmInput()
         {

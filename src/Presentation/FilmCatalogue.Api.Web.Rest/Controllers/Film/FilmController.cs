@@ -1,8 +1,8 @@
-﻿using FilmCatalogue.Domain.Contexts.Film.Commands;
-using FilmCatalogue.Domain.Contexts.Film.Models;
+﻿using FilmCatalogue.Domain;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.Repositories.Film.Commands;
-using FilmCatalogue.Domain.Repositories.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Film.Models;
+using FilmCatalogue.Domain.UseCases.Film.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -27,44 +27,44 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         public async Task<IEnumerable<FilmModel>> GetListAsync()
         {
             return await _mediator.Send(
-                new GetFilmList<FilmModel>()
+                new GetFilmList()
             );
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FilmModel>> GetByIdAsync(Guid id)
         {
-            var films = await _mediator.Send(
-                new GetFilmsByIds<FilmModel>
+            var film = await _mediator.Send(
+                new GetFilm
                 {
-                    FilmIds = new List<Id> { new Id(id) }
+                    Id = id
                 }
             );
-            if (!films.Any())
+            if (film == null)
             {
                 return NotFound();
             }
-            return Ok(films.Single());
+            return Ok(film);
         }
 
         [HttpPost("{id:guid}")]
         public async Task<ActionResult<FilmModel>> CreateAsync(CreateModel model)
         {
-            await _mediator.Send((AddFilm)model);
+            await _mediator.Send((AddFilmCommand)model);
             return Ok();
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<FilmModel>> UpdateAsync(UpdateModel model)
         {
-            await _mediator.Send((UpdateFilm)model);
+            await _mediator.Send((UpdateFilmCommand)model);
             return Ok();
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FilmModel>> DeleteAsync(Guid id)
         {
-            await _mediator.Send(new DeleteFilm
+            await _mediator.Send(new DeleteFilmCommand
             {
                 FilmId = new Id(id)
             });

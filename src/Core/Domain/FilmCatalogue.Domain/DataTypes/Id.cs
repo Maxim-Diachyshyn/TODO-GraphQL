@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentValidation;
 
 namespace FilmCatalogue.Domain.DataTypes
 {
@@ -8,21 +9,22 @@ namespace FilmCatalogue.Domain.DataTypes
 
         public Id (Guid value)
         {
-            if (value == null || value == Guid.Empty)
-            {
-                throw new Exception();
-            }
             _value = value;
         }
 
         public Id New()
-        {
+        {           
             return new Id(Guid.NewGuid());
         }
 
         public static implicit operator Guid(Id id)
         {
             return id._value;
+        }
+
+        public static implicit operator Id(Guid id)
+        {
+            return new Id(id);
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
-using FilmCatalogue.Domain.Contexts.Film.Commands;
-using FilmCatalogue.Domain.Contexts.Film.Models;
-using FilmCatalogue.Domain.Contexts.Time.Requests;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.Repositories.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Film.Models;
 using GraphQL.Types;
 using MediatR;
 using System;
-using System.Threading.Tasks;
 
 namespace FilmCatalogue.Api.GraphQL.Mutations
 {
@@ -17,22 +14,19 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
         {
             Field<FilmType, FilmModel>()
                 .Name("createFilm")
-                .Argument<NonNullGraphType<AddFilmInput>, AddFilm>("film", "Film input.")
+                .Argument<NonNullGraphType<AddFilmInput>, AddFilmCommand>("film", "Film input.")
                 .ResolveAsync(async context => 
                 {
-                    var request = context.GetArgument<AddFilm>("film");
-                    var currentTime = await mediator.Send(new GetCurrentTime());
-                    request.AddedAt = currentTime;
+                    var request = context.GetArgument<AddFilmCommand>("film");
                     return await mediator.Send(request);
                 });
 
             Field<BooleanGraphType>()
                 .Name("updateFilm")
-                .Argument<NonNullGraphType<UpdateFilmInput>, UpdateFilm>("film", "Film input.")
+                .Argument<NonNullGraphType<UpdateFilmInput>, UpdateFilmCommand>("film", "Film input.")
                 .ResolveAsync(async context =>
                 {
-                    var request = context.GetArgument<UpdateFilm>("film");
-                    var currentTime = await mediator.Send(new GetCurrentTime());
+                    var request = context.GetArgument<UpdateFilmCommand>("film");
                     await mediator.Send(request);
                     return true;
                 });
@@ -43,7 +37,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                 .ResolveAsync(async context =>
                 {
                     var id = context.GetArgument<Guid>("id");
-                    await mediator.Send(new DeleteFilm { FilmId = new Id(id) });
+                    await mediator.Send(new DeleteFilmCommand { FilmId = new Id(id) });
                     return true;
                 });
         }

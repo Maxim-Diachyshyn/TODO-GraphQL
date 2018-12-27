@@ -29,8 +29,8 @@ namespace FilmCatalogue.Api.GraphQL
                 options.EnableMetrics = true;
                 options.ExposeExceptions = Environment.IsDevelopment();
             })
-            //.AddUserContextBuilder(httpContext => new { httpContext.User });
-            //.AddWebSockets() // Add required services for web socket support
+            // .AddUserContextBuilder(httpContext => new { httpContext.User })
+            .AddWebSockets() // Add required services for web socket support
             .AddDataLoader(); // Add required services for DataLoader support
 
 
@@ -55,6 +55,9 @@ namespace FilmCatalogue.Api.GraphQL
             {
                 app.UseGraphiQl("/graphql/ui", "/graphql");
             }
+
+            app.UseWebSockets();
+            app.UseGraphQLWebSockets<FilmSchema>("/graphql");
             app.UseGraphQL<FilmSchema>("/graphql");
 
             context.Database.EnsureDeleted();

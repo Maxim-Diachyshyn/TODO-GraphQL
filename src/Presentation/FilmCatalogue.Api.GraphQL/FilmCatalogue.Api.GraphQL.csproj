@@ -13,12 +13,14 @@
     <PackageReference Include="GraphQL" Version="2.4.0" />
     <PackageReference Include="GraphiQL" Version="1.2.0" />
     <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="GraphQL.Server.Transports.WebSockets" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj" />
     <ProjectReference Include="..\..\Persistence\FilmCatalogue.Persistence\FilmCatalogue.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\Application\FilmCatalogue.Application\FilmCatalogue.Application.csproj" />
   </ItemGroup>
 
 </Project>

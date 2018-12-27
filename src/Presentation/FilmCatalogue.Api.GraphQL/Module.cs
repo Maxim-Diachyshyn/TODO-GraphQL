@@ -3,6 +3,7 @@ using FilmCatalogue.Api.GraphQL.GraphTypes;
 using FilmCatalogue.Api.GraphQL.Mutations;
 using FilmCatalogue.Api.GraphQL.Queries;
 using FilmCatalogue.Api.GraphQL.Schemas;
+using FilmCatalogue.Api.GraphQL.Subscriptions;
 
 namespace FilmCatalogue.Api.GraphQL
 {
@@ -16,8 +17,8 @@ namespace FilmCatalogue.Api.GraphQL
             builder.RegisterType<AddFilmInput>();
 
             builder.RegisterType<Query>();
-
             builder.RegisterType<Mutation>();
+            builder.RegisterType<Subscription>();
 
             builder.RegisterType<FilmSchema>();
         }

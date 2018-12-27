@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Projections;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,11 +18,7 @@ namespace FilmCatalogue.Persistence.EntityFramework
                 options.UseSqlServer("Data Source=\".\";Initial Catalog=Films;Integrated Security=False;User ID=sa;Password=Password1"));
             builder.Populate(services);
 
-            builder.RegisterGeneric(typeof(GetFilmPagedListHandler<>))
-                .AsImplementedInterfaces();
-            builder.RegisterGeneric(typeof(GetFilmsByIdsHandler<>))
-                .AsImplementedInterfaces();
-            builder.RegisterType(typeof(FilmProjection))
+            builder.RegisterType<GetFilmPagedListHandler>()
                 .AsImplementedInterfaces();
         }
     }

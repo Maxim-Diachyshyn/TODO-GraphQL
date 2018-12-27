@@ -1,7 +1,7 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
 using System;
 
-namespace FilmCatalogue.Domain.Contexts.Film.Models
+namespace FilmCatalogue.Domain.UseCases.Film.Models
 {
     public class FilmModel
     {

@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.Contexts.Film.Commands;
+﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -11,9 +11,9 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         public string Name { get; set; }
         public DateTime ShowedDate { get; set; }
 
-        public static implicit operator UpdateFilm(UpdateModel model)
+        public static implicit operator UpdateFilmCommand(UpdateModel model)
         {
-            return new UpdateFilm
+            return new UpdateFilmCommand
             {
                 FilmId = model.Id,
                 Name = model.Name,

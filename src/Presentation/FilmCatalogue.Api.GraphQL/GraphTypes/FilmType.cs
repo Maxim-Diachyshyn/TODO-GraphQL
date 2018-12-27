@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.Contexts.Film.Models;
+﻿using FilmCatalogue.Domain.UseCases.Film.Models;
 using GraphQL.Types;
 using System;
 

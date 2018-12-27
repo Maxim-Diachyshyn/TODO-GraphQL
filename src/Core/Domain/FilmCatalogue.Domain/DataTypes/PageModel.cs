@@ -1,4 +1,7 @@
-﻿namespace FilmCatalogue.Domain.DataTypes
+﻿using System;
+using FluentValidation;
+
+namespace FilmCatalogue.Domain.DataTypes
 {
     public class PageModel
     {

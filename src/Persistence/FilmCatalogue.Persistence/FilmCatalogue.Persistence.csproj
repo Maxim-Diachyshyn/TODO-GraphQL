@@ -5,13 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.1.2" />
     <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+    <PackageReference Include="System.Reactive" Version="4.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\Application\FilmCatalogue.Application\FilmCatalogue.Application.csproj" />
   </ItemGroup>
 
 </Project>

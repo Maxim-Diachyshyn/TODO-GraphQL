@@ -9,8 +9,8 @@
         {
             return new Domain.DataTypes.PageModel
             {
-                Count = model.Count,
-                Page = model.Page
+                Page = model.Page,
+                Count = model.Count
             };
         }
     }
