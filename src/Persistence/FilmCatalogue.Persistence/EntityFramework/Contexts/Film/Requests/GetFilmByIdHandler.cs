@@ -1,17 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests;
-using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
+using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
 {
-    public class GetFilmByIdHandler : IRequestHandler<GetFilm, FilmModel>
+    public class GetFilmByIdHandler : IRequestHandler<GetFilmByIdRequest, FilmModel>
     {
         private readonly FilmDbContext _context;
 
@@ -20,7 +16,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
             _context = context;
         }
 
-        public async Task<FilmModel> Handle(GetFilm request, CancellationToken cancellationToken)
+        public async Task<FilmModel> Handle(GetFilmByIdRequest request, CancellationToken cancellationToken)
         {
             var film = await _context.Films
                 .AsNoTracking()

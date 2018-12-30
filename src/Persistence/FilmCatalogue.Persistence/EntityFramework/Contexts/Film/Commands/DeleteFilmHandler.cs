@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
+﻿using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
 using MediatR;
 using System.Threading;
@@ -17,7 +17,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands
 
         public async Task<Unit> Handle(DeleteFilmCommand request, CancellationToken cancellationToken)
         {
-            _context.Remove(new FilmEntity { Id = request.FilmId });
+            _context.Films.Remove(new FilmEntity { Id = request.FilmId });
             await _context.SaveChangesAsync();
             return Unit.Value;
         }

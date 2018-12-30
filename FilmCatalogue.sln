@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Api.Web.Rest"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Api.GraphQL", "src\Presentation\FilmCatalogue.Api.GraphQL\FilmCatalogue.Api.GraphQL.csproj", "{EA521358-FE67-4911-8AC3-E80367C71C9D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Tests", "5. Tests", "{78A542F7-6EAB-475F-BF88-1FD710FDBD9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Tests", "src\Tests\FilmCatalogue.Tests\FilmCatalogue.Tests.csproj", "{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +57,10 @@ Global
 		{EA521358-FE67-4911-8AC3-E80367C71C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA521358-FE67-4911-8AC3-E80367C71C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA521358-FE67-4911-8AC3-E80367C71C9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +72,7 @@ Global
 		{0162B0AF-F5F7-4EE6-8612-D7146F8F9FB7} = {53096041-D1F5-4478-B565-4FD16D37AA7E}
 		{02FC5D6D-3F4F-493F-B2BC-31C2B3BAEB28} = {9DC14200-06E0-11E9-990E-B1EC6167815B}
 		{EA521358-FE67-4911-8AC3-E80367C71C9D} = {9DC14200-06E0-11E9-990E-B1EC6167815B}
+		{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10} = {78A542F7-6EAB-475F-BF88-1FD710FDBD9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {726A2799-FED4-4210-ABC9-8F8E0F37013D}

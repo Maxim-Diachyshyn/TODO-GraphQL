@@ -3,9 +3,9 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 
-namespace FilmCatalogue.Domain.UseCases.Film.Requests
+namespace FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById
 {
-    public class GetFilm : IRequest<FilmModel>
+    public class GetFilmByIdRequest : IRequest<FilmModel>
     {
         public Guid Id { get; set; }
     }

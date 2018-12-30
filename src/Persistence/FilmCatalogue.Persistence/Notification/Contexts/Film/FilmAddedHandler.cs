@@ -3,7 +3,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using MediatR;
 

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reactive.Subjects;
 using Autofac;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using FilmCatalogue.Persistence.Notification.Contexts.Film;
 using MediatR;

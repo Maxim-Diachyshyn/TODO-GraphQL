@@ -1,13 +1,16 @@
-﻿using FilmCatalogue.Domain;
+﻿using FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Create;
+using FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Update;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
+using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
@@ -27,7 +30,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         public async Task<IEnumerable<FilmModel>> GetListAsync()
         {
             return await _mediator.Send(
-                new GetFilmList()
+                new GetFilmListRequest()
             );
         }
 
@@ -35,7 +38,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         public async Task<ActionResult<FilmModel>> GetByIdAsync(Guid id)
         {
             var film = await _mediator.Send(
-                new GetFilm
+                new GetFilmByIdRequest
                 {
                     Id = id
                 }

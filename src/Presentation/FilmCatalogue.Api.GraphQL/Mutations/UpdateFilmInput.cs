@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
+﻿using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
 using GraphQL.Types;
 using System;
 

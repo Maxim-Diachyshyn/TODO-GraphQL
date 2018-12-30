@@ -7,6 +7,7 @@ namespace FilmCatalogue.Persistence.EntityFramework
     {
         public FilmDbContext(DbContextOptions options) : base(options)
         {
+            
         }
 
         public DbSet<FilmEntity> Films { get; set; }

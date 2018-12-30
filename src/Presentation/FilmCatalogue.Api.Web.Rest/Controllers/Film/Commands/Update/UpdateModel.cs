@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
+namespace FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Update
 {
     public class UpdateModel
     {

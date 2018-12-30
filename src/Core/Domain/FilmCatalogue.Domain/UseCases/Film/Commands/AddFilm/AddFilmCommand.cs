@@ -2,7 +2,7 @@
 using MediatR;
 using System;
 
-namespace FilmCatalogue.Domain.UseCases.Film.Commands
+namespace FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm
 {
     public class AddFilmCommand : IRequest<FilmModel>
     {

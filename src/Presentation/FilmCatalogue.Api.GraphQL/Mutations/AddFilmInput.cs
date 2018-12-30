@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
+﻿using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
 using GraphQL.Types;
 
 namespace FilmCatalogue.Api.GraphQL.Mutations
