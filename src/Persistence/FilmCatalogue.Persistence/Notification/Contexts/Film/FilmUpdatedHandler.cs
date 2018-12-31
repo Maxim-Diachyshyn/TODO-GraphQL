@@ -1,20 +1,18 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using MediatR;
 using MediatR.Pipeline;
 
 namespace FilmCatalogue.Persistence.Notification.Contexts.Film
 {
-    public class FilmAddedHandler : IRequestPostProcessor<AddFilmCommand, FilmModel>
+    public class FilmUpdatedHandler : IRequestPostProcessor<UpdateFilmCommand, FilmModel>
     {
         private readonly ISubject<FilmModel> _filmStream;
 
-        public FilmAddedHandler(ISubject<FilmModel> filmStream)
+        public FilmUpdatedHandler(ISubject<FilmModel> filmStream)
         {
             _filmStream = filmStream;
         }
@@ -24,7 +22,7 @@ namespace FilmCatalogue.Persistence.Notification.Contexts.Film
             return _filmStream.AsObservable();
         }
 
-        public Task Process(AddFilmCommand command, FilmModel response)
+        public Task Process(UpdateFilmCommand command, FilmModel response)
         {
             _filmStream.OnNext(response);            
             return Task.CompletedTask;

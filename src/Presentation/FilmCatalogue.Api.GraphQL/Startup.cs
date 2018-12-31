@@ -3,6 +3,9 @@ using FilmCatalogue.Api.GraphQL.Schemas;
 using FilmCatalogue.Persistence.EntityFramework;
 using GraphiQl;
 using GraphQL.Server;
+using GraphQL.Server.Ui.GraphiQL;
+using GraphQL.Server.Ui.Playground;
+using GraphQL.Server.Ui.Voyager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -53,7 +56,20 @@ namespace FilmCatalogue.Api.GraphQL
 
             if (Environment.IsDevelopment())
             {
-                app.UseGraphiQl("/graphql/ui", "/graphql");
+                app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
+                {
+                    Path = "/ui/playground"
+                });
+                app.UseGraphiQLServer(new GraphiQLOptions
+                {
+                    GraphiQLPath = "/ui/graphiql",
+                    GraphQLEndPoint = "/graphql"
+                });
+                app.UseGraphQLVoyager(new GraphQLVoyagerOptions()
+                {
+                    GraphQLEndPoint = "/graphql",
+                    Path = "/ui/voyager"
+                });
             }
 
             app.UseWebSockets();
