@@ -38,6 +38,7 @@ namespace FilmCatalogue.Api.GraphQL
 
 
             services.AddHttpContextAccessor();
+            services.AddCors();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -71,6 +72,14 @@ namespace FilmCatalogue.Api.GraphQL
                     Path = "/ui/voyager"
                 });
             }
+
+            app.UseCors(options => 
+            {
+                options.AllowAnyOrigin();
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+                options.AllowCredentials();
+            });
 
             app.UseWebSockets();
             app.UseGraphQLWebSockets<FilmSchema>("/graphql");

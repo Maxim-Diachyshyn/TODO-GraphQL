@@ -18,7 +18,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands
 
         public async Task<FilmModel> Handle(UpdateFilmCommand request, CancellationToken cancellationToken)
         {
-            var filmEntity = _context.Attach(new FilmEntity { Id = request.FilmId }).Entity;
+            var filmEntity = _context.Films.Attach(new FilmEntity { Id = request.FilmId }).Entity;
             filmEntity.Name = request.Name;
             filmEntity.ShowedDate = request.ShowedDate;
             await _context.SaveChangesAsync();

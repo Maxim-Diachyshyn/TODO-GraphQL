@@ -9,23 +9,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Persistence", "2. Persis
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Infrastructure", "3. Infrastructure", "{7A47A57D-8161-4E74-924E-2FECC693EADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Application", "src\Core\Application\FilmCatalogue.Application\FilmCatalogue.Application.csproj", "{FE799515-4928-40A7-BED5-80B311BABD58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Application", "Core\Application\FilmCatalogue.Application\FilmCatalogue.Application.csproj", "{FE799515-4928-40A7-BED5-80B311BABD58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Persistence", "src\Persistence\FilmCatalogue.Persistence\FilmCatalogue.Persistence.csproj", "{7DE106BE-2015-4F26-AA8F-3DA5BEB38DB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Persistence", "Persistence\FilmCatalogue.Persistence\FilmCatalogue.Persistence.csproj", "{7DE106BE-2015-4F26-AA8F-3DA5BEB38DB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Infrastructure", "src\Infrastructure\FilmCatalogue.Infrastructure\FilmCatalogue.Infrastructure.csproj", "{C9D09E75-02DA-4D12-AF0F-38EA2A2C9F80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Infrastructure", "Infrastructure\FilmCatalogue.Infrastructure\FilmCatalogue.Infrastructure.csproj", "{C9D09E75-02DA-4D12-AF0F-38EA2A2C9F80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Domain", "src\Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj", "{0162B0AF-F5F7-4EE6-8612-D7146F8F9FB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Domain", "Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj", "{0162B0AF-F5F7-4EE6-8612-D7146F8F9FB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Presenation", "4. Presenation", "{9DC14200-06E0-11E9-990E-B1EC6167815B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Api.Web.Rest", "src\Presentation\FilmCatalogue.Api.Web.Rest\FilmCatalogue.Api.Web.Rest.csproj", "{02FC5D6D-3F4F-493F-B2BC-31C2B3BAEB28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Api.Web.Rest", "Presentation\FilmCatalogue.Api.Web.Rest\FilmCatalogue.Api.Web.Rest.csproj", "{02FC5D6D-3F4F-493F-B2BC-31C2B3BAEB28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Api.GraphQL", "src\Presentation\FilmCatalogue.Api.GraphQL\FilmCatalogue.Api.GraphQL.csproj", "{EA521358-FE67-4911-8AC3-E80367C71C9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Api.GraphQL", "Presentation\FilmCatalogue.Api.GraphQL\FilmCatalogue.Api.GraphQL.csproj", "{EA521358-FE67-4911-8AC3-E80367C71C9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Tests", "5. Tests", "{78A542F7-6EAB-475F-BF88-1FD710FDBD9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Tests", "src\Tests\FilmCatalogue.Tests\FilmCatalogue.Tests.csproj", "{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmCatalogue.Tests", "Tests\FilmCatalogue.Tests\FilmCatalogue.Tests.csproj", "{F88667B3-63AF-4E7A-9A17-C2D2DFFA0F10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
