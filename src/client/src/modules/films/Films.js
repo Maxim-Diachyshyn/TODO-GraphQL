@@ -1,27 +1,25 @@
 import React, { Component } from 'react';
 import { graphql } from "react-apollo";
-import { gql } from "apollo-boost";
+import { Link } from 'react-router-dom'
 import _ from "lodash";
-
-const query = gql`
-query {
-    films {
-      id
-      name
-      showedDate
-    }
-  }
-`;
+import query from "./query";
+import ROUTES from "../appRouter/routes";
 
 class Films extends Component {
     render() {
         const { data } = this.props;
+        if (data.loading) {
+            return "Loading...";
+        }
         return (
-            <ul key='allUsers'>
-                {_.map(data.films, (({ id, name }) => (
-                    <li key={id}>{name}</li>
-                )))}
-            </ul>
+            <div>
+                <ul key='allFilms'>
+                    {_.map(data.films, (({ id, name }) => (
+                        <li key={id}>{name}</li>
+                    )))}
+                </ul>
+                <Link to={ROUTES.CREATE_FILM}>Add</Link>
+            </div>
         );
     }
 }
