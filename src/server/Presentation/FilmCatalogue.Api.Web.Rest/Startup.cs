@@ -38,7 +38,7 @@ namespace FilmCatalogue.Api.Web.Rest
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new Persistence.Module());
+            builder.RegisterModule(new Module());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
