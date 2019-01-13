@@ -7,7 +7,10 @@ class AppRouter extends Component {
     render() {
       return (
         <BrowserRouter>
+          <Switch>
             <Route exact path={ROUTES.HOME} component={VIEWS.Films}/>
+            <Route exact path={ROUTES.CREATE_FILM} component={VIEWS.AddFilm}/>
+          </Switch>
         </BrowserRouter>
       );
     }
