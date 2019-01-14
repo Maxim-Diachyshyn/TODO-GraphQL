@@ -9,6 +9,8 @@ mutation($name: String!, $showedDate: Date!) {
             }
     ) {
       id 
+      name
+      showedDate
     }
   }
 `;

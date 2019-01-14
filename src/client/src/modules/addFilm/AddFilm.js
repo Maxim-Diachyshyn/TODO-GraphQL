@@ -13,27 +13,29 @@ class AddFilm extends Component {
             name: "",
             showedDate: new Date(),
         };
-
-        this.onSubmit = this.onSubmit.bind(this);
-        this.onNameChange = this.onNameChange.bind(this);
-        this.onShowedDateChange = this.onShowedDateChange.bind(this);
     }
 
-    onNameChange = (e) => {
+    _onNameChange = (e) => {
         this.setState({name: e.target.value});
     }
 
-    onShowedDateChange = (e) => {
+    _onShowedDateChange = (e) => {
         this.setState({showedDate: e.target.value});
     }
 
-    onSubmit = (e) => {
+    _onSubmit = (e) => {
         const { mutate, history } = this.props;
         e.preventDefault();
         mutate({
-            variables: this.state, 
-            refetchQueries: [ { query: filmQuery }],
-            })
+            variables: this.state,
+            update: (cache, { data: { createFilm } }) => {
+                const { films } = cache.readQuery({ query: filmQuery });
+                cache.writeQuery({
+                  query: filmQuery,
+                  data: { films: [...films, createFilm] },
+                });
+              }}
+            )
             .then(() => {
                 history.push(ROUTES.HOME);
             });
@@ -41,14 +43,14 @@ class AddFilm extends Component {
 
     render() {
         return (
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this._onSubmit}>
                 <input
                     type='text'
-                    onChange={this.onNameChange}
+                    onChange={this._onNameChange}
                 />
                 <input
                     type='date'
-                    onChange={this.onShowedDateChange}
+                    onChange={this._onShowedDateChange}
                 />
                 <button type='submit'>Create</button>
             </form>
