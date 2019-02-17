@@ -16,11 +16,13 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands
             _context = context;
         }
 
-        public async Task<FilmModel> Handle(UpdateFilmCommand request, CancellationToken cancellationToken)
+        public async Task<FilmModel> Handle(UpdateFilmCommand command, CancellationToken cancellationToken)
         {
-            var filmEntity = _context.Films.Attach(new FilmEntity { Id = request.FilmId }).Entity;
-            filmEntity.Name = request.Name;
-            filmEntity.ShowedDate = request.ShowedDate;
+            var filmEntity = _context.Films.Attach(new FilmEntity { Id = command.FilmId }).Entity;
+            filmEntity.Name = command.Name;
+            filmEntity.ShowedDate = command.ShowedDate;
+            filmEntity.Photo = command.Photo?.Data;
+            filmEntity.PhotoType = command.Photo?.Type;
             await _context.SaveChangesAsync();
 
             return filmEntity.ToModel();

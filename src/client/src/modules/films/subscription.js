@@ -5,7 +5,8 @@ subscription {
     filmAdded{
       id
       name,
-      showedDate
+      showedDate,
+      photo
     }
   }
 `;

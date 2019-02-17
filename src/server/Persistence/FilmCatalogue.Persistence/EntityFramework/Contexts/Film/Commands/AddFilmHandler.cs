@@ -23,6 +23,8 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands
                 {
                     Name = command.Name,
                     ShowedDate = command.ShowedDate,
+                    Photo = command.Photo?.Data,
+                    PhotoType = command.Photo?.Type
                 }
             );
             await _context.SaveChangesAsync(cancellationToken);

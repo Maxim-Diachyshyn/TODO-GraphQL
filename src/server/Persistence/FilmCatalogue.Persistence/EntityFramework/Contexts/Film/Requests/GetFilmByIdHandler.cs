@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using FilmCatalogue.Domain.DataTypes;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
 using MediatR;
@@ -23,13 +24,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
                 .SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             
             return film != null 
-                ? new FilmModel
-                    {
-                        Id = film.Id,
-                        Name = film.Name,
-                        ShowedDate = film.ShowedDate,
-                        AddedAt = film.AddedAt,
-                    }
+                ? film.ToModel()
                 : null;
         }
     }

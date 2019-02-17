@@ -10,5 +10,6 @@ namespace FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm
         public Id FilmId { get; set; }
         public string Name { get; set; }
         public DateTime ShowedDate { get; set; }
+        public Blob Photo { get; set; }
     }
 }

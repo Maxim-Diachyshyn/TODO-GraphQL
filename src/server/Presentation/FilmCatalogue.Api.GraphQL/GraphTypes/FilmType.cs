@@ -14,6 +14,9 @@ namespace FilmCatalogue.Api.GraphQL.GraphTypes
             Field(x => x.Name);
             Field(x => x.ShowedDate, false, typeof(DateTimeGraphType));
             Field(x => x.AddedAt, false, typeof(DateTimeGraphType));
+            Field<StringGraphType>()
+                .Name(nameof(FilmModel.Photo))
+                .Resolve(x => x.Source.Photo?.Base64);
         }
     }
 }

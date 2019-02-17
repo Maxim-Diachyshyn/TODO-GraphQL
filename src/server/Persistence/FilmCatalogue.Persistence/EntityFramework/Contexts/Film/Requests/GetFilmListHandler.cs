@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FilmCatalogue.Domain.DataTypes;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmList;
 using MediatR;
@@ -23,15 +24,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
             var films = await _context.Films
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-            return films.Select(x => 
-                new FilmModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    ShowedDate = x.ShowedDate,
-                    AddedAt = x.AddedAt,
-                }
-            );
+            return films.Select(x => x.ToModel());
         }
     }
 }

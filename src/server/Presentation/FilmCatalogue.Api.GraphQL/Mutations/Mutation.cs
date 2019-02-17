@@ -4,9 +4,11 @@ using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
 using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
 using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
 using FilmCatalogue.Domain.UseCases.Film.Models;
+using GraphQL;
 using GraphQL.Types;
 using MediatR;
 using System;
+using System.Linq;
 
 namespace FilmCatalogue.Api.GraphQL.Mutations
 {
@@ -16,21 +18,73 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
         {
             Field<FilmType, FilmModel>()
                 .Name("createFilm")
-                .Argument<NonNullGraphType<AddFilmInput>, AddFilmCommand>("film", "Film input.")
+                .Argument<NonNullGraphType<AddFilmInput>>("film", "Film input.")
                 .ResolveAsync(async context => 
                 {
-                    var request = context.GetArgument<AddFilmCommand>("film");
+                    var input = context.GetArgument<AddFilmCommandInput>("film");
+                    if (string.IsNullOrEmpty(input.Name))
+                    {
+                        context.Errors.Add(new ExecutionError("Name should not be empty") {Code = "EmptyName"});
+                    }
+                    if (input.ShowedDate == default(DateTime))
+                    {
+                        context.Errors.Add(new ExecutionError("Showed date should not be empty") {Code = "EmptyDate"});
+                    }
+                    if (string.IsNullOrEmpty(input.Photo))
+                    {
+                        context.Errors.Add(new ExecutionError("Photo should not be empty") {Code = "EmptyPhoto"});
+                    }
+                    if (context.Errors.Any())
+                    {
+                        return null;
+                    }
+                    var request = new AddFilmCommand
+                    {
+                        Name = input.Name,
+                        ShowedDate = input.ShowedDate,
+                        Photo = !string.IsNullOrEmpty(input.Photo)
+                            ? new Blob(input.Photo)
+                            : null
+                    };
                     return await mediator.Send(request);
                 });
 
-            Field<BooleanGraphType>()
+            Field<FilmType, FilmModel>()
                 .Name("updateFilm")
                 .Argument<NonNullGraphType<UpdateFilmInput>, UpdateFilmCommand>("film", "Film input.")
                 .ResolveAsync(async context =>
                 {
-                    var request = context.GetArgument<UpdateFilmCommand>("film");
-                    await mediator.Send(request);
-                    return true;
+                    var input = context.GetArgument<UpdateFilmCommandInput>("film");
+                    if (string.IsNullOrEmpty(input.Name))
+                    {
+                        context.Errors.Add(new ExecutionError("Name should not be empty") {Code = "EmptyName"});
+                    }
+                    if (input.ShowedDate == default(DateTime))
+                    {
+                        context.Errors.Add(new ExecutionError("Showed date should not be empty") {Code = "EmptyDate"});
+                    }
+                    if (input.Id == Guid.Empty)
+                    {
+                        context.Errors.Add(new ExecutionError("Film id should not be empty") {Code = "EmptyFilmId"});
+                    }
+                    if (string.IsNullOrEmpty(input.Photo))
+                    {
+                        context.Errors.Add(new ExecutionError("Photo should not be empty") {Code = "EmptyPhoto"});
+                    }
+                    if (context.Errors.Any())
+                    {
+                        return null;
+                    }
+                    var request = new UpdateFilmCommand
+                    {
+                        FilmId = input.Id,
+                        Name = input.Name,
+                        ShowedDate = input.ShowedDate,
+                        Photo = !string.IsNullOrEmpty(input.Photo)
+                            ? new Blob(input.Photo)
+                            : null
+                    };
+                    return await mediator.Send(request);
                 });
 
             Field<BooleanGraphType>()

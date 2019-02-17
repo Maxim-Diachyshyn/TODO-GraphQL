@@ -5,7 +5,8 @@ query {
     films {
       id
       name
-      showedDate
+      showedDate,
+      photo
     }
   }
 `;

@@ -9,7 +9,8 @@ class AppRouter extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path={ROUTES.HOME} component={VIEWS.Films}/>
-            <Route exact path={ROUTES.CREATE_FILM} component={VIEWS.AddFilm}/>
+            <Route exact path={ROUTES.EDIT_FILM} component={VIEWS.FilmForm.EditFrom}/>
+            <Route exact path={ROUTES.CREATE_FILM} component={VIEWS.FilmForm.AddForm}/>
           </Switch>
         </BrowserRouter>
       );

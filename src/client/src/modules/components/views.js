@@ -1,4 +1,4 @@
 import Films from "../films"
-import AddFilm from "../addFilm";
+import FilmForm from "../filmForm";
 
-export default {Films, AddFilm};
+export default {Films, FilmForm};

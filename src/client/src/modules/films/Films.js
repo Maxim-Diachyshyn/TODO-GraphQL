@@ -15,9 +15,10 @@ class Films extends Component {
                 return prev;
               const newFilmAdded = subscriptionData.data.filmAdded;
   
-              return Object.assign({}, prev, {
+              return {
+                ...prev,
                 films: [...prev.films, newFilmAdded]
-              });
+              };
             }
           });
     }
@@ -25,19 +26,52 @@ class Films extends Component {
     render() {
         const { data } = this.props;
         if (data.loading) {
-            return "Loading...";
+            return <span>Loading...</span>
         }
         return (
-            <div>
-                <ul key='allFilms'>
-                    {_.map(data.films, ({ id, name }) => (
-                        <li key={id}>{name}</li>
+            <div style={containerStyle}>
+                <div style={filmsContainerStyle}>     
+                    {_.map(data.films, film => (
+                        <div key={film.id} style={filmContainerStyle}>
+                            <span style={filmNameStyle}>{film.name}</span>
+                            <Link to={{pathname: _.replace(ROUTES.EDIT_FILM, ":id", film.id), state: film}}>
+                                <img src={film.photo} height={300} width={300}/>
+                            </Link>
+                            <span>{new Date(film.showedDate).toLocaleDateString()}</span>
+                        </div>
                     ))}
-                </ul>
-                <Link to={ROUTES.CREATE_FILM}>Add</Link>
+                </div>
+                <div>
+                    <Link to={ROUTES.CREATE_FILM}>Add</Link>
+                </div>
             </div>
         );
     }
+}
+
+const containerStyle = {
+    padding: 20
+}
+
+const filmsContainerStyle = {
+    display: "grid",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+    gridColumnGap: 10,
+    gridRowGap: 20,
+    padding: 20
+}
+
+const filmContainerStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+}
+
+const filmNameStyle = {
+    fontWeight: "bold",
+    fontSize: 24
 }
   
 export default graphql(query)(Films);
