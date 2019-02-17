@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Mutation, Query, ApolloConsumer, withApollo } from "react-apollo";
+import { Mutation, withApollo } from "react-apollo";
 import _ from "lodash";
 import { Link } from 'react-router-dom'
 import {editMutation, createMutation} from "./mutation";
 import filmQuery from "./query";
+import filmsQuery from "../films/query";
 import ROUTES from "../appRouter/routes";
 import moment from 'moment';
 
@@ -37,11 +38,13 @@ class EditForm extends Component {
     }
 
     _onNameChange = (e) => {
-        this.setState(prevState => ({film:{...prevState.film, name: e.target.value}}));
+        const name = e.target.value;
+        this.setState(prevState => ({film:{...prevState.film, name}}));
     }
 
     _onShowedDateChange = (e) => {
-        this.setState(prevState => ({film:{...prevState.film, showedDate: e.target.value}}));
+        const showedDate = e.target.value;
+        this.setState(prevState => ({film:{...prevState.film, showedDate}}));
     }
 
     _onfileChange = (e) => {
@@ -66,11 +69,25 @@ class EditForm extends Component {
             ? _.pick(this.state.film, ["name", "showedDate", "photo"])
             : _.pick(this.state.film, ["id", "name", "showedDate", "photo"]);
 
+        const update = isAddingForm ?
+            (store, { data: { createFilm } }) => {
+                if (store.data.data.ROOT_QUERY) {
+                    const data = store.readQuery({ query: filmsQuery });
+                    data.films.push(createFilm);
+                    store.writeQuery({ 
+                        query: filmsQuery,
+                        data
+                    });
+                }
+                
+                history.push(ROUTES.HOME)
+            }
+            : () => history.push(ROUTES.HOME);
         return (
             <Mutation
                 mutation={mutation}
                 variables={variables}
-                onCompleted={() => {history.push(ROUTES.HOME)}}
+                update={update}
             >
                 {isAddingForm
                     ? (createFilm, {loading, error}) => handler(createFilm, {loading, error})
@@ -82,6 +99,7 @@ class EditForm extends Component {
 
     render() {
         const { isAddingForm } = this.props;
+        const { film, isUploadingFile } = this.state;
         return this.withMutation((mutation, {loading, error}) => {
             const errors = _.get(error, "graphQLErrors", []);
             if (loading) {
@@ -100,7 +118,7 @@ class EditForm extends Component {
                         <div style={inputContainerStyle}>
                             <input
                                 type='text'
-                                value={this.state.film.name}
+                                value={film.name}
                                 onChange={this._onNameChange}
                             />
                             {_.some(errors, e => e.extensions.code === "EmptyName") 
@@ -114,7 +132,7 @@ class EditForm extends Component {
                         <div style={inputContainerStyle}>
                             <input
                                 type='date'
-                                value={this.state.film.showedDate}
+                                value={film.showedDate}
                                 onChange={this._onShowedDateChange}
                             />
                             {_.some(errors, e => e.extensions.code === "EmptyDate") 
@@ -129,8 +147,8 @@ class EditForm extends Component {
                             type="file"
                             onChange={this._onfileChange}
                         />
-                        <img src={this.state.film.photo} style={photoStyle} height={300} width={300}/>
-                        <button type='submit' disabled={this.state.isUploadingFile} style={submitStyle}>Ok</button>
+                        <img src={film.photo} style={photoStyle} height={300} width={300}/>
+                        <button type='submit' disabled={isUploadingFile} style={submitStyle}>Ok</button>
                     </form>
                 </div>
             )
