@@ -1,12 +1,24 @@
 import { gql } from "apollo-boost";
 
-export default gql`
+const filmAddedSubscription = gql`
 subscription {
-    filmAdded{
+    filmAdded {
       id
-      name,
-      showedDate,
+      name
+      showedDate
       photo
     }
   }
 `;
+
+const filmUpdatedSubscription = gql`
+subscription {
+  filmUpdated {
+    id
+    name
+    showedDate
+    photo
+  }
+}`;
+
+export default {filmAddedSubscription, filmUpdatedSubscription}

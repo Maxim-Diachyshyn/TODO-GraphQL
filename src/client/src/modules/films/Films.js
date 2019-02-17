@@ -9,7 +9,7 @@ import subscription from './subscription';
 class Films extends Component {
     componentDidMount() {
         this.props.data.subscribeToMore({
-            document: subscription,
+            document: subscription.filmAddedSubscription,
             updateQuery: (prev, { subscriptionData }) => {
               if (!subscriptionData.data || !subscriptionData.data.filmAdded)
                 return prev;
@@ -19,6 +19,23 @@ class Films extends Component {
                 ...prev,
                 films: [...prev.films, newFilmAdded]
               };
+            }
+          });
+
+        this.props.data.subscribeToMore({
+            document: subscription.filmUpdatedSubscription,
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data || !subscriptionData.data.filmAdded)
+                return prev;
+              const filmUpdated = subscriptionData.data.filmUpdated;
+              const index = _.index(prev.films, f => f.id === filmUpdated.id);
+              if (!index) {
+                return prev;
+              }
+              return {
+                ...prev,
+                films: {...prev.films, [index]: filmUpdated}
+              }
             }
           });
     }
