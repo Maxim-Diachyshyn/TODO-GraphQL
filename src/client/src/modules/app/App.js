@@ -33,7 +33,14 @@ const link = split(
   httpLink,
 );
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  cacheRedirects: {
+    Query: {
+      film: (_, args, { getCacheKey }) =>
+        getCacheKey({ __typename: 'FilmType', id: args.id })
+    },
+  },
+});
 
 const client = new ApolloClient({
   link,

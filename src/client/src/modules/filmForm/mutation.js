@@ -2,7 +2,7 @@ import { gql } from "apollo-boost";
 
 export const createMutation = gql`
 mutation ($name: String!, $showedDate: Date!, $photo: String!) {
-  film: createFilm(
+  createFilm(
     film: {
       name: $name
       showedDate: $showedDate,
@@ -19,7 +19,7 @@ mutation ($name: String!, $showedDate: Date!, $photo: String!) {
 
 export const editMutation = gql`
 mutation ($id: ID, $name: String!, $showedDate: Date!, $photo: String!) {
-  film: updateFilm(
+  updateFilm(
     film: {
       id: $id,
       name: $name

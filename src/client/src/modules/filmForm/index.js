@@ -1,4 +1,3 @@
-import AddForm from "./AddForm";
-import EditFrom from "./EditForm";
+import FilmForm from "./FilmForm";
 
-export default {AddForm, EditFrom};
+export default FilmForm;

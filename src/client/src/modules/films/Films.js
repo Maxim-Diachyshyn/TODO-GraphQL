@@ -34,7 +34,7 @@ class Films extends Component {
                     {_.map(data.films, film => (
                         <div key={film.id} style={filmContainerStyle}>
                             <span style={filmNameStyle}>{film.name}</span>
-                            <Link to={{pathname: _.replace(ROUTES.EDIT_FILM, ":id", film.id), state: film}}>
+                            <Link to={{pathname: _.replace(ROUTES.EDIT_FILM, ":id", film.id)}}>
                                 <img src={film.photo} height={300} width={300}/>
                             </Link>
                             <span>{new Date(film.showedDate).toLocaleDateString()}</span>
