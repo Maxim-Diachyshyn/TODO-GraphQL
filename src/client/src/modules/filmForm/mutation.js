@@ -18,7 +18,7 @@ mutation ($name: String!, $showedDate: Date!, $photo: String!) {
 `;
 
 export const editMutation = gql`
-mutation ($id: ID, $name: String!, $showedDate: Date!, $photo: String!) {
+mutation ($id: ID!, $name: String!, $showedDate: Date!, $photo: String!) {
   updateFilm(
     film: {
       id: $id,
@@ -27,6 +27,17 @@ mutation ($id: ID, $name: String!, $showedDate: Date!, $photo: String!) {
       photo: $photo
     }
     ) {
+      id 
+      name
+      showedDate,
+      photo
+    }
+  }
+`;
+
+export const deleteMutation = gql`
+mutation ($id: ID!) {
+  deleteFilm(id: $id) {
       id 
       name
       showedDate,

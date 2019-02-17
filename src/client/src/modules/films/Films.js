@@ -25,7 +25,7 @@ class Films extends Component {
         this.props.data.subscribeToMore({
             document: subscription.filmUpdatedSubscription,
             updateQuery: (prev, { subscriptionData }) => {
-              if (!subscriptionData.data || !subscriptionData.data.filmAdded)
+              if (!subscriptionData.data || !subscriptionData.data.filmUpdated)
                 return prev;
               const filmUpdated = subscriptionData.data.filmUpdated;
               const index = _.index(prev.films, f => f.id === filmUpdated.id);
@@ -35,6 +35,19 @@ class Films extends Component {
               return {
                 ...prev,
                 films: {...prev.films, [index]: filmUpdated}
+              }
+            }
+          });
+
+          this.props.data.subscribeToMore({
+            document: subscription.filmDeletedSubscription,
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data || !subscriptionData.data.filmDeleted)
+                return prev;
+              const filmDeleted = subscriptionData.data.filmDeleted;
+              return {
+                ...prev,
+                films: _.reject(prev.films, {id: filmDeleted.id})
               }
             }
           });

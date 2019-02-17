@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Mutation, withApollo } from "react-apollo";
 import _ from "lodash";
 import { Link } from 'react-router-dom'
-import {editMutation, createMutation} from "./mutation";
+import {editMutation, createMutation, deleteMutation} from "./mutation";
 import filmQuery from "./query";
 import filmsQuery from "../films/query";
 import ROUTES from "../appRouter/routes";
@@ -80,27 +80,46 @@ class EditForm extends Component {
                     });
                 }
                 
-                history.push(ROUTES.HOME)
+                history.push(ROUTES.HOME);
             }
             : () => history.push(ROUTES.HOME);
         return (
             <Mutation
-                mutation={mutation}
-                variables={variables}
-                update={update}
+                mutation={deleteMutation}
+                variables={{id: this.state.film.id}}
+                update={(store, { data: { deleteFilm } }) => {
+                    if (store.data.data.ROOT_QUERY) {
+                        const data = store.readQuery({ query: filmsQuery });
+                        data.films = _.reject(data.films, {id: deleteFilm.id});
+                        store.writeQuery({ 
+                            query: filmsQuery,
+                            data
+                        });
+                        history.push(ROUTES.HOME);
+                    }
+                }}
             >
-                {isAddingForm
-                    ? (createFilm, {loading, error}) => handler(createFilm, {loading, error})
-                    : (editFilm, {loading, error}) => handler(editFilm, {loading, error})
-                }
+                {(deleteFilm, {loading: deleteLoading}) =>
+                    <Mutation
+                    mutation={mutation}
+                    variables={variables}
+                    update={update}
+                    >
+                        {isAddingForm
+                            ? (createFilm, {loading, error}) => handler(createFilm, {loading, error})
+                            : (editFilm, {loading, error}) => handler(editFilm, {loading, error}, deleteFilm, {deleteLoading})
+                        }
+                    </Mutation>
+                }              
             </Mutation>
+
         );
     }
 
     render() {
         const { isAddingForm } = this.props;
         const { film, isUploadingFile } = this.state;
-        return this.withMutation((mutation, {loading, error}) => {
+        return this.withMutation((mutation, {loading, error}, deleteFilm, {deleteLoading}) => {
             const errors = _.get(error, "graphQLErrors", []);
             if (loading) {
                 if (isAddingForm) {
@@ -109,6 +128,9 @@ class EditForm extends Component {
                 else {
                     return <span>Updating Film...</span>
                 }
+            }
+            if (deleteLoading) {
+                return <span>Deleting Film...</span>
             }
             return (
                 <div style={containerStyle}>                
@@ -149,6 +171,9 @@ class EditForm extends Component {
                         />
                         <img src={film.photo} style={photoStyle} height={300} width={300}/>
                         <button type='submit' disabled={isUploadingFile} style={submitStyle}>Ok</button>
+                        {!isAddingForm ? (
+                            <button onClick={deleteFilm}>Delete</button>
+                        ): null}
                     </form>
                 </div>
             )

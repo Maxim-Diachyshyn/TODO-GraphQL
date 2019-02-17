@@ -4,6 +4,7 @@ using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
 using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
 using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
 using FilmCatalogue.Domain.UseCases.Film.Models;
+using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;
@@ -87,14 +88,15 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     return await mediator.Send(request);
                 });
 
-            Field<BooleanGraphType>()
+            Field<FilmType, FilmModel>()
                 .Name("deleteFilm")
-                .Argument<NonNullGraphType<StringGraphType>, Guid>("Id", "Film id.")
+                .Argument<NonNullGraphType<IdGraphType>, Guid>("Id", "Film id.")
                 .ResolveAsync(async context =>
                 {
                     var id = context.GetArgument<Guid>("id");
+                    var film = await mediator.Send(new GetFilmByIdRequest { Id = id });
                     await mediator.Send(new DeleteFilmCommand { FilmId = new Id(id) });
-                    return true;
+                    return film;
                 });
         }
     }

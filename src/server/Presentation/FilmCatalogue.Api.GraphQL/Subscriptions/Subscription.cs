@@ -26,7 +26,7 @@ namespace FilmCatalogue.Api.GraphQL.Subscriptions
             });
             AddField(new EventStreamFieldType
             {
-                Name = "filmRemoved",
+                Name = "filmDeleted",
                 Type = typeof(FilmType),
                 Resolver = new FuncFieldResolver<FilmModel>(ctx => ctx.Source as FilmModel),
                 Subscriber = new EventStreamResolver<FilmModel>(ctx => filmRemovedHandler.Observable())

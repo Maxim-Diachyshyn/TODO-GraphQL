@@ -21,4 +21,14 @@ subscription {
   }
 }`;
 
-export default {filmAddedSubscription, filmUpdatedSubscription}
+const filmDeletedSubscription = gql`
+subscription {
+  filmDeleted {
+    id
+    name
+    showedDate
+    photo
+  }
+}`;
+
+export default {filmAddedSubscription, filmUpdatedSubscription, filmDeletedSubscription}
