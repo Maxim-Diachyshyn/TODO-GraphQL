@@ -106,7 +106,7 @@ class EditForm extends Component {
                     update={update}
                     >
                         {isAddingForm
-                            ? (createFilm, {loading, error}) => handler(createFilm, {loading, error})
+                            ? (createFilm, {loading, error}) => handler(createFilm, {loading, error}, null, {})
                             : (editFilm, {loading, error}) => handler(editFilm, {loading, error}, deleteFilm, {deleteLoading})
                         }
                     </Mutation>
