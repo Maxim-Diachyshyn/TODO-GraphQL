@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { graphql } from "react-apollo";
 import { Link } from 'react-router-dom'
 import _ from "lodash";
+import moment from "moment";
+import StarRatings from 'react-star-ratings';
 import query from "./query";
 import ROUTES from "../appRouter/routes";
 import subscription from './subscription';
@@ -63,11 +65,11 @@ class Films extends Component {
                 <div style={filmsContainerStyle}>     
                     {_.map(data.films, film => (
                         <div key={film.id} style={filmContainerStyle}>
-                            <span style={filmNameStyle}>{film.name}</span>
+                            <span style={filmNameStyle}>{film.name} ({moment(film.showedDate).format("YYYY")})</span>
+                            <StarRatings rating={film.rate || 0} starRatedColor="#FFE438" starEmptyColor="#FFF3AA"/>
                             <Link to={{pathname: _.replace(ROUTES.EDIT_FILM, ":id", film.id)}}>
                                 <img src={film.photo} height={300} width={300}/>
                             </Link>
-                            <span>{new Date(film.showedDate).toLocaleDateString()}</span>
                         </div>
                     ))}
                 </div>

@@ -10,12 +10,12 @@ import './App.css';
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://192.168.0.106:10000/graphql'
+  uri: 'http://localhost:5000/graphql'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://192.168.0.106:10001/graphql`,
+  uri: `ws://localhost:5000/graphql`,
   options: {
     reconnect: true
   }
