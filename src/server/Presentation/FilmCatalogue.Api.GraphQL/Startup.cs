@@ -2,6 +2,8 @@
 using FilmCatalogue.Api.GraphQL.Schemas;
 using FilmCatalogue.Persistence.EntityFramework;
 using GraphiQl;
+using GraphQL;
+using GraphQL.DataLoader;
 using GraphQL.Server;
 using GraphQL.Server.Ui.GraphiQL;
 using GraphQL.Server.Ui.Playground;
@@ -28,15 +30,19 @@ namespace FilmCatalogue.Api.GraphQL
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+
             services.AddGraphQL(options =>
             {
                 options.EnableMetrics = true;
                 options.ExposeExceptions = Environment.IsDevelopment();
+                // TODO: use this for security
+                // options.ComplexityConfiguration
+                options.SetFieldMiddleware = true;
             })
             // .AddUserContextBuilder(httpContext => new { httpContext.User })
             .AddWebSockets() // Add required services for web socket support
             .AddDataLoader(); // Add required services for DataLoader support
-
 
             services.AddHttpContextAccessor();
             services.AddCors();

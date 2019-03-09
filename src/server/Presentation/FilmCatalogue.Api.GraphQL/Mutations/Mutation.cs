@@ -1,10 +1,8 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
-using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
-using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
+using FilmCatalogue.Domain.UseCases.Film.Requests;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;
@@ -94,7 +92,8 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                 .ResolveAsync(async context =>
                 {
                     var id = context.GetArgument<Guid>("id");
-                    var film = await mediator.Send(new GetFilmByIdRequest { Id = id });
+                    var films = await mediator.Send(new GetFilmListRequest(new Id(id)));
+                    var film = films.Single();
                     await mediator.Send(new DeleteFilmCommand { FilmId = new Id(id) });
                     return film;
                 });

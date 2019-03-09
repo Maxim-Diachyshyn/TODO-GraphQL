@@ -11,20 +11,11 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities
         public DateTime ShowedDate { get; set; }
         public DateTime AddedAt { get; set; }
         public string PhotoType { get; set; }
-        public byte[] Photo { get; set;}
+        public byte[] Photo { get; set; }
 
         public FilmModel ToModel()
         {
-            return new FilmModel
-            {
-                Id = Id,
-                Name = Name,
-                AddedAt = AddedAt,
-                ShowedDate = ShowedDate,
-                Photo = !string.IsNullOrEmpty(PhotoType)
-                    ? new Blob(PhotoType, Photo)
-                    : null
-            };
+            return new FilmModel(Id, Name, AddedAt, ShowedDate, !string.IsNullOrEmpty(PhotoType) ? new Blob(PhotoType, Photo) : null);
         }
     }
 }

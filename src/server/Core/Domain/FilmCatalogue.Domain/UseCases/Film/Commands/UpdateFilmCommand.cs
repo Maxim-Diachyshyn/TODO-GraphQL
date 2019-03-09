@@ -3,7 +3,7 @@ using FilmCatalogue.Domain.UseCases.Film.Models;
 using MediatR;
 using System;
 
-namespace FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm
+namespace FilmCatalogue.Domain.UseCases.Film.Commands
 {
     public class UpdateFilmCommand : IRequest<FilmModel>
     {       

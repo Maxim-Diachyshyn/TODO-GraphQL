@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Linq;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests;
 using Microsoft.EntityFrameworkCore;

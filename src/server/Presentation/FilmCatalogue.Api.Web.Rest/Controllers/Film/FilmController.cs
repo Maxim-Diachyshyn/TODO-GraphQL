@@ -1,16 +1,14 @@
 ﻿using FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Create;
 using FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Update;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
-using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
-using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
-using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmList;
+using FilmCatalogue.Domain.UseCases.Film.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
@@ -37,12 +35,10 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FilmModel>> GetByIdAsync(Guid id)
         {
-            var film = await _mediator.Send(
-                new GetFilmByIdRequest
-                {
-                    Id = id
-                }
+            var films = await _mediator.Send(
+                new GetFilmListRequest(new Id(id))
             );
+            var film = films.SingleOrDefault();
             if (film == null)
             {
                 return NotFound();

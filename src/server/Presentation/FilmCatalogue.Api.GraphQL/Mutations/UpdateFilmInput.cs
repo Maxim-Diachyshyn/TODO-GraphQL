@@ -1,5 +1,5 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using GraphQL.Types;
 using System;

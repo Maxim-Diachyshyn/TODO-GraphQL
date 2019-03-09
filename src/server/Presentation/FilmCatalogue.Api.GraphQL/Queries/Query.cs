@@ -1,12 +1,13 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
+using FilmCatalogue.Domain.DataTypes;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
-using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmList;
+using FilmCatalogue.Domain.UseCases.Film.Requests;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FilmCatalogue.Api.GraphQL.Queries
 {
@@ -28,7 +29,8 @@ namespace FilmCatalogue.Api.GraphQL.Queries
                 .ResolveAsync(async context =>
                 {
                     var id = context.GetArgument<Guid>("id");
-                    var film = await mediator.Send(new GetFilmByIdRequest { Id = id });
+                    var films = await mediator.Send(new GetFilmListRequest(new Id(id)));
+                    var film = films.SingleOrDefault();
                     if (film == null)
                     {
                         context.Errors.Add(new ExecutionError("Not found"));

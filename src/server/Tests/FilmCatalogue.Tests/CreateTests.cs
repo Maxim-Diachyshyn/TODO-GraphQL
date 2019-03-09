@@ -4,7 +4,7 @@ using FilmCatalogue.Persistence.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using FluentAssertions;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
 using System.Threading.Tasks;
 using System.Threading;
 

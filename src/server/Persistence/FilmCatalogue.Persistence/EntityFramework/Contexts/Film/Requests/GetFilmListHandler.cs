@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FilmCatalogue.Domain.DataTypes;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmList;
+using FilmCatalogue.Domain.UseCases.Film.Requests;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

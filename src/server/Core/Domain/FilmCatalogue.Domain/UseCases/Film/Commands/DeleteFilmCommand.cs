@@ -1,7 +1,7 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
 using MediatR;
 
-namespace FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm
+namespace FilmCatalogue.Domain.UseCases.Film.Commands
 {
     public class DeleteFilmCommand : IRequest
     {

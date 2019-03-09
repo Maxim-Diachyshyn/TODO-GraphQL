@@ -3,8 +3,9 @@ using System.Linq;
 using System.Reactive.Subjects;
 using Autofac;
 using Autofac.Core;
-using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
 using FilmCatalogue.Domain.UseCases.Film.Models;
+using FilmCatalogue.Persistence.EntityFramework.Base;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders;
 using FilmCatalogue.Persistence.Notification.Contexts.Film;
 using FluentValidation;
 using MediatR;
@@ -22,13 +23,16 @@ namespace FilmCatalogue.Persistence
             var interfacesToRegister = new[] {
                 typeof(IRequestHandler<,>),
                 typeof(IValidator<>),
-                typeof(IRequestPostProcessor<,>)
+                typeof(IRequestPostProcessor<,>),
+                typeof(IQueryBuilder<,>)
             };
+
+            builder.RegisterType<ReviewsQueryBuilder>().AsImplementedInterfaces();
 
             foreach (var interfaceToRegister in interfacesToRegister)
             {
                 builder.RegisterAssemblyTypes(ThisAssembly)
-                .Where(type => type.GetInterfaces()
+                    .Where(type => type.GetInterfaces()
                     .Where(i => i.IsGenericType)
                     .Select(i => i.GetGenericTypeDefinition())
                     .Contains(interfaceToRegister))

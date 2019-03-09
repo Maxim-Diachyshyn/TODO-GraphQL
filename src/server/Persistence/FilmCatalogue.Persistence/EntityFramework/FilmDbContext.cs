@@ -1,4 +1,5 @@
 ﻿using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmCatalogue.Persistence.EntityFramework
@@ -11,6 +12,7 @@ namespace FilmCatalogue.Persistence.EntityFramework
         }
 
         public DbSet<FilmEntity> Films { get; set; }
+        public DbSet<ReviewEntity> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

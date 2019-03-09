@@ -4,6 +4,7 @@ using FilmCatalogue.Api.GraphQL.Mutations;
 using FilmCatalogue.Api.GraphQL.Queries;
 using FilmCatalogue.Api.GraphQL.Schemas;
 using FilmCatalogue.Api.GraphQL.Subscriptions;
+using GraphQL.Types;
 
 namespace FilmCatalogue.Api.GraphQL
 {
@@ -12,9 +13,14 @@ namespace FilmCatalogue.Api.GraphQL
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
+            
+            builder.RegisterType<GuidGraphType>();
 
             builder.RegisterType<FilmType>();
             builder.RegisterType<AddFilmInput>();
+            builder.RegisterType<UpdateFilmInput>();
+
+            builder.RegisterType<ReviewType>();
 
             builder.RegisterType<Query>();
             builder.RegisterType<Mutation>();

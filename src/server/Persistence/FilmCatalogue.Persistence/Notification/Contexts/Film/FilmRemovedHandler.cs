@@ -1,11 +1,12 @@
 using System;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests.GetFilmById;
+using FilmCatalogue.Domain.UseCases.Film.Requests;
 using MediatR;
 using MediatR.Pipeline;
 
@@ -29,14 +30,11 @@ namespace FilmCatalogue.Persistence.Notification.Contexts.Film
 
         public async Task<Unit> Handle(DeleteFilmCommand request, CancellationToken cancellationToken, RequestHandlerDelegate<Unit> next)
         {
-            var film = await _mediator.Send(
-                new GetFilmByIdRequest
-                {
-                    Id = request.FilmId
-                }
+            var films = await _mediator.Send(
+                new GetFilmListRequest(request.FilmId)
             );
             var result = await next();
-            _filmStream.OnNext(film);            
+            _filmStream.OnNext(films.Single());            
             return result;
         }
     }

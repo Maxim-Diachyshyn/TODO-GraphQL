@@ -1,4 +1,4 @@
-using FilmCatalogue.Domain.UseCases.Film.Commands.AddFilm;
+using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FluentValidation;
 
 namespace FilmCatalogue.Persistence.Validation.Contexts.Film

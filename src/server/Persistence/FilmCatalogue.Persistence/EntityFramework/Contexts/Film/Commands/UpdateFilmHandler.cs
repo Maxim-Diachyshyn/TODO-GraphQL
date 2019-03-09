@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.UseCases.Film.Commands.UpdateFilm;
+﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
 using MediatR;

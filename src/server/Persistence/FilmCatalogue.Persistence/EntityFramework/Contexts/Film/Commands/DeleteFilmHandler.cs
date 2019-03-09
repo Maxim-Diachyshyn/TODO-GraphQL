@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.UseCases.Film.Commands.DeleteFilm;
+﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
 using MediatR;
 using System.Threading;
