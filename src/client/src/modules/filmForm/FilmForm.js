@@ -7,6 +7,9 @@ import filmQuery from "./query";
 import filmsQuery from "../films/query";
 import ROUTES from "../appRouter/routes";
 import moment from 'moment';
+import Reviews from "../reviews";
+
+const DATE_FORMAT = "YYYY-MM-DD";
 
 class EditForm extends Component {
     constructor(props){
@@ -16,22 +19,28 @@ class EditForm extends Component {
             film: {
                 name: "",
                 id: "",
-                showedDate: moment().format("YYYY-MM-DD"),
+                showedDate: moment(),
                 photo: ""
             },
             isUploadingFile: false
         };
     }
-
-    async componentDidMount() {
+    
+    async componentWillMount() {
         if (!this.props.isAddingForm) {
             let film = _.get(this.props.location, "state.film", null);
             if (!film) {
                 const response = await this.props.client.query({query: filmQuery, variables: {id: this.props.match.params.id}});
                 film = {
                     ...response.data.film,
-                    showedDate: moment(response.data.film.showedDate).format("YYYY-MM-DD")
+                    showedDate: moment(response.data.film.showedDate)
                 };
+            }
+            else {
+                film = {
+                    ...film,
+                    showedDate: moment(film.showedDate)
+                }
             }
             this.setState({film});
         }
@@ -43,7 +52,7 @@ class EditForm extends Component {
     }
 
     _onShowedDateChange = (e) => {
-        const showedDate = e.target.value;
+        const showedDate = moment(e.target.value);
         this.setState(prevState => ({film:{...prevState.film, showedDate}}));
     }
 
@@ -102,7 +111,10 @@ class EditForm extends Component {
                 {(deleteFilm, {loading: deleteLoading}) =>
                     <Mutation
                     mutation={mutation}
-                    variables={variables}
+                    variables={{
+                        ...variables,
+                        showedDate: variables.showedDate.format()
+                    }}
                     update={update}
                     >
                         {isAddingForm
@@ -154,7 +166,7 @@ class EditForm extends Component {
                         <div style={inputContainerStyle}>
                             <input
                                 type='date'
-                                value={film.showedDate}
+                                value={film.showedDate.format(DATE_FORMAT)}
                                 onChange={this._onShowedDateChange}
                             />
                             {_.some(errors, e => e.extensions.code === "EmptyDate") 
@@ -175,16 +187,28 @@ class EditForm extends Component {
                             <button onClick={deleteFilm}>Delete</button>
                         ): null}
                     </form>
+                    <div style={reviewsStyle}>
+                        <Reviews id={film.id}/>
+                    </div>
                 </div>
             )
         });
     }
 }
 
+export default withApollo(EditForm);
+
 const containerStyle = {
     display: "flex",
     flexDirection: "column",
     padding: 20
+}
+
+const reviewsStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "center",
+    maxWidth: 1024
 }
 
 const errorStyle = {
@@ -220,5 +244,3 @@ const photoStyle = {
 const submitStyle = {
     gridColumn: "1 / span 2",
 }
-  
-export default withApollo(EditForm);

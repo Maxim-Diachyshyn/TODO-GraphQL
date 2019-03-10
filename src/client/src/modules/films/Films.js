@@ -60,14 +60,17 @@ class Films extends Component {
         if (data.loading) {
             return <span>Loading...</span>
         }
+        if (data.error) {
+            return <span>{data.error.message}</span>;
+        }
         return (
             <div style={containerStyle}>
                 <div style={filmsContainerStyle}>     
                     {_.map(data.films, film => (
                         <div key={film.id} style={filmContainerStyle}>
                             <span style={filmNameStyle}>{film.name} ({moment(film.showedDate).format("YYYY")})</span>
-                            <StarRatings rating={film.rate || 0} starRatedColor="#FFE438" starEmptyColor="#FFF3AA"/>
-                            <Link to={{pathname: _.replace(ROUTES.EDIT_FILM, ":id", film.id)}}>
+                            <StarRatings rating={film.rate || 0} starRatedColor="#FFE438" starEmptyColor="#FFFFAA"/>
+                            <Link to={{pathname: _.replace(ROUTES.EDIT_FILM, ":id", film.id), state: {film}}}>
                                 <img src={film.photo} height={300} width={300}/>
                             </Link>
                         </div>
