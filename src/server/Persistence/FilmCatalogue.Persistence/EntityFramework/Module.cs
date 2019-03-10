@@ -16,7 +16,9 @@ namespace FilmCatalogue.Persistence.EntityFramework
             var services = new ServiceCollection();
 
             services.AddDbContext<FilmDbContext>(options =>
-                options.UseSqlServer("Data Source=\".\";Initial Catalog=Films;Integrated Security=False;User ID=sa;Password=Password1;MultipleActiveResultSets=true"));
+            {
+                options.UseSqlServer("Data Source=\".\";Initial Catalog=Films;Integrated Security=False;User ID=sa;Password=Password1;MultipleActiveResultSets=true");
+            }, ServiceLifetime.Transient);
             builder.Populate(services);
         }
     }

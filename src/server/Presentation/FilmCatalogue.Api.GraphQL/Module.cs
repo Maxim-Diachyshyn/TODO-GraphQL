@@ -14,7 +14,7 @@ namespace FilmCatalogue.Api.GraphQL
         {
             base.Load(builder);
             
-            builder.RegisterType<GuidGraphType>();
+            builder.RegisterType<IdGraphType>();
 
             builder.RegisterType<FilmType>();
             builder.RegisterType<AddFilmInput>();

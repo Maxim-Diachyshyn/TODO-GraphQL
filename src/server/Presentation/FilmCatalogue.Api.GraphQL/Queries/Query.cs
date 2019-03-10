@@ -33,7 +33,7 @@ namespace FilmCatalogue.Api.GraphQL.Queries
                     var film = films.SingleOrDefault();
                     if (film == null)
                     {
-                        context.Errors.Add(new ExecutionError("Not found"));
+                        context.Errors.Add(new ExecutionError("Not found") {Code="NotFound"});
                     }
                     return film;
                 });

@@ -15,7 +15,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities
 
         public FilmModel ToModel()
         {
-            return new FilmModel(Id, Name, AddedAt, ShowedDate, !string.IsNullOrEmpty(PhotoType) ? new Blob(PhotoType, Photo) : null);
+            return new FilmModel(Id, Name, ShowedDate, AddedAt, !string.IsNullOrEmpty(PhotoType) ? new Blob(PhotoType, Photo) : null);
         }
     }
 }

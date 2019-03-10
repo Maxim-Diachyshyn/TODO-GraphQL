@@ -8,12 +8,12 @@ namespace FilmCatalogue.Api.GraphQL.GraphTypes
     {
         public ReviewType()
         {
-            Field<GuidGraphType>()
+            Field<IdGraphType>()
                 .Name(nameof(Review.Id))
                 .Resolve(x => (Guid)x.Source.Id);
             Field(x => x.Comment);
             Field(x => x.AddedAt, false, typeof(DateTimeGraphType));
-            Field(x => x.Rate, false, typeof(IntGraphType))
+            Field<IntGraphType>()
                 .Name(nameof(Review.Rate))
                 .Resolve(x => (int)x.Source.Rate);
         }

@@ -11,7 +11,7 @@ namespace FilmCatalogue.Api.GraphQL.GraphTypes
     {
         public FilmType(IMediator mediator)
         {
-            Field<GuidGraphType>()
+            Field<IdGraphType>()
                 .Name(nameof(FilmModel.Id))
                 .Resolve(x => (Guid)x.Source.Id);
             Field(x => x.Name);
