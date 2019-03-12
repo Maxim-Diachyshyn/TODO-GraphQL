@@ -38,7 +38,7 @@ namespace FilmCatalogue.Api.GraphQL
                 options.ExposeExceptions = Environment.IsDevelopment();
                 // TODO: use this for security
                 // options.ComplexityConfiguration
-                options.SetFieldMiddleware = true;
+                options.SetFieldMiddleware = false;
             })
             // .AddUserContextBuilder(httpContext => new { httpContext.User })
             .AddWebSockets() // Add required services for web socket support

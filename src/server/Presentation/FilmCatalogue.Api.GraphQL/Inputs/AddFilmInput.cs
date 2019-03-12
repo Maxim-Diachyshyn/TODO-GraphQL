@@ -4,7 +4,7 @@ using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using GraphQL.Types;
 
-namespace FilmCatalogue.Api.GraphQL.Mutations
+namespace FilmCatalogue.Api.GraphQL.Inputs
 {
     public class AddFilmCommandInput
     {

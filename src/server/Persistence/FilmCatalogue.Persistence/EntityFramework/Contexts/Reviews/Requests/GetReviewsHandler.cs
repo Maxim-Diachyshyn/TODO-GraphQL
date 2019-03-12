@@ -27,12 +27,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Requests
                 .ToListAsync();
 
             return entities
-                .Select(x => new Review(
-                    id: x.Id,
-                    comment: x.Comment,
-                    addedAt: x.AddedAt,
-                    rate: x.Rating
-                ));
+                .Select(x => x.ToModel());
         }
     }
 }

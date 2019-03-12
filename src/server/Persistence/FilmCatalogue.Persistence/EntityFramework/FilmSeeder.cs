@@ -23,7 +23,6 @@ namespace FilmCatalogue.Persistence.EntityFramework
                 AddedAt = DateTime.Now,
                 FilmId = film1.Entity.Id
             });
-
             context.Add(new ReviewEntity
             {
                 Comment = "Second review",
@@ -31,7 +30,6 @@ namespace FilmCatalogue.Persistence.EntityFramework
                 AddedAt = DateTime.Now,
                 FilmId = film1.Entity.Id
             });
-
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
@@ -39,6 +37,93 @@ namespace FilmCatalogue.Persistence.EntityFramework
                 AddedAt = DateTime.Now,
                 FilmId = film1.Entity.Id
             });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+                        context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+            context.Add(new ReviewEntity
+            {
+                Comment = "One more review",
+                Rating = 3,
+                AddedAt = DateTime.Now,
+                FilmId = film1.Entity.Id
+            });
+
+
+
 
             context.Add(new FilmEntity
             {

@@ -1,4 +1,5 @@
 using System;
+using FilmCatalogue.Domain.UseCases.Reviews.Models;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities
 {
@@ -10,5 +11,15 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities
         public DateTime AddedAt { get; set; }
 
         public Guid FilmId { get; set; }
+
+        public Review ToModel()
+        {
+            return new Review(
+                id: Id,
+                comment: Comment,
+                addedAt: AddedAt,
+                rate: Rating
+            );
+        }
     }
 }

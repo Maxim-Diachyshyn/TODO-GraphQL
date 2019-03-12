@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using FilmCatalogue.Api.GraphQL.GraphTypes;
+using FilmCatalogue.Api.GraphQL.Inputs;
 using FilmCatalogue.Api.GraphQL.Mutations;
 using FilmCatalogue.Api.GraphQL.Queries;
 using FilmCatalogue.Api.GraphQL.Schemas;
@@ -21,6 +22,7 @@ namespace FilmCatalogue.Api.GraphQL
             builder.RegisterType<UpdateFilmInput>();
 
             builder.RegisterType<ReviewType>();
+            builder.RegisterType<AddReviewInput>();
 
             builder.RegisterType<Query>();
             builder.RegisterType<Mutation>();

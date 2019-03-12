@@ -1,8 +1,11 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
+using FilmCatalogue.Api.GraphQL.Inputs;
 using FilmCatalogue.Domain.DataTypes;
 using FilmCatalogue.Domain.UseCases.Film.Commands;
 using FilmCatalogue.Domain.UseCases.Film.Models;
 using FilmCatalogue.Domain.UseCases.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Reviews.Commands;
+using FilmCatalogue.Domain.UseCases.Reviews.Models;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;
@@ -96,6 +99,20 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     var film = films.Single();
                     await mediator.Send(new DeleteFilmCommand { FilmId = new Id(id) });
                     return film;
+                });
+
+            Field<ReviewType, Review>()
+                .Name("createReview")
+                .Argument<NonNullGraphType<AddReviewInput>>("review", "Review")
+                .ResolveAsync(async context =>
+                {
+                    var input = context.GetArgument<AddReviewCommandInput>("review");
+                    var command = new AddReviewCommand(
+                        filmId: Guid.Parse(input.FilmId),
+                        comment: input.Comment,
+                        rate: input.Rate
+                    );
+                    return await mediator.Send(command);
                 });
         }
     }
