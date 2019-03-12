@@ -4,9 +4,10 @@ import _ from "lodash";
 import StarRatings from 'react-star-ratings';
 import { Mutation, Query, withApollo, graphql } from "react-apollo";
 import query from "./query";
+import filmsQuery from "../films/query"
+import mutation from "./mutation"
 
 class Reviews extends Component {
-
     renderReviews = () => {
         const { data: { loading, error, film } } = this.props;
         const empty = !loading && !error && !_.some(film.reviews);
@@ -29,22 +30,65 @@ class Reviews extends Component {
         ))
     }
 
+    onSubmit = (e, createReview) => {
+        e.preventDefault();
+        const filmId = this.props.id;
+        const comment = this.input.value;
+        createReview({ variables: { comment, filmId, rate: 1 } });
+    }
+
     render() {
-        const { data: { loading, error, film } } = this.props;
-        const empty = !loading && !error && !_.some(film.reviews);
+        const { data: { error }, id } = this.props;
         if (error) {
             return <span>Error...</span>
         }
         return (
             <div style={containerStyle}>
                 <span>Reviews</span>
-                <form style={{display: "flex", flexDirection: "row"}}>
-                    <input
-                        style={{flex: 1}}
-                        type='text'
-                    />
-                    <input type='submit' value="Add"/>
-                </form>
+                <Mutation 
+                    mutation={mutation}
+                    update={(cache, { data: { createReview } }) => {
+                        const { film } = cache.readQuery({ query: query, variables: { id }});
+                        const newReviews = film.reviews.concat([createReview]);
+                        cache.writeQuery({
+                            query: query,
+                            variables: { id },
+                            data: { film: {
+                                ...film,
+                                reviews: newReviews
+                            }},
+                        });
+
+                        const newRates = _.map(newReviews, "rate");
+                        const newRate = _.reduce(newRates, (a, b) => a + b, 0) / (newRates.length || 1);
+                        const { films } = cache.readQuery({ query: filmsQuery});
+                        debugger;
+                        cache.writeQuery({
+                            query: filmsQuery,
+                            data: {
+                                films: _.map(films, x => x.id === id ? {...x, rate: newRate} : x)
+                            }
+                        });
+                    }}>
+                    {(createReview, { loading }) => {
+                        if (loading) {
+                            return <span>Adding review...</span>
+                        }
+                        return (
+                            <form style={{display: "flex", flexDirection: "row"}} onSubmit={e => this.onSubmit(e, createReview)}>
+                                <input
+                                    ref={node => {
+                                        this.input = node;
+                                    }}
+                                    style={{flex: 1}}
+                                    type='text'
+                                />
+                                <input type='submit' value="Add"/>
+                            </form>
+                        )
+                    }}
+                </Mutation>
+                
                 {this.renderReviews()}
             </div>
         );
