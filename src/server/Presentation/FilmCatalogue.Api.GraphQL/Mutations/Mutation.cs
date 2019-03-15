@@ -9,6 +9,7 @@ using FilmCatalogue.Domain.UseCases.Reviews.Models;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 
@@ -16,13 +17,14 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
 {
     public class Mutation : ObjectGraphType
     {
-        public Mutation(IMediator mediator)
+        public Mutation(IHttpContextAccessor accessor)
         {
             Field<FilmType, Film>()
                 .Name("createFilm")
                 .Argument<NonNullGraphType<AddFilmInput>>("film", "Film input.")
                 .ResolveAsync(async context => 
                 {
+                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var input = context.GetArgument<AddFilmCommandInput>("film");
                     if (string.IsNullOrEmpty(input.Name))
                     {
@@ -56,6 +58,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                 .Argument<NonNullGraphType<UpdateFilmInput>, UpdateFilmCommand>("film", "Film input.")
                 .ResolveAsync(async context =>
                 {
+                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var input = context.GetArgument<UpdateFilmCommandInput>("film");
                     if (string.IsNullOrEmpty(input.Name))
                     {
@@ -94,6 +97,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                 .Argument<NonNullGraphType<IdGraphType>, Guid>("Id", "Film id.")
                 .ResolveAsync(async context =>
                 {
+                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var id = context.GetArgument<Guid>("id");
                     var films = await mediator.Send(new GetFilmListRequest(new Id(id)));
                     var film = films.Single();
@@ -106,6 +110,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                 .Argument<NonNullGraphType<AddReviewInput>>("review", "Review")
                 .ResolveAsync(async context =>
                 {
+                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var input = context.GetArgument<AddReviewCommandInput>("review");
                     var command = new AddReviewCommand(
                         filmId: Guid.Parse(input.FilmId),

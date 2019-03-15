@@ -15,20 +15,20 @@ namespace FilmCatalogue.Api.GraphQL
         {
             base.Load(builder);
             
-            builder.RegisterType<IdGraphType>();
+            builder.RegisterType<IdGraphType>().SingleInstance();
 
-            builder.RegisterType<FilmType>();
-            builder.RegisterType<AddFilmInput>();
-            builder.RegisterType<UpdateFilmInput>();
+            builder.RegisterType<FilmType>().SingleInstance();
+            builder.RegisterType<AddFilmInput>().SingleInstance();
+            builder.RegisterType<UpdateFilmInput>().SingleInstance();
 
-            builder.RegisterType<ReviewType>();
-            builder.RegisterType<AddReviewInput>();
+            builder.RegisterType<ReviewType>().SingleInstance();
+            builder.RegisterType<AddReviewInput>().SingleInstance();
 
-            builder.RegisterType<Query>();
+            builder.RegisterType<Query>().SingleInstance();
             builder.RegisterType<Mutation>();
-            builder.RegisterType<Subscription>();
+            builder.RegisterType<Subscription>().SingleInstance();
 
-            builder.RegisterType<FilmSchema>();
+            builder.RegisterType<FilmSchema>().SingleInstance();
         }
     }
 }

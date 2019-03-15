@@ -54,7 +54,8 @@ namespace FilmCatalogue.Persistence
                         (pi, ctx) => pi.ParameterType == typeof(ISubject<Film>) && pi.Name == "filmStream",
                         (pi, ctx) => filmAddedStream
                     )
-                );
+                )
+                .SingleInstance();
 
             var filmUpdatedStream = new ReplaySubject<Film>(0);
             builder.RegisterType<FilmUpdatedHandler>()
@@ -65,7 +66,8 @@ namespace FilmCatalogue.Persistence
                         (pi, ctx) => pi.ParameterType == typeof(ISubject<Film>) && pi.Name == "filmStream",
                         (pi, ctx) => filmUpdatedStream
                     )
-                );
+                )
+                .SingleInstance();
 
             var filmRemovedStream = new ReplaySubject<Film>(0);
             builder.RegisterType<FilmRemovedHandler>()
@@ -76,7 +78,8 @@ namespace FilmCatalogue.Persistence
                         (pi, ctx) => pi.ParameterType == typeof(ISubject<Film>) && pi.Name == "filmStream",
                         (pi, ctx) => filmRemovedStream
                     )
-                );
+                )
+                .SingleInstance();
 
             var reviewAddedStream = new ReplaySubject<Review>(0);
             builder.RegisterType<ReviewAddedHandler>()
@@ -87,7 +90,8 @@ namespace FilmCatalogue.Persistence
                         (pi, ctx) => pi.ParameterType == typeof(ISubject<Review>) && pi.Name == "reviewStream",
                         (pi, ctx) => reviewAddedStream
                     )
-                );
+                )
+                .SingleInstance();
         }
     }
 }

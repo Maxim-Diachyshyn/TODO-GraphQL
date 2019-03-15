@@ -19,7 +19,7 @@ namespace FilmCatalogue.Persistence.EntityFramework
             {
                 // options.UseSqlServer("Data Source=\".\";Initial Catalog=Films;Integrated Security=False;User ID=sa;Password=Password1;MultipleActiveResultSets=true");
                 options.UseInMemoryDatabase("TestDatabase");
-            }, ServiceLifetime.Transient);
+            });
             builder.Populate(services);
         }
     }

@@ -3,13 +3,14 @@ using FilmCatalogue.Domain.UseCases.Reviews.Requests;
 using GraphQL.DataLoader;
 using GraphQL.Types;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 
 namespace FilmCatalogue.Api.GraphQL.GraphTypes
 {
     public class FilmType : ObjectGraphType<Film>
     {
-        public FilmType(IMediator mediator)
+        public FilmType(IHttpContextAccessor accessor)
         {
             Field<IdGraphType>()
                 .Name(nameof(Film.Id))
@@ -22,10 +23,19 @@ namespace FilmCatalogue.Api.GraphQL.GraphTypes
                 .Resolve(x => x.Source.Photo?.Base64);
             Field<ListGraphType<ReviewType>>()
                 .Name("Reviews")
-                .ResolveAsync(async ctx => await mediator.Send(new GetReviewsRequest(ctx.Source.Id)));
+                .ResolveAsync(async ctx => 
+                {
+                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
+                    return await mediator.Send(new GetReviewsRequest(ctx.Source.Id));
+                });
             Field<DecimalGraphType>()
                 .Name("Rate")
-                .ResolveAsync(async ctx => await mediator.Send(new GetRateRequest(ctx.Source.Id)));
+                //context.TryAsyncResolve() maybe this for reviews than average
+                .ResolveAsync(async ctx =>
+                {
+                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
+                    return await mediator.Send(new GetRateRequest(ctx.Source.Id));
+                });
         }
     }
 }
