@@ -2,6 +2,7 @@ using FilmCatalogue.Api.GraphQL.GraphTypes;
 using FilmCatalogue.Domain.UseCases.Films.Models;
 using FilmCatalogue.Domain.UseCases.Reviews.Models;
 using FilmCatalogue.Persistence.Notification.Contexts.Films;
+using FilmCatalogue.Persistence.Notification.Contexts.Reviews;
 using GraphQL.Resolvers;
 using GraphQL.Types;
 
@@ -9,7 +10,7 @@ namespace FilmCatalogue.Api.GraphQL.Subscriptions
 {
     public class Subscription : ObjectGraphType
     {
-        public Subscription(FilmAddedHandler filmAddedHandler, FilmUpdatedHandler filmUpdatedHandler, FilmRemovedHandler filmRemovedHandler)
+        public Subscription(FilmAddedHandler filmAddedHandler, FilmUpdatedHandler filmUpdatedHandler, FilmRemovedHandler filmRemovedHandler, ReviewAddedHandler reviewAddedHandler)
         {
             AddField(new EventStreamFieldType
             {
@@ -31,6 +32,14 @@ namespace FilmCatalogue.Api.GraphQL.Subscriptions
                 Type = typeof(FilmType),
                 Resolver = new FuncFieldResolver<Film>(ctx => ctx.Source as Film),
                 Subscriber = new EventStreamResolver<Film>(ctx => filmRemovedHandler.Observable())
+            });
+
+            AddField(new EventStreamFieldType
+            {
+                Name = "reviewAdded",
+                Type = typeof(ReviewType),
+                Resolver = new FuncFieldResolver<Review>(ctx => ctx.Source as Review),
+                Subscriber = new EventStreamResolver<Review>(ctx => reviewAddedHandler.Observable())
             });
         }
     }   

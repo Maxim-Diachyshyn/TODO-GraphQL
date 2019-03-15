@@ -4,9 +4,11 @@ using System.Reactive.Subjects;
 using Autofac;
 using Autofac.Core;
 using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.UseCases.Reviews.Models;
 using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders;
 using FilmCatalogue.Persistence.Notification.Contexts.Films;
+using FilmCatalogue.Persistence.Notification.Contexts.Reviews;
 using FluentValidation;
 using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
@@ -73,6 +75,17 @@ namespace FilmCatalogue.Persistence
                     new ResolvedParameter(
                         (pi, ctx) => pi.ParameterType == typeof(ISubject<Film>) && pi.Name == "filmStream",
                         (pi, ctx) => filmRemovedStream
+                    )
+                );
+
+            var reviewAddedStream = new ReplaySubject<Review>(0);
+            builder.RegisterType<ReviewAddedHandler>()
+            .AsSelf()
+                .AsImplementedInterfaces()
+                .WithParameter(
+                    new ResolvedParameter(
+                        (pi, ctx) => pi.ParameterType == typeof(ISubject<Review>) && pi.Name == "reviewStream",
+                        (pi, ctx) => reviewAddedStream
                     )
                 );
         }
