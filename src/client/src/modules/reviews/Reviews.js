@@ -7,7 +7,19 @@ import query from "./query";
 import filmsQuery from "../films/query"
 import mutation from "./mutation"
 
+const initialState = {
+    rate: 0,
+    comment: ""
+}
+
 class Reviews extends Component {
+    
+    constructor(props){
+        super(props);
+
+        this.state = initialState;
+    }
+
     renderReviews = () => {
         const { data: { loading, error, film } } = this.props;
         const empty = !loading && !error && !_.some(film.reviews);
@@ -30,15 +42,29 @@ class Reviews extends Component {
         ))
     }
 
+    onReviewAdded = () => {
+        this.setState({...initialState});
+    }
+
+    onChangeComment = e => {
+        const comment = e.target.value;
+        this.setState({ comment });
+    }
+
+    onChangeRating = rate => {
+        this.setState({ rate });
+    }
+
     onSubmit = (e, createReview) => {
         e.preventDefault();
         const filmId = this.props.id;
-        const comment = this.input.value;
-        createReview({ variables: { comment, filmId, rate: 1 } });
+        const { comment, rate } = this.state;
+        createReview({ variables: { filmId, comment, rate } });
     }
 
     render() {
         const { data: { error }, id } = this.props;
+        const { comment, rate }= this.state;
         if (error) {
             return <span>Error...</span>
         }
@@ -47,6 +73,7 @@ class Reviews extends Component {
                 <span>Reviews</span>
                 <Mutation 
                     mutation={mutation}
+                    onCompleted={this.onReviewAdded}
                     update={(cache, { data: { createReview } }) => {
                         const { film } = cache.readQuery({ query: query, variables: { id }});
                         const newReviews = film.reviews.concat([createReview]);
@@ -62,7 +89,6 @@ class Reviews extends Component {
                         const newRates = _.map(newReviews, "rate");
                         const newRate = _.reduce(newRates, (a, b) => a + b, 0) / (newRates.length || 1);
                         const { films } = cache.readQuery({ query: filmsQuery});
-                        debugger;
                         cache.writeQuery({
                             query: filmsQuery,
                             data: {
@@ -70,20 +96,25 @@ class Reviews extends Component {
                             }
                         });
                     }}>
-                    {(createReview, { loading }) => {
+                    {(createReview, { loading, error }) => {
                         if (loading) {
                             return <span>Adding review...</span>
                         }
+                        if (error) {
+                            return <span>{error.message}</span>
+                        }
                         return (
-                            <form style={{display: "flex", flexDirection: "row"}} onSubmit={e => this.onSubmit(e, createReview)}>
-                                <input
-                                    ref={node => {
-                                        this.input = node;
-                                    }}
-                                    style={{flex: 1}}
-                                    type='text'
-                                />
-                                <input type='submit' value="Add"/>
+                            <form style={formStyle} onSubmit={e => this.onSubmit(e, createReview)}>
+                                <StarRatings rating={rate} changeRating={this.onChangeRating} starRatedColor="#FFE438" starEmptyColor="#FFFFAA" starDimension="20px" starSpacing="4px"/>
+                                <div style={commentContainerStyle}>
+                                    <input
+                                        value={comment}
+                                        onChange={this.onChangeComment}
+                                        style={{flex: 1}}
+                                        type='text'
+                                    />
+                                    <input type='submit' value="Add"/>
+                                </div>
                             </form>
                         )
                     }}
@@ -116,4 +147,14 @@ const reviewHeaderStyle = {
 const reviewTextStyle = {
     textAlign: "justify",
     marginTop: 10
+}
+
+const formStyle = {
+    display: "flex", 
+    flexDirection: "column"
+}
+
+const commentContainerStyle = {
+    display: "flex", 
+    flexDirection: "row"
 }
