@@ -1,6 +1,6 @@
 ﻿using System;
-using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Films;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities
 {

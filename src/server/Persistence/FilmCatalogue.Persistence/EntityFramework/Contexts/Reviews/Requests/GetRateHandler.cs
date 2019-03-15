@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Reviews.Requests;
+using FilmCatalogue.Application.UseCases.Reviews.Requests;
 using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities;
 using MediatR;

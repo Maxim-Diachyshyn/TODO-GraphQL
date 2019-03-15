@@ -1,5 +1,5 @@
 using System;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 using GraphQL.Types;
 
 namespace FilmCatalogue.Api.GraphQL.GraphTypes

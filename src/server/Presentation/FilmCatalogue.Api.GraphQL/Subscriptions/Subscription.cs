@@ -1,6 +1,6 @@
 using FilmCatalogue.Api.GraphQL.GraphTypes;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 using FilmCatalogue.Persistence.Notification.Contexts.Films;
 using FilmCatalogue.Persistence.Notification.Contexts.Reviews;
 using GraphQL.Resolvers;

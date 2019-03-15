@@ -1,7 +1,7 @@
 using System;
-using FilmCatalogue.Domain.DataTypes;
+using FilmCatalogue.Domain.DataTypes.Common;
 
-namespace FilmCatalogue.Domain.UseCases.Reviews.Models
+namespace FilmCatalogue.Domain.DataTypes.Reviews
 {
     public class Review
     {

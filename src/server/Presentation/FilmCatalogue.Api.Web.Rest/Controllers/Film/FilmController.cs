@@ -1,9 +1,9 @@
 ﻿using FilmCatalogue.Api.Web.Rest.Controllers.Films.Commands.Create;
 using FilmCatalogue.Api.Web.Rest.Controllers.Films.Commands.Update;
-using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Commands;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Films.Requests;
+using FilmCatalogue.Application.UseCases.Films.Commands;
+using FilmCatalogue.Application.UseCases.Films.Requests;
+using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Films;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -1,7 +1,7 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
-using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Films.Requests;
+using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Application.UseCases.Films.Requests;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;

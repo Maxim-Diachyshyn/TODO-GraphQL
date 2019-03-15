@@ -4,9 +4,9 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Films.Commands;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Films.Requests;
+using FilmCatalogue.Application.UseCases.Films.Commands;
+using FilmCatalogue.Application.UseCases.Films.Requests;
+using FilmCatalogue.Domain.DataTypes.Films;
 using MediatR;
 using MediatR.Pipeline;
 

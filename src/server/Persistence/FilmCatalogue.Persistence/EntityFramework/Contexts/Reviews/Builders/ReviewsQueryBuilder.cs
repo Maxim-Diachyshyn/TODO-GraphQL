@@ -1,5 +1,5 @@
 using System.Linq;
-using FilmCatalogue.Domain.UseCases.Reviews.Requests;
+using FilmCatalogue.Application.UseCases.Reviews.Requests;
 using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities;
 using Microsoft.EntityFrameworkCore;

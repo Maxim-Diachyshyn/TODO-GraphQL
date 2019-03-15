@@ -1,4 +1,4 @@
-﻿namespace FilmCatalogue.Domain.DataTypes
+﻿namespace FilmCatalogue.Domain.DataTypes.Common
 {
     public class PageModel
     {

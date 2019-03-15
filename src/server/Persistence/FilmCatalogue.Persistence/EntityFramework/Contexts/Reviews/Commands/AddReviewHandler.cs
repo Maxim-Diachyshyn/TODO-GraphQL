@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Reviews.Commands;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Application.UseCases.Reviews.Commands;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities;
 using MediatR;
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Application.UseCases.Films.Commands;
 
 namespace FilmCatalogue.Api.Web.Rest.Controllers.Films.Commands.Create
 {

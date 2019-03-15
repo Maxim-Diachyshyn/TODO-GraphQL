@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Films.Requests;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Application.UseCases.Films.Requests;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

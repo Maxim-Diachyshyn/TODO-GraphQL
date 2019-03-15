@@ -1,4 +1,4 @@
-﻿using FilmCatalogue.Domain.DataTypes;
+﻿using FilmCatalogue.Domain.DataTypes.Common;
 using Newtonsoft.Json;
 using System;
 

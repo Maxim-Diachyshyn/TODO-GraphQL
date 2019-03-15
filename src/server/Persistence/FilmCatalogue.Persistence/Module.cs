@@ -3,13 +3,12 @@ using System.Linq;
 using System.Reactive.Subjects;
 using Autofac;
 using Autofac.Core;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders;
 using FilmCatalogue.Persistence.Notification.Contexts.Films;
 using FilmCatalogue.Persistence.Notification.Contexts.Reviews;
-using FluentValidation;
 using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Pipeline;
@@ -24,7 +23,6 @@ namespace FilmCatalogue.Persistence
 
             var interfacesToRegister = new[] {
                 typeof(IRequestHandler<,>),
-                typeof(IValidator<>),
                 typeof(IRequestPostProcessor<,>),
                 typeof(IQueryBuilder<,>)
             };

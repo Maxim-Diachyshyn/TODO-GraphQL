@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 using MediatR;
 
-namespace FilmCatalogue.Domain.UseCases.Reviews.Requests
+namespace FilmCatalogue.Application.UseCases.Reviews.Requests
 {
     public class GetReviewsRequest : IRequest<IEnumerable<Review>>, IReviewRequest
     {

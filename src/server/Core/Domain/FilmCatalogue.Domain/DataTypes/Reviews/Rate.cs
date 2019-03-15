@@ -1,4 +1,4 @@
-namespace FilmCatalogue.Domain.UseCases.Reviews.Models
+namespace FilmCatalogue.Domain.DataTypes.Reviews
 {
     public class Rate
     {

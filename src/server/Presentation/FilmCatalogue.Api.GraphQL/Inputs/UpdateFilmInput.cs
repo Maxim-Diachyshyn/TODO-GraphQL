@@ -1,6 +1,6 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Application.UseCases.Films.Commands;
 using GraphQL.Types;
 using System;
 

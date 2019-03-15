@@ -1,5 +1,5 @@
 using System;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities
 {

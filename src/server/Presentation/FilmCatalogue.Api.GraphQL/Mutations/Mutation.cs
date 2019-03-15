@@ -1,11 +1,11 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
 using FilmCatalogue.Api.GraphQL.Inputs;
-using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Commands;
-using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Films.Requests;
-using FilmCatalogue.Domain.UseCases.Reviews.Commands;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Application.UseCases.Films.Commands;
+using FilmCatalogue.Application.UseCases.Films.Requests;
+using FilmCatalogue.Application.UseCases.Reviews.Commands;
+using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;

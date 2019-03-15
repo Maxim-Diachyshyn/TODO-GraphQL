@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\FilmCatalogue.Api.Web.Rest\FilmCatalogue.Api.Web.Rest.csproj" />
+    <ProjectReference Include="..\..\Core\Application\FilmCatalogue.Application\FilmCatalogue.Application.csproj" />
   </ItemGroup>
 
 </Project>

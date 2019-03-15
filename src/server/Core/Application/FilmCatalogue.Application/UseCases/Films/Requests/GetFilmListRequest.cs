@@ -1,10 +1,10 @@
-﻿using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Models;
+﻿using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Films;
 using MediatR;
 using System;
 using System.Collections.Generic;
 
-namespace FilmCatalogue.Domain.UseCases.Films.Requests
+namespace FilmCatalogue.Application.UseCases.Films.Requests
 {
     public class GetFilmListRequest : IRequest<IEnumerable<Film>>
     {

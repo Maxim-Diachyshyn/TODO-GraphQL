@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace FilmCatalogue.Domain.DataTypes
+namespace FilmCatalogue.Domain.DataTypes.Common
 {
     public class Blob
     {

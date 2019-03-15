@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FilmCatalogue.Domain.DataTypes
+namespace FilmCatalogue.Domain.DataTypes.Common
 {
     public struct Id
     {
@@ -9,11 +9,6 @@ namespace FilmCatalogue.Domain.DataTypes
         public Id (Guid value)
         {
             _value = value;
-        }
-
-        public Id New()
-        {           
-            return new Id(Guid.NewGuid());
         }
 
         public static implicit operator Guid(Id id)

@@ -2,8 +2,8 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Films.Commands;
-using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Application.UseCases.Films.Commands;
 using MediatR.Pipeline;
 
 namespace FilmCatalogue.Persistence.Notification.Contexts.Films

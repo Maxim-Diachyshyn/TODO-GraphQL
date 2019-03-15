@@ -1,5 +1,5 @@
-﻿using FilmCatalogue.Domain.UseCases.Films.Models;
-using FilmCatalogue.Domain.UseCases.Reviews.Requests;
+﻿using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Application.UseCases.Reviews.Requests;
 using GraphQL.DataLoader;
 using GraphQL.Types;
 using MediatR;

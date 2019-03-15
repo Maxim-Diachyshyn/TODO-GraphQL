@@ -1,8 +1,8 @@
-using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Reviews.Models;
+using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Reviews;
 using MediatR;
 
-namespace FilmCatalogue.Domain.UseCases.Reviews.Commands
+namespace FilmCatalogue.Application.UseCases.Reviews.Commands
 {
     public class AddReviewCommand : IRequest<Review>
     {

@@ -1,9 +1,9 @@
-﻿using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Films.Models;
+﻿using FilmCatalogue.Domain.DataTypes.Common;
+using FilmCatalogue.Domain.DataTypes.Films;
 using MediatR;
 using System;
 
-namespace FilmCatalogue.Domain.UseCases.Films.Commands
+namespace FilmCatalogue.Application.UseCases.Films.Commands
 {
     public class UpdateFilmCommand : IRequest<Film>
     {       

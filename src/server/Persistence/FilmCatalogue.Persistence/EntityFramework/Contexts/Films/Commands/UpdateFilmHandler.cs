@@ -1,5 +1,5 @@
-﻿using FilmCatalogue.Domain.UseCases.Films.Commands;
-using FilmCatalogue.Domain.UseCases.Films.Models;
+﻿using FilmCatalogue.Application.UseCases.Films.Commands;
+using FilmCatalogue.Domain.DataTypes.Films;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using MediatR;
 using System.Threading;
