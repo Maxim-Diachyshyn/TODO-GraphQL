@@ -7,6 +7,7 @@ subscription {
       name
       showedDate
       photo
+      rate
     }
   }
 `;
@@ -18,6 +19,7 @@ subscription {
     name
     showedDate
     photo
+    rate
   }
 }`;
 
@@ -28,6 +30,7 @@ subscription {
     name
     showedDate
     photo
+    rate
   }
 }`;
 

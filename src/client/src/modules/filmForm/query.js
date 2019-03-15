@@ -5,8 +5,9 @@ query($id: ID!) {
     film(id: $id) {
       id
       name
-      showedDate,
+      showedDate
       photo
+      rate
     }
   }
 `;

@@ -30,19 +30,22 @@ class EditForm extends Component {
         if (!this.props.isAddingForm) {
             let film = _.get(this.props.location, "state.film", null);
             if (!film) {
-                const response = await this.props.client.query({query: filmQuery, variables: {id: this.props.match.params.id}});
-                film = {
-                    ...response.data.film,
-                    showedDate: moment(response.data.film.showedDate)
-                };
+                this.props.client.query({query: filmQuery, variables: {id: this.props.match.params.id}})
+                    .then(response => {
+                        film = {
+                            ...response.data.film,
+                            showedDate: moment(response.data.film.showedDate)
+                        };
+                        this.setState({film});
+                    });                
             }
             else {
                 film = {
                     ...film,
                     showedDate: moment(film.showedDate)
                 }
+                this.setState({film});
             }
-            this.setState({film});
         }
     }
 
@@ -187,9 +190,11 @@ class EditForm extends Component {
                             <button onClick={deleteFilm}>Delete</button>
                         ): null}
                     </form>
-                    <div style={reviewsStyle}>
-                        <Reviews id={film.id}/>
-                    </div>
+                    {!isAddingForm ? (
+                        <div style={reviewsStyle}>
+                            <Reviews id={film.id}/>
+                        </div>
+                    ): null}
                 </div>
             )
         });

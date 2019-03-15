@@ -15,8 +15,7 @@ class Films extends Component {
             updateQuery: (prev, { subscriptionData }) => {
               if (!subscriptionData.data || !subscriptionData.data.filmAdded)
                 return prev;
-              const newFilmAdded = subscriptionData.data.filmAdded;
-  
+              const newFilmAdded = subscriptionData.data.filmAdded;  
               return {
                 ...prev,
                 films: [...prev.films, newFilmAdded]
