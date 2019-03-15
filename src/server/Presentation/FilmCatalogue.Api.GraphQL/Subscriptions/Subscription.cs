@@ -12,7 +12,7 @@ namespace FilmCatalogue.Api.GraphQL.Subscriptions
 {
     public class Subscription : ObjectGraphType
     {
-        public Subscription(FilmAddedHandler filmAddedHandler, FilmUpdatedHandler filmUpdatedHandler, FilmRemovedHandler filmRemovedHandler, ReviewAddedHandler reviewAddedHandler)
+        public Subscription(FilmAddedHandler filmAddedHandler, FilmUpdatedHandler filmUpdatedHandler, FilmRemovedHandler filmRemovedHandler, Common.Contexts.Reviews.NotificationHandlers.ReviewAddedHandler reviewAddedHandler)
         {
             AddField(new EventStreamFieldType
             {

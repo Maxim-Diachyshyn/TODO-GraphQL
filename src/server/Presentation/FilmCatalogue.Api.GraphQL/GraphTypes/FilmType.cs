@@ -38,6 +38,10 @@ namespace FilmCatalogue.Api.GraphQL.GraphTypes
                 //context.TryAsyncResolve() maybe this for reviews than average
                 .ResolveAsync(async ctx =>
                 {
+                    if (ctx.Source.Rate.HasValue)
+                    {
+                        return ctx.Source.Rate.Value;
+                    }
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     return await mediator.Send(new GetRateRequest(ctx.Source.Id));
                 });

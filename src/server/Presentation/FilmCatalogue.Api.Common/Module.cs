@@ -46,6 +46,8 @@ namespace FilmCatalogue.Api.Common
                     )
                 )
                 .SingleInstance();
+
+
             var filmUpdatedStream = new ReplaySubject<FilmViewModel>(0);
             builder.RegisterType<FilmUpdatedHandler>()
                 .AsSelf()
@@ -57,6 +59,17 @@ namespace FilmCatalogue.Api.Common
                     )
                 )
                 .SingleInstance();
+            builder.RegisterType<Contexts.Films.NotificationHandlers.ReviewAddedHandler>()
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .WithParameter(
+                    new ResolvedParameter(
+                        (pi, ctx) => pi.ParameterType == typeof(ISubject<FilmViewModel>) && pi.Name == "filmStream",
+                        (pi, ctx) => filmUpdatedStream
+                    )
+                )
+                .SingleInstance();            
+
             var filmRemovedStream = new ReplaySubject<FilmViewModel>(0);
             builder.RegisterType<FilmRemovedHandler>()
                 .AsSelf()
@@ -71,7 +84,7 @@ namespace FilmCatalogue.Api.Common
 
 
             var reviewAddedStream = new ReplaySubject<ReviewViewModel>(0);
-            builder.RegisterType<ReviewAddedHandler>()
+            builder.RegisterType<Contexts.Reviews.NotificationHandlers.ReviewAddedHandler>()
             .AsSelf()
                 .AsImplementedInterfaces()
                 .WithParameter(

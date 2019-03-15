@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FilmCatalogue.Api.Common.Contexts.Common.ViewModels;
 using FilmCatalogue.Api.Common.Contexts.Reviews.ViewModels;
 using FilmCatalogue.Domain.DataTypes.Films;
@@ -14,7 +15,9 @@ namespace FilmCatalogue.Api.Common.Contexts.Films.ViewModels
         public DateTime AddedAt { get; }
         public BlobViewModel Photo { get; }
 
-        public List<ReviewViewModel> Reviews { get; set; }
+        public IEnumerable<ReviewViewModel> Reviews { get; set; }
+
+        public decimal? Rate { get; set; }
 
         public FilmViewModel(Film film)
         {
@@ -23,6 +26,12 @@ namespace FilmCatalogue.Api.Common.Contexts.Films.ViewModels
             ShowedDate = film.ShowedDate;
             AddedAt = film.AddedAt;
             Photo = film.Photo != null ? new BlobViewModel(film.Photo) : null;
+        }
+
+        public void SetReviews(IEnumerable<ReviewViewModel> reviews)
+        {
+            Reviews = reviews;
+            Rate = reviews.Average(x => (decimal?)x.Rate);
         }
     }
 }
