@@ -1,13 +1,13 @@
-﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
+﻿using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands
+namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
 {
-    public class AddFilmHandler : IRequestHandler<AddFilmCommand, FilmModel>
+    public class AddFilmHandler : IRequestHandler<AddFilmCommand, Film>
     {
         private readonly FilmDbContext _context;
 
@@ -16,7 +16,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands
             _context = context;
         }
 
-        public async Task<FilmModel> Handle(AddFilmCommand command, CancellationToken cancellationToken)
+        public async Task<Film> Handle(AddFilmCommand command, CancellationToken cancellationToken)
         {
             var entry = _context.Add(
                 new FilmEntity

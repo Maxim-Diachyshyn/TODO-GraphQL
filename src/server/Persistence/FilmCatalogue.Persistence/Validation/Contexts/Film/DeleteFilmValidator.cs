@@ -1,7 +1,7 @@
-using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
 using FluentValidation;
 
-namespace FilmCatalogue.Persistence.Validation.Contexts.Film
+namespace FilmCatalogue.Persistence.Validation.Contexts.Films
 {
     public class DeleteFilmValidator : AbstractValidator<DeleteFilmCommand>
     {

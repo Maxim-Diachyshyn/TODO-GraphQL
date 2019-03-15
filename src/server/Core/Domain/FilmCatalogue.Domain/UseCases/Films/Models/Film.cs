@@ -1,11 +1,11 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
 using System;
 
-namespace FilmCatalogue.Domain.UseCases.Film.Models
+namespace FilmCatalogue.Domain.UseCases.Films.Models
 {
-    public class FilmModel
+    public class Film
     {
-        public FilmModel(Id id, string name, DateTime showedDate, DateTime addedAt, Blob photo)
+        public Film(Id id, string name, DateTime showedDate, DateTime addedAt, Blob photo)
         {
             Id = id;
             Name = name;

@@ -3,8 +3,8 @@ using Xunit;
 using FilmCatalogue.Persistence.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using FluentAssertions;
-using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
 using System.Threading.Tasks;
 using System.Threading;
 

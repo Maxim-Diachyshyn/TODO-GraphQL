@@ -1,8 +1,8 @@
 ﻿using System;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Models;
+using FilmCatalogue.Domain.UseCases.Films.Models;
 
-namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities
+namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities
 {
     public class FilmEntity
     {
@@ -13,9 +13,9 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities
         public string PhotoType { get; set; }
         public byte[] Photo { get; set; }
 
-        public FilmModel ToModel()
+        public Film ToModel()
         {
-            return new FilmModel(Id, Name, ShowedDate, AddedAt, !string.IsNullOrEmpty(PhotoType) ? new Blob(PhotoType, Photo) : null);
+            return new Film(Id, Name, ShowedDate, AddedAt, !string.IsNullOrEmpty(PhotoType) ? new Blob(PhotoType, Photo) : null);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.UseCases.Films.Requests;
 using GraphQL;
 using GraphQL.Types;
 using MediatR;
@@ -16,14 +16,14 @@ namespace FilmCatalogue.Api.GraphQL.Queries
         public Query(IMediator mediator)
         {
             Name = "query";
-            Field<ListGraphType<FilmType>, IEnumerable<FilmModel>>()
+            Field<ListGraphType<FilmType>, IEnumerable<Film>>()
                 .Name("films")
                 .ResolveAsync(async context =>
                 {
                     return await mediator.Send(new GetFilmListRequest());
                 });
 
-            Field<FilmType, FilmModel>()
+            Field<FilmType, Film>()
                 .Name("film")
                 .Argument<NonNullGraphType<IdGraphType>, Guid>("id", "Film id.")
                 .ResolveAsync(async context =>

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.UseCases.Films.Requests;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
+namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Requests
 {
-    public class GetFilmPagedListHandler : IRequestHandler<GetFilmListRequest, IEnumerable<FilmModel>>
+    public class GetFilmPagedListHandler : IRequestHandler<GetFilmListRequest, IEnumerable<Film>>
     {
         private readonly FilmDbContext _context;
 
@@ -20,7 +20,7 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Requests
             _context = context;
         }
 
-        public async Task<IEnumerable<FilmModel>> Handle(GetFilmListRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Film>> Handle(GetFilmListRequest request, CancellationToken cancellationToken)
         {
             var query = _context.Films.AsNoTracking();
             var ids = request.SpecifiedIds.Select(x => (Guid)x).ToList();

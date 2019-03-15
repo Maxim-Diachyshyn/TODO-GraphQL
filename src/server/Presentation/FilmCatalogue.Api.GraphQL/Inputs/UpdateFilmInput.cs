@@ -1,10 +1,10 @@
 ﻿using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Models;
+using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
 using GraphQL.Types;
 using System;
 
-namespace FilmCatalogue.Api.GraphQL.Mutations
+namespace FilmCatalogue.Api.GraphQL.Inputs
 {
 
     public class UpdateFilmCommandInput

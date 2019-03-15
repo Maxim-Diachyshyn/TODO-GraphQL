@@ -4,26 +4,26 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.UseCases.Films.Requests;
 using MediatR;
 using MediatR.Pipeline;
 
-namespace FilmCatalogue.Persistence.Notification.Contexts.Film
+namespace FilmCatalogue.Persistence.Notification.Contexts.Films
 {
     public class FilmRemovedHandler : IPipelineBehavior<DeleteFilmCommand, Unit>
     {
-        private readonly ISubject<FilmModel> _filmStream;
+        private readonly ISubject<Film> _filmStream;
         private readonly IMediator _mediator;
 
-        public FilmRemovedHandler(ISubject<FilmModel> filmStream, IMediator mediator)
+        public FilmRemovedHandler(ISubject<Film> filmStream, IMediator mediator)
         {
             _filmStream = filmStream;
             _mediator = mediator;
         }
 
-        public IObservable<FilmModel> Observable()
+        public IObservable<Film> Observable()
         {
             return _filmStream.AsObservable();
         }

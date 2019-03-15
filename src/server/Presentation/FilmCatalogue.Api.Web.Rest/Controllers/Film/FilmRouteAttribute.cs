@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
+namespace FilmCatalogue.Api.Web.Rest.Controllers.Films
 {
     public class FilmRouteAttribute : RouteAttribute
     {

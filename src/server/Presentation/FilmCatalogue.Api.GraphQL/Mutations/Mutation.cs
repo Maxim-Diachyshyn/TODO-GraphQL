@@ -1,9 +1,9 @@
 ﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
 using FilmCatalogue.Api.GraphQL.Inputs;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.UseCases.Films.Requests;
 using FilmCatalogue.Domain.UseCases.Reviews.Commands;
 using FilmCatalogue.Domain.UseCases.Reviews.Models;
 using GraphQL;
@@ -18,7 +18,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
     {
         public Mutation(IMediator mediator)
         {
-            Field<FilmType, FilmModel>()
+            Field<FilmType, Film>()
                 .Name("createFilm")
                 .Argument<NonNullGraphType<AddFilmInput>>("film", "Film input.")
                 .ResolveAsync(async context => 
@@ -51,7 +51,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     return await mediator.Send(request);
                 });
 
-            Field<FilmType, FilmModel>()
+            Field<FilmType, Film>()
                 .Name("updateFilm")
                 .Argument<NonNullGraphType<UpdateFilmInput>, UpdateFilmCommand>("film", "Film input.")
                 .ResolveAsync(async context =>
@@ -89,7 +89,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     return await mediator.Send(request);
                 });
 
-            Field<FilmType, FilmModel>()
+            Field<FilmType, Film>()
                 .Name("deleteFilm")
                 .Argument<NonNullGraphType<IdGraphType>, Guid>("Id", "Film id.")
                 .ResolveAsync(async context =>

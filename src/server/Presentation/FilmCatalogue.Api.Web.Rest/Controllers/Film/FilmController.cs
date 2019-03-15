@@ -1,9 +1,9 @@
-﻿using FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Create;
-using FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Update;
+﻿using FilmCatalogue.Api.Web.Rest.Controllers.Films.Commands.Create;
+using FilmCatalogue.Api.Web.Rest.Controllers.Films.Commands.Update;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Models;
-using FilmCatalogue.Domain.UseCases.Film.Requests;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Models;
+using FilmCatalogue.Domain.UseCases.Films.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
+namespace FilmCatalogue.Api.Web.Rest.Controllers.Films
 {
     [FilmRoute]
     [ApiController]
@@ -25,7 +25,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FilmModel>> GetListAsync()
+        public async Task<IEnumerable<Film>> GetListAsync()
         {
             return await _mediator.Send(
                 new GetFilmListRequest()
@@ -33,7 +33,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<FilmModel>> GetByIdAsync(Guid id)
+        public async Task<ActionResult<Film>> GetByIdAsync(Guid id)
         {
             var films = await _mediator.Send(
                 new GetFilmListRequest(new Id(id))
@@ -47,7 +47,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         }
 
         [HttpPost]
-        public async Task<ActionResult<FilmModel>> CreateAsync(CreateModel model)
+        public async Task<ActionResult<Film>> CreateAsync(CreateModel model)
         {
             return Ok(
                 await _mediator.Send(
@@ -61,7 +61,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<FilmModel>> UpdateAsync(Guid id, UpdateModel model)
+        public async Task<ActionResult<Film>> UpdateAsync(Guid id, UpdateModel model)
         {
             return Ok(
                 await _mediator.Send(
@@ -76,7 +76,7 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Film
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<FilmModel>> DeleteAsync(Guid id)
+        public async Task<ActionResult<Film>> DeleteAsync(Guid id)
         {
             await _mediator.Send(new DeleteFilmCommand
             {

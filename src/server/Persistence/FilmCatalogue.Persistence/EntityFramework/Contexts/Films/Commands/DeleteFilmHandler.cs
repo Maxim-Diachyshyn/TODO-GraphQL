@@ -1,10 +1,10 @@
-﻿using FilmCatalogue.Domain.UseCases.Film.Commands;
-using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
+﻿using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Commands
+namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
 {
     public class DeleteFilmHandler : IRequestHandler<DeleteFilmCommand>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
 
-namespace FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Create
+namespace FilmCatalogue.Api.Web.Rest.Controllers.Films.Commands.Create
 {
     public class CreateModel
     {

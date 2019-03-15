@@ -1,7 +1,7 @@
 ﻿using System;
 using FilmCatalogue.Domain.DataTypes;
-using FilmCatalogue.Domain.UseCases.Film.Commands;
-using FilmCatalogue.Domain.UseCases.Film.Models;
+using FilmCatalogue.Domain.UseCases.Films.Commands;
+using FilmCatalogue.Domain.UseCases.Films.Models;
 using GraphQL.Types;
 
 namespace FilmCatalogue.Api.GraphQL.Inputs

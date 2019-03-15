@@ -1,4 +1,4 @@
-using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

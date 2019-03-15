@@ -1,13 +1,13 @@
 using System;
 using Xunit;
-using FilmCatalogue.Api.Web.Rest.Controllers.Film;
+using FilmCatalogue.Api.Web.Rest.Controllers.Films;
 using Autofac;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FilmCatalogue.Api.Web.Rest.Controllers.Film.Commands.Create;
+using FilmCatalogue.Api.Web.Rest.Controllers.Films.Commands.Create;
 using FilmCatalogue.Persistence.EntityFramework;
-using FilmCatalogue.Persistence.EntityFramework.Contexts.Film.Entities;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 
 namespace FilmCatalogue.Tests.Rest
 {
