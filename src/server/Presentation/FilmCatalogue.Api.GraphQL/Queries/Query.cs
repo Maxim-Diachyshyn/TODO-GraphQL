@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FilmCatalogue.Api.Common.Contexts.Films.ViewModels;
 
 namespace FilmCatalogue.Api.GraphQL.Queries
 {
@@ -17,15 +18,16 @@ namespace FilmCatalogue.Api.GraphQL.Queries
         public Query(IHttpContextAccessor accessor)
         {
             Name = "query";
-            Field<ListGraphType<FilmType>, IEnumerable<Film>>()
+            Field<ListGraphType<FilmType>, IEnumerable<FilmViewModel>>()
                 .Name("films")
                 .ResolveAsync(async context =>
                 {
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
-                    return await mediator.Send(new GetFilmListRequest());
+                    var models = await mediator.Send(new GetFilmListRequest());
+                    return models.Select(x => new FilmViewModel(x));
                 });
 
-            Field<FilmType, Film>()
+            Field<FilmType, FilmViewModel>()
                 .Name("film")
                 .Argument<NonNullGraphType<IdGraphType>, Guid>("id", "Film id.")
                 .ResolveAsync(async context =>
@@ -38,7 +40,7 @@ namespace FilmCatalogue.Api.GraphQL.Queries
                     {
                         context.Errors.Add(new ExecutionError("Not found") {Code="NotFound"});
                     }
-                    return film;
+                    return new FilmViewModel(film);
                 });
         }
     }

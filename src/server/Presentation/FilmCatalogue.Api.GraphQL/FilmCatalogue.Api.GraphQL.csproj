@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\Core\Domain\FilmCatalogue.Domain\FilmCatalogue.Domain.csproj" />
     <ProjectReference Include="..\..\Persistence\FilmCatalogue.Persistence\FilmCatalogue.Persistence.csproj" />
     <ProjectReference Include="..\..\Core\Application\FilmCatalogue.Application\FilmCatalogue.Application.csproj" />
+    <ProjectReference Include="..\FilmCatalogue.Api.Common\FilmCatalogue.Api.Common.csproj" />
   </ItemGroup>
 
 </Project>

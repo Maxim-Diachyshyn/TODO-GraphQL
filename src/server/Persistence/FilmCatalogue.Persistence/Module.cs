@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Reactive.Subjects;
 using Autofac;
-using Autofac.Core;
-using FilmCatalogue.Domain.DataTypes.Films;
-using FilmCatalogue.Domain.DataTypes.Reviews;
 using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders;
-using FilmCatalogue.Persistence.Notification.Contexts.Films;
-using FilmCatalogue.Persistence.Notification.Contexts.Reviews;
 using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Pipeline;
@@ -42,54 +36,6 @@ namespace FilmCatalogue.Persistence
 
             builder.AddMediatR(ThisAssembly);
             builder.RegisterModule(new EntityFramework.Module());
-
-            var filmAddedStream = new ReplaySubject<Film>(0);
-            builder.RegisterType<FilmAddedHandler>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<Film>) && pi.Name == "filmStream",
-                        (pi, ctx) => filmAddedStream
-                    )
-                )
-                .SingleInstance();
-
-            var filmUpdatedStream = new ReplaySubject<Film>(0);
-            builder.RegisterType<FilmUpdatedHandler>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<Film>) && pi.Name == "filmStream",
-                        (pi, ctx) => filmUpdatedStream
-                    )
-                )
-                .SingleInstance();
-
-            var filmRemovedStream = new ReplaySubject<Film>(0);
-            builder.RegisterType<FilmRemovedHandler>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<Film>) && pi.Name == "filmStream",
-                        (pi, ctx) => filmRemovedStream
-                    )
-                )
-                .SingleInstance();
-
-            var reviewAddedStream = new ReplaySubject<Review>(0);
-            builder.RegisterType<ReviewAddedHandler>()
-            .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<Review>) && pi.Name == "reviewStream",
-                        (pi, ctx) => reviewAddedStream
-                    )
-                )
-                .SingleInstance();
         }
     }
 }

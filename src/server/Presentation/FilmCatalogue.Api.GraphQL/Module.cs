@@ -18,17 +18,19 @@ namespace FilmCatalogue.Api.GraphQL
             builder.RegisterType<IdGraphType>().SingleInstance();
 
             builder.RegisterType<FilmType>().SingleInstance();
-            builder.RegisterType<AddFilmInput>().SingleInstance();
-            builder.RegisterType<UpdateFilmInput>().SingleInstance();
+            builder.RegisterType<AddFilmInputType>().SingleInstance();
+            builder.RegisterType<UpdateFilmInputType>().SingleInstance();
 
             builder.RegisterType<ReviewType>().SingleInstance();
-            builder.RegisterType<AddReviewInput>().SingleInstance();
+            builder.RegisterType<AddReviewInputType>().SingleInstance();
 
             builder.RegisterType<Query>().SingleInstance();
             builder.RegisterType<Mutation>();
             builder.RegisterType<Subscription>().SingleInstance();
 
             builder.RegisterType<FilmSchema>().SingleInstance();
+
+            builder.RegisterModule(new FilmCatalogue.Api.Common.Module());
         }
     }
 }

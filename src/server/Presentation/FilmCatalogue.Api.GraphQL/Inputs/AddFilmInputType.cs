@@ -3,19 +3,13 @@ using FilmCatalogue.Domain.DataTypes;
 using FilmCatalogue.Application.UseCases.Films.Commands;
 using FilmCatalogue.Domain.DataTypes.Films;
 using GraphQL.Types;
+using FilmCatalogue.Api.Common.Contexts.Films.Inputs;
 
 namespace FilmCatalogue.Api.GraphQL.Inputs
 {
-    public class AddFilmCommandInput
+    public class AddFilmInputType : InputObjectGraphType<AddFilmInput>
     {
-        public string Name { get; set; }
-        public DateTime ShowedDate { get; set; }
-        public string Photo { get; set; }
-    }
-
-    public class AddFilmInput : InputObjectGraphType<AddFilmCommandInput>
-    {
-        public AddFilmInput()
+        public AddFilmInputType()
         {
             Name = "AddFilmInput";
             Field(x => x.Name);

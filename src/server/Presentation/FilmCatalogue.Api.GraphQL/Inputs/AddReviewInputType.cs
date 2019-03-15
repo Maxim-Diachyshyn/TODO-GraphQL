@@ -1,20 +1,14 @@
 using System;
+using FilmCatalogue.Api.Common.Contexts.Reviews.Inputs;
 using FilmCatalogue.Domain.DataTypes.Common;
 using FilmCatalogue.Domain.DataTypes.Reviews;
 using GraphQL.Types;
 
 namespace FilmCatalogue.Api.GraphQL.Inputs
 {
-    public class AddReviewCommandInput
+    public class AddReviewInputType : InputObjectGraphType<AddReviewInput>
     {
-        public string FilmId { get; set; }
-        public string Comment { get; set; }
-        public int Rate { get; set; }
-    }
-
-    public class AddReviewInput : InputObjectGraphType<AddReviewCommandInput>
-    {
-        public AddReviewInput()
+        public AddReviewInputType()
         {
             Name = "AddReviewInput";
             Field(x => x.FilmId)

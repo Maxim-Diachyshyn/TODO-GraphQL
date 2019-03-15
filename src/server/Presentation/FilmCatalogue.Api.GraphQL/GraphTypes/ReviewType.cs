@@ -1,20 +1,20 @@
 using System;
-using FilmCatalogue.Domain.DataTypes.Reviews;
+using FilmCatalogue.Api.Common.Contexts.Reviews.ViewModels;
 using GraphQL.Types;
 
 namespace FilmCatalogue.Api.GraphQL.GraphTypes
 {
-    public class ReviewType : ObjectGraphType<Review>
+    public class ReviewType : ObjectGraphType<ReviewViewModel>
     {
         public ReviewType()
         {
             Field<IdGraphType>()
-                .Name(nameof(Review.Id))
+                .Name(nameof(ReviewViewModel.Id))
                 .Resolve(x => (Guid)x.Source.Id);
             Field(x => x.Comment);
             Field(x => x.AddedAt, false, typeof(DateTimeGraphType));
             Field<IntGraphType>()
-                .Name(nameof(Review.Rate))
+                .Name(nameof(ReviewViewModel.Rate))
                 .Resolve(x => (int)x.Source.Rate);
         }
     }

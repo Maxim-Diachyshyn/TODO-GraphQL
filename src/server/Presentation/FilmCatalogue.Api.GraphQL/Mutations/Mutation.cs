@@ -1,4 +1,8 @@
-﻿using FilmCatalogue.Api.GraphQL.GraphTypes;
+﻿using FilmCatalogue.Api.Common.Contexts.Films.Inputs;
+using FilmCatalogue.Api.Common.Contexts.Films.ViewModels;
+using FilmCatalogue.Api.Common.Contexts.Reviews.Inputs;
+using FilmCatalogue.Api.Common.Contexts.Reviews.ViewModels;
+using FilmCatalogue.Api.GraphQL.GraphTypes;
 using FilmCatalogue.Api.GraphQL.Inputs;
 using FilmCatalogue.Application.UseCases.Films.Commands;
 using FilmCatalogue.Application.UseCases.Films.Requests;
@@ -19,13 +23,13 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
     {
         public Mutation(IHttpContextAccessor accessor)
         {
-            Field<FilmType, Film>()
+            Field<FilmType, FilmViewModel>()
                 .Name("createFilm")
-                .Argument<NonNullGraphType<AddFilmInput>>("film", "Film input.")
+                .Argument<NonNullGraphType<AddFilmInputType>>("film", "Film input.")
                 .ResolveAsync(async context => 
                 {
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
-                    var input = context.GetArgument<AddFilmCommandInput>("film");
+                    var input = context.GetArgument<AddFilmInput>("film");
                     if (string.IsNullOrEmpty(input.Name))
                     {
                         context.Errors.Add(new ExecutionError("Name should not be empty") {Code = "EmptyName"});
@@ -42,24 +46,17 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     {
                         return null;
                     }
-                    var request = new AddFilmCommand
-                    {
-                        Name = input.Name,
-                        ShowedDate = input.ShowedDate,
-                        Photo = !string.IsNullOrEmpty(input.Photo)
-                            ? new Blob(input.Photo)
-                            : null
-                    };
-                    return await mediator.Send(request);
+                    var request = input.ToCommand();
+                    return new FilmViewModel(await mediator.Send(request));
                 });
 
-            Field<FilmType, Film>()
+            Field<FilmType, FilmViewModel>()
                 .Name("updateFilm")
-                .Argument<NonNullGraphType<UpdateFilmInput>, UpdateFilmCommand>("film", "Film input.")
+                .Argument<NonNullGraphType<UpdateFilmInputType>, UpdateFilmCommand>("film", "Film input.")
                 .ResolveAsync(async context =>
                 {
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
-                    var input = context.GetArgument<UpdateFilmCommandInput>("film");
+                    var input = context.GetArgument<UpdateFilmInput>("film");
                     if (string.IsNullOrEmpty(input.Name))
                     {
                         context.Errors.Add(new ExecutionError("Name should not be empty") {Code = "EmptyName"});
@@ -80,19 +77,11 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     {
                         return null;
                     }
-                    var request = new UpdateFilmCommand
-                    {
-                        FilmId = input.Id,
-                        Name = input.Name,
-                        ShowedDate = input.ShowedDate,
-                        Photo = !string.IsNullOrEmpty(input.Photo)
-                            ? new Blob(input.Photo)
-                            : null
-                    };
-                    return await mediator.Send(request);
+                    var request = input.ToCommand();
+                    return new FilmViewModel(await mediator.Send(request));
                 });
 
-            Field<FilmType, Film>()
+            Field<FilmType, FilmViewModel>()
                 .Name("deleteFilm")
                 .Argument<NonNullGraphType<IdGraphType>, Guid>("Id", "Film id.")
                 .ResolveAsync(async context =>
@@ -102,22 +91,18 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     var films = await mediator.Send(new GetFilmListRequest(new Id(id)));
                     var film = films.Single();
                     await mediator.Send(new DeleteFilmCommand { FilmId = new Id(id) });
-                    return film;
+                    return new FilmViewModel(film);
                 });
 
-            Field<ReviewType, Review>()
+            Field<ReviewType, ReviewViewModel>()
                 .Name("createReview")
-                .Argument<NonNullGraphType<AddReviewInput>>("review", "Review")
+                .Argument<NonNullGraphType<AddReviewInputType>>("review", "Review")
                 .ResolveAsync(async context =>
                 {
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
-                    var input = context.GetArgument<AddReviewCommandInput>("review");
-                    var command = new AddReviewCommand(
-                        filmId: Guid.Parse(input.FilmId),
-                        comment: input.Comment,
-                        rate: input.Rate
-                    );
-                    return await mediator.Send(command);
+                    var input = context.GetArgument<AddReviewInput>("review");
+                    var command = input.ToCommand();
+                    return new ReviewViewModel(await mediator.Send(command));
                 });
         }
     }
