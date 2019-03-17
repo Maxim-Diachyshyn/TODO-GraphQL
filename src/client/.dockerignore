@@ -1,0 +1,7 @@
+.vs/
+.git/
+bin\
+obj\
+out\
+.gitignore
+node_modules\

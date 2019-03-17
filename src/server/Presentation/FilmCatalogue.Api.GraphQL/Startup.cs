@@ -71,7 +71,8 @@ namespace FilmCatalogue.Api.GraphQL
             {
                 app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
                 {
-                    Path = "/ui/playground"
+                    Path = "/ui/playground",
+                    GraphQLEndPoint = "/graphql"
                 });
                 app.UseGraphiQLServer(new GraphiQLOptions
                 {
@@ -80,8 +81,8 @@ namespace FilmCatalogue.Api.GraphQL
                 });
                 app.UseGraphQLVoyager(new GraphQLVoyagerOptions()
                 {
-                    GraphQLEndPoint = "/graphql",
-                    Path = "/ui/voyager"
+                    Path = "/ui/voyager",
+                    GraphQLEndPoint = "/graphql"
                 });
             }
 
@@ -90,7 +91,6 @@ namespace FilmCatalogue.Api.GraphQL
                 options.AllowAnyOrigin();
                 options.AllowAnyHeader();
                 options.AllowAnyMethod();
-                options.AllowCredentials();
             });
 
             app.UseWebSockets();
