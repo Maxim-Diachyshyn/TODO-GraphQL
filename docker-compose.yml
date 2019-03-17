@@ -13,3 +13,12 @@ services:
         ports:
             - "8001:3000"
         restart: always
+    host:
+        build: 
+            context: src/nginx/
+        ports:
+            - "3000:80"
+        restart: always
+        depends_on: 
+            - client_react-web
+            - server-api
