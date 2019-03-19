@@ -5,14 +5,15 @@ using FilmCatalogue.Application.UseCases.Reviews.Commands;
 using FilmCatalogue.Domain.DataTypes.Reviews;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Commands
 {
     public class AddReviewHandler : IRequestHandler<AddReviewCommand, Review>
     {
-        private readonly FilmDbContext _context;
+        private readonly DbContext _context;
 
-        public AddReviewHandler(FilmDbContext context)
+        public AddReviewHandler(DbContext context)
         {
             _context = context;
         }

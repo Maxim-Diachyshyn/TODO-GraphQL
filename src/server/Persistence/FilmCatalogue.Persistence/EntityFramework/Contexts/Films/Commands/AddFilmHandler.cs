@@ -2,6 +2,7 @@
 using FilmCatalogue.Domain.DataTypes.Films;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,9 +10,9 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
 {
     public class AddFilmHandler : IRequestHandler<AddFilmCommand, Film>
     {
-        private readonly FilmDbContext _context;
+        private readonly DbContext _context;
 
-        public AddFilmHandler(FilmDbContext context)
+        public AddFilmHandler(DbContext context)
         {
             _context = context;
         }

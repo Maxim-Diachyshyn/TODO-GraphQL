@@ -8,16 +8,16 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders
 {
     public class ReviewsQueryBuilder : IQueryBuilder<IReviewRequest, ReviewEntity>
     {
-        private readonly FilmDbContext _context;
+        private readonly IQueryable<ReviewEntity> _query;
 
-        public ReviewsQueryBuilder(FilmDbContext context)
+        public ReviewsQueryBuilder(IQueryable<ReviewEntity> query)
         {
-            _context = context;
+            _query = query;
         }
 
         public IQueryable<ReviewEntity> Build(IReviewRequest request)
         {
-            return _context.Reviews.AsNoTracking()
+            return _query
                 .Where(x => x.FilmId == request.FilmId);
         }
     }

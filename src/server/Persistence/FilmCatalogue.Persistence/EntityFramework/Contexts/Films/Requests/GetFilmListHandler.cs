@@ -8,28 +8,28 @@ using FilmCatalogue.Domain.DataTypes.Films;
 using FilmCatalogue.Application.UseCases.Films.Requests;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Requests
 {
     public class GetFilmPagedListHandler : IRequestHandler<GetFilmListRequest, IEnumerable<Film>>
     {
-        private readonly FilmDbContext _context;
+        private IQueryable<FilmEntity> _query;
 
-        public GetFilmPagedListHandler(FilmDbContext context)
+        public GetFilmPagedListHandler(IQueryable<FilmEntity> query)
         {
-            _context = context;
+            _query = query;
         }
 
         public async Task<IEnumerable<Film>> Handle(GetFilmListRequest request, CancellationToken cancellationToken)
         {
-            var query = _context.Films.AsNoTracking();
             var ids = request.SpecifiedIds.Select(x => (Guid)x).ToList();
             if (request.SpecifiedIds.Any())
             {
-                query = query.Where(x => ids.Contains(x.Id));
+                _query = _query.Where(x => ids.Contains(x.Id));
             }
 
-            var films = await query
+            var films = await _query
                 .ToListAsync(cancellationToken);
             return films.Select(x => x.ToModel());
         }

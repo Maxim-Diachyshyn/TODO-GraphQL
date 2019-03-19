@@ -15,12 +15,15 @@ namespace FilmCatalogue.Persistence.EntityFramework
 
             var services = new ServiceCollection();
 
-            services.AddDbContext<FilmDbContext>(options =>
+            services.AddDbContextPool<FilmDbContext>(options =>
             {
                 // options.UseSqlServer("Data Source=\".\";Initial Catalog=Films;Integrated Security=False;User ID=sa;Password=Password1;MultipleActiveResultSets=true");
                 options.UseInMemoryDatabase("TestDatabase");
             });
+
             builder.Populate(services);
+
+            builder.RegisterSource(new QueryableRegistrationSource<FilmDbContext>());
         }
     }
 }
