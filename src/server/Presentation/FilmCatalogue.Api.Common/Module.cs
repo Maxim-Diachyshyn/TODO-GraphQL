@@ -18,81 +18,14 @@ namespace FilmCatalogue.Api.Common
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterGeneric(typeof(ReplaySubject<>))
+                .WithParameter("bufferSize", 0)
+                .As(typeof(ISubject<>));
 
-            var interfacesToRegister = new[] {
-                typeof(IRequestPostProcessor<,>),
-                typeof(IPipelineBehavior<,>)
-            };
-
-            foreach (var interfaceToRegister in interfacesToRegister)
-            {
-                builder.RegisterAssemblyTypes(ThisAssembly)
-                    .Where(type => type.GetInterfaces()
-                    .Where(i => i.IsGenericType)
-                    .Select(i => i.GetGenericTypeDefinition())
-                    .Contains(interfaceToRegister))
-                    .AsSelf()
-                    .As(interfaceToRegister);
-            }
-
-            var filmAddedStream = new ReplaySubject<FilmViewModel>(0);
-            builder.RegisterType<FilmAddedHandler>()
+            builder.RegisterAssemblyTypes(ThisAssembly)
+                .Where(type => type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IObservable<>)))
                 .AsSelf()
                 .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<FilmViewModel>) && pi.Name == "filmStream",
-                        (pi, ctx) => filmAddedStream
-                    )
-                )
-                .SingleInstance();
-
-
-            var filmUpdatedStream = new ReplaySubject<FilmViewModel>(0);
-            builder.RegisterType<FilmUpdatedHandler>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<FilmViewModel>) && pi.Name == "filmStream",
-                        (pi, ctx) => filmUpdatedStream
-                    )
-                )
-                .SingleInstance();
-            builder.RegisterType<Contexts.Films.NotificationHandlers.ReviewAddedHandler>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<FilmViewModel>) && pi.Name == "filmStream",
-                        (pi, ctx) => filmUpdatedStream
-                    )
-                )
-                .SingleInstance();            
-
-            var filmRemovedStream = new ReplaySubject<FilmViewModel>(0);
-            builder.RegisterType<FilmRemovedHandler>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<FilmViewModel>) && pi.Name == "filmStream",
-                        (pi, ctx) => filmRemovedStream
-                    )
-                )
-                .SingleInstance();
-
-
-            var reviewAddedStream = new ReplaySubject<ReviewViewModel>(0);
-            builder.RegisterType<Contexts.Reviews.NotificationHandlers.ReviewAddedHandler>()
-            .AsSelf()
-                .AsImplementedInterfaces()
-                .WithParameter(
-                    new ResolvedParameter(
-                        (pi, ctx) => pi.ParameterType == typeof(ISubject<ReviewViewModel>) && pi.Name == "reviewStream",
-                        (pi, ctx) => reviewAddedStream
-                    )
-                )
                 .SingleInstance();
         }
     }

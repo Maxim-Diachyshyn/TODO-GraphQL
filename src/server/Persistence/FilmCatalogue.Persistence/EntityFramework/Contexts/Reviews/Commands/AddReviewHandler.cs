@@ -11,9 +11,9 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Commands
 {
     public class AddReviewHandler : IRequestHandler<AddReviewCommand, Review>
     {
-        private readonly DbContext _context;
+        private readonly FilmDbContext _context;
 
-        public AddReviewHandler(DbContext context)
+        public AddReviewHandler(FilmDbContext context)
         {
             _context = context;
         }

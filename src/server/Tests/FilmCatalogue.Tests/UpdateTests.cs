@@ -32,7 +32,7 @@ namespace FilmCatalogue.Tests
             };
             _context.Add(film);
             _context.SaveChanges();
-            _context.AsNoTracking().Should().HaveCount(1);
+            _context.Films.AsNoTracking().Should().HaveCount(1);
             _context.Entry(film).State = EntityState.Detached;
             _addedFilmId = film.Id;
             _handler = new UpdateFilmHandler(_context);

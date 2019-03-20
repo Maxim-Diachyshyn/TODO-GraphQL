@@ -9,7 +9,7 @@ using MediatR.Pipeline;
 
 namespace FilmCatalogue.Api.Common.Contexts.Films.NotificationHandlers
 {
-    public class FilmAddedHandler : IRequestPostProcessor<AddFilmCommand, Film>
+    public class FilmAddedHandler : IObservable<FilmViewModel>, IRequestPostProcessor<AddFilmCommand, Film>
     {
         private readonly ISubject<FilmViewModel> _filmStream;
 
@@ -18,9 +18,9 @@ namespace FilmCatalogue.Api.Common.Contexts.Films.NotificationHandlers
             _filmStream = filmStream;
         }
 
-        public IObservable<FilmViewModel> Observable()
+        public IDisposable Subscribe(IObserver<FilmViewModel> observer)
         {
-            return _filmStream.AsObservable();
+            return _filmStream.Subscribe(observer);
         }
 
         public Task Process(AddFilmCommand command, Film response)

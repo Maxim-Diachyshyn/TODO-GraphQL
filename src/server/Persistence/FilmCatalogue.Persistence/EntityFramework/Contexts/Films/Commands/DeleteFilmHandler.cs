@@ -9,9 +9,9 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
 {
     public class DeleteFilmHandler : IRequestHandler<DeleteFilmCommand>
     {
-        private readonly DbContext _context;
+        private readonly FilmDbContext _context;
 
-        public DeleteFilmHandler(DbContext context)
+        public DeleteFilmHandler(FilmDbContext context)
         {
             _context = context;
         }

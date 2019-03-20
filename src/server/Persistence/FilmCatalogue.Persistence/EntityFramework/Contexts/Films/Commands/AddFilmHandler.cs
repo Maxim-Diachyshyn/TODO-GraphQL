@@ -10,9 +10,9 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
 {
     public class AddFilmHandler : IRequestHandler<AddFilmCommand, Film>
     {
-        private readonly DbContext _context;
+        private readonly FilmDbContext _context;
 
-        public AddFilmHandler(DbContext context)
+        public AddFilmHandler(FilmDbContext context)
         {
             _context = context;
         }

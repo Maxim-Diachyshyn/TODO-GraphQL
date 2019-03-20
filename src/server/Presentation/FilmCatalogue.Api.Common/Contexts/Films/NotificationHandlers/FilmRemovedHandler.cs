@@ -11,7 +11,7 @@ using MediatR;
 
 namespace FilmCatalogue.Api.Common.Contexts.Films.NotificationHandlers
 {
-    public class FilmRemovedHandler : IPipelineBehavior<DeleteFilmCommand, Unit>
+    public class FilmRemovedHandler : IObservable<FilmViewModel>, IPipelineBehavior<DeleteFilmCommand, Unit>
     {
         private readonly ISubject<FilmViewModel> _filmStream;        
         private readonly IMediator _mediator;
@@ -20,11 +20,6 @@ namespace FilmCatalogue.Api.Common.Contexts.Films.NotificationHandlers
         {
             _filmStream = filmStream;
             _mediator = mediator;
-        }
-
-        public IObservable<FilmViewModel> Observable()
-        {
-            return _filmStream.AsObservable();
         }
 
         public async Task<Unit> Handle(DeleteFilmCommand request, CancellationToken cancellationToken, RequestHandlerDelegate<Unit> next)
@@ -36,6 +31,11 @@ namespace FilmCatalogue.Api.Common.Contexts.Films.NotificationHandlers
             var result = await next();
             _filmStream.OnNext(new FilmViewModel(films.Single()));      
             return result;
+        }
+
+        public IDisposable Subscribe(IObserver<FilmViewModel> observer)
+        {
+            return _filmStream.Subscribe(observer);
         }
     }
 }
