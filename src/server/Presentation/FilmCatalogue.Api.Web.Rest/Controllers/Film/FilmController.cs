@@ -35,10 +35,9 @@ namespace FilmCatalogue.Api.Web.Rest.Controllers.Films
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<Film>> GetByIdAsync(Guid id)
         {
-            var films = await _mediator.Send(
-                new GetFilmListRequest(new Id(id))
+            var film = await _mediator.Send(
+                new GetFilmByIdRequest(new Id(id))
             );
-            var film = films.SingleOrDefault();
             if (film == null)
             {
                 return NotFound();

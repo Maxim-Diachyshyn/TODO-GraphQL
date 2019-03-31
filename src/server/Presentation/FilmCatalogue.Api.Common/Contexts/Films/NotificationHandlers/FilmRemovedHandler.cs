@@ -25,11 +25,11 @@ namespace FilmCatalogue.Api.Common.Contexts.Films.NotificationHandlers
         public async Task<Unit> Handle(DeleteFilmCommand request, CancellationToken cancellationToken, RequestHandlerDelegate<Unit> next)
         {
             //TODO: this data should be loaded to command body
-            var films = await _mediator.Send(
-                new GetFilmListRequest(request.FilmId)
+            var film = await _mediator.Send(
+                new GetFilmByIdRequest(request.FilmId)
             );
             var result = await next();
-            _filmStream.OnNext(new FilmViewModel(films.Single()));      
+            _filmStream.OnNext(new FilmViewModel(film));      
             return result;
         }
 

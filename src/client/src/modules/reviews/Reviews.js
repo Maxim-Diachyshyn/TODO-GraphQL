@@ -4,8 +4,9 @@ import _ from "lodash";
 import StarRatings from 'react-star-ratings';
 import { Mutation, Query, withApollo, graphql } from "react-apollo";
 import query from "./query";
-import filmsQuery from "../films/query"
-import mutation from "./mutation"
+import filmsQuery from "../films/query";
+import mutation from "./mutation";
+import subscription from "../films/subscription";
 
 const initialState = {
     rate: 0,
@@ -20,6 +21,34 @@ class Reviews extends Component {
         this.state = initialState;
     }
 
+    componentDidMount() {
+        this.props.data.subscribeToMore({
+            document: subscription.filmUpdatedSubscription,
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data || !subscriptionData.data.filmUpdated)
+                return prev;
+              const filmUpdated = subscriptionData.data.filmUpdated;
+              const index = _.index(prev.films, f => f.id === filmUpdated.id);
+              if (!index) {
+                return prev;
+              }              
+              return {
+                ...prev,
+                films: {...prev.films, [index]: filmUpdated}
+              }
+            }
+          });
+    }
+
+    mapReviewTime = review => {
+        const { addedAt } = review;
+        const momentDate = moment(addedAt);
+        if (momentDate.diff(momentDate, "days") <= 0) {
+            return momentDate.fromNow();
+        }
+        return momentDate.format("lll");
+    }
+
     renderReviews = () => {
         const { data: { loading, error, film } } = this.props;
         const empty = !loading && !error && !_.some(film.reviews);
@@ -30,9 +59,9 @@ class Reviews extends Component {
             return <span>Loading...</span>
         }
         return _.map(film.reviews, r => (
-            <div key={r.id} style={reviewStyle}>
+            <div key={r.id} style={{ ...reviewStyle, ...(r.isNew ? newReviewStyle : null) }}>
                 <div style={reviewHeaderStyle}>
-                    <span>{moment().format(r.addedAt)}</span>
+                    <span>{this.mapReviewTime(r)}</span>
                     <StarRatings rating={r.rate} starRatedColor="#FFE438" starEmptyColor="#FFFFAA" starDimension="14px" starSpacing="2px"/>
                 </div>
                 <div style={reviewTextStyle}>
@@ -74,28 +103,7 @@ class Reviews extends Component {
                 <Mutation 
                     mutation={mutation}
                     onCompleted={this.onReviewAdded}
-                    update={(cache, { data: { createReview } }) => {
-                        const { film } = cache.readQuery({ query: query, variables: { id }});
-                        const newReviews = film.reviews.concat([createReview]);
-                        cache.writeQuery({
-                            query: query,
-                            variables: { id },
-                            data: { film: {
-                                ...film,
-                                reviews: newReviews
-                            }},
-                        });
-
-                        const newRates = _.map(newReviews, "rate");
-                        const newRate = _.reduce(newRates, (a, b) => a + b, 0) / (newRates.length || 1);
-                        const { films } = cache.readQuery({ query: filmsQuery});
-                        cache.writeQuery({
-                            query: filmsQuery,
-                            data: {
-                                films: _.map(films, x => x.id === id ? {...x, rate: newRate} : x)
-                            }
-                        });
-                    }}>
+                    >
                     {(createReview, { loading, error }) => {
                         if (loading) {
                             return <span>Adding review...</span>
@@ -136,6 +144,10 @@ const containerStyle = {
 
 const reviewStyle = {
     marginTop: 30
+}
+
+const newReviewStyle = {
+    background: "yellow"
 }
 
 const reviewHeaderStyle = {

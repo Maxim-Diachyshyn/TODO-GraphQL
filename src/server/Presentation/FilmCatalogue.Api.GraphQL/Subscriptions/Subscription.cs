@@ -6,41 +6,34 @@ using FilmCatalogue.Api.Common.Contexts.Reviews.ViewModels;
 using FilmCatalogue.Api.GraphQL.GraphTypes;
 using GraphQL.Resolvers;
 using GraphQL.Types;
+using Microsoft.AspNetCore.Http;
 
 namespace FilmCatalogue.Api.GraphQL.Subscriptions
 {
     public class Subscription : ObjectGraphType
     {
-        public Subscription(FilmAddedHandler filmAddedHandler, FilmUpdatedHandler filmUpdatedHandler, FilmRemovedHandler filmRemovedHandler, ReviewAddedHandler reviewAddedHandler)
+        public Subscription(IHttpContextAccessor accessor)
         {
             AddField(new EventStreamFieldType
             {
                 Name = "filmAdded",
                 Type = typeof(FilmType),
                 Resolver = new FuncFieldResolver<FilmViewModel>(ctx => ctx.Source as FilmViewModel),
-                Subscriber = new EventStreamResolver<FilmViewModel>(ctx => filmAddedHandler.AsObservable())
+                Subscriber = new EventStreamResolver<FilmViewModel>(ctx => accessor.GetService<FilmAddedHandler>().AsObservable())
             });
             AddField(new EventStreamFieldType
             {
                 Name = "filmUpdated",
                 Type = typeof(FilmType),
                 Resolver = new FuncFieldResolver<FilmViewModel>(ctx => ctx.Source as FilmViewModel),
-                Subscriber = new EventStreamResolver<FilmViewModel>(ctx => filmUpdatedHandler.AsObservable())
+                Subscriber = new EventStreamResolver<FilmViewModel>(ctx => accessor.GetService<FilmUpdatedHandler>().AsObservable())
             });
             AddField(new EventStreamFieldType
             {
                 Name = "filmDeleted",
                 Type = typeof(FilmType),
                 Resolver = new FuncFieldResolver<FilmViewModel>(ctx => ctx.Source as FilmViewModel),
-                Subscriber = new EventStreamResolver<FilmViewModel>(ctx => filmRemovedHandler.AsObservable())
-            });
-
-            AddField(new EventStreamFieldType
-            {
-                Name = "reviewAdded",
-                Type = typeof(ReviewType),
-                Resolver = new FuncFieldResolver<ReviewViewModel>(ctx => ctx.Source as ReviewViewModel),
-                Subscriber = new EventStreamResolver<ReviewViewModel>(ctx => reviewAddedHandler.AsObservable())
+                Subscriber = new EventStreamResolver<FilmViewModel>(ctx => accessor.GetService<FilmRemovedHandler>().AsObservable())
             });
         }
     }   

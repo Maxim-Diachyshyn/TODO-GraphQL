@@ -1,3 +1,5 @@
+using System;
+
 namespace FilmCatalogue.Domain.DataTypes.Reviews
 {
     public class Rate
@@ -6,6 +8,11 @@ namespace FilmCatalogue.Domain.DataTypes.Reviews
 
         public Rate(int value)
         {
+            if (value < 1 || value > 5)
+            {
+                //TODO:
+                throw new Exception();
+            }
             _value = value;
         }
 

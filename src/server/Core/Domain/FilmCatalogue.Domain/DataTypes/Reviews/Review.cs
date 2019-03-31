@@ -9,13 +9,15 @@ namespace FilmCatalogue.Domain.DataTypes.Reviews
         public string Comment { get; }
         public DateTime AddedAt { get; }
         public Rate Rate { get; }
+        public Id FilmId { get; }
 
-        public Review(Id id, string comment, DateTime addedAt, Rate rate)
+        public Review(Id id, string comment, DateTime addedAt, Rate rate, Id filmId)
         {
             Id = id;
             Comment = comment;
             AddedAt = addedAt;
             Rate = rate;
+            FilmId = filmId;
         }
     }
 }

@@ -17,8 +17,19 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders
 
         public IQueryable<ReviewEntity> Build(IReviewRequest request)
         {
-            return _query
-                .Where(x => x.FilmId == request.FilmId);
+            var query = _query;
+            if (request.FilmId != null)
+            {
+                query = query
+                    .Where(x => x.FilmId == request.FilmId);
+            }
+            if (request.SpecifiedIds.Any())
+            {
+                query = query
+                    .Where(x => request.SpecifiedIds.Contains(x.Id))
+                    .OrderBy(x => x.AddedAt);
+            }
+            return query;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using Autofac;
 using FilmCatalogue.Persistence.EntityFramework.Base;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Builders;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders;
 using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
@@ -22,6 +23,7 @@ namespace FilmCatalogue.Persistence
             };
 
             builder.RegisterType<ReviewsQueryBuilder>().AsImplementedInterfaces();
+            builder.RegisterType<FilmsQueryBuilder>().AsImplementedInterfaces();
 
             foreach (var interfaceToRegister in interfacesToRegister)
             {

@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace FilmCatalogue.Application.UseCases.Films.Requests
 {
-    public class GetFilmListRequest : IRequest<IEnumerable<Film>>
+    public class GetFilmListRequest : IRequest<IEnumerable<Film>>, IFilmRequest
     {
         public GetFilmListRequest(params Id[] specifiedIds)
         {
             SpecifiedIds = specifiedIds;
         }
 
-        public IEnumerable<Id> SpecifiedIds { get; }
+        public IList<Id> SpecifiedIds { get; }
     }
 }

@@ -12,7 +12,7 @@ namespace FilmCatalogue.Persistence.EntityFramework
             var film1 = context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10),
             });
 
@@ -20,105 +20,105 @@ namespace FilmCatalogue.Persistence.EntityFramework
             {
                 Comment = "Some review",
                 Rating = 4,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "Second review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
                         context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
             context.Add(new ReviewEntity
             {
                 Comment = "One more review",
                 Rating = 3,
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 FilmId = film1.Entity.Id
             });
 
@@ -128,133 +128,133 @@ namespace FilmCatalogue.Persistence.EntityFramework
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
             context.Add(new FilmEntity
             {
                 Name = "asdasd",
-                AddedAt = DateTime.Now,
+                AddedAt = DateTime.UtcNow,
                 ShowedDate = new DateTime(2010, 11, 10)
             });
 

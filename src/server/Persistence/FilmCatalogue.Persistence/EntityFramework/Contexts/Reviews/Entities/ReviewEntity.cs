@@ -18,7 +18,8 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities
                 id: Id,
                 comment: Comment,
                 addedAt: AddedAt,
-                rate: Rating
+                rate: Rating,
+                filmId: FilmId
             );
         }
     }

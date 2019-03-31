@@ -29,9 +29,9 @@ namespace FilmCatalogue.Api.GraphQL.GraphTypes
                 .Name(nameof(FilmViewModel.Reviews))
                 .ResolveAsync(async ctx => 
                 {
-                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
+                    var mediator = accessor.GetMediator();
                     var models = await mediator.Send(new GetReviewsRequest(ctx.Source.Id));
-                    return models.Select(x => new ReviewViewModel(x)).ToList();
+                    return models.Select(x => new ReviewViewModel(x, ctx.Source)).ToList();
                 });
             Field<DecimalGraphType>()
                 .Name("Rate")
@@ -42,7 +42,7 @@ namespace FilmCatalogue.Api.GraphQL.GraphTypes
                     {
                         return ctx.Source.Rate.Value;
                     }
-                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
+                    var mediator = accessor.GetMediator();
                     return await mediator.Send(new GetRateRequest(ctx.Source.Id));
                 });
         }

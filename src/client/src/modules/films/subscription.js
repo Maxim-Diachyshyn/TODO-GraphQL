@@ -20,6 +20,12 @@ subscription {
     showedDate
     photo
     rate
+    reviews {
+      id
+      rate
+      addedAt
+      comment
+    }
   }
 }`;
 

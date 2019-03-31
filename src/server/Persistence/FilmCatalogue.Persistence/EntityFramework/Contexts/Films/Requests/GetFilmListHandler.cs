@@ -9,6 +9,7 @@ using FilmCatalogue.Application.UseCases.Films.Requests;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
+using FilmCatalogue.Persistence.EntityFramework.Extensions;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Requests
 {
@@ -23,10 +24,9 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Requests
 
         public async Task<IEnumerable<Film>> Handle(GetFilmListRequest request, CancellationToken cancellationToken)
         {
-            var ids = request.SpecifiedIds.Select(x => (Guid)x).ToList();
             if (request.SpecifiedIds.Any())
             {
-                _query = _query.Where(x => ids.Contains(x.Id));
+                _query = _query.Where(x => request.SpecifiedIds.ToGuid().Contains(x.Id));
             }
 
             var films = await _query

@@ -42,7 +42,7 @@ namespace FilmCatalogue.Tests.Rest
             await _controller.CreateAsync(new CreateModel
             {
                 Name = "New Film",
-                ShowedDate = DateTime.Now
+                ShowedDate = DateTime.UtcNow
             });
             list = await _controller.GetListAsync();
             list.Should().HaveCount(1);

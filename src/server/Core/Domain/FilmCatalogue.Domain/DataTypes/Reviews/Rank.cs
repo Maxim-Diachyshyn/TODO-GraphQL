@@ -1,3 +1,5 @@
+using System;
+
 namespace FilmCatalogue.Domain.DataTypes.Reviews
 {
     public class Rank
@@ -6,6 +8,11 @@ namespace FilmCatalogue.Domain.DataTypes.Reviews
 
         public Rank(decimal value)
         {
+            if (value < 1 || value > 5)
+            {
+                //TODO:
+                throw new Exception();
+            }
             _value = value;
         }
 

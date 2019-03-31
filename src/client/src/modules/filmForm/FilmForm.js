@@ -7,6 +7,7 @@ import filmQuery from "./query";
 import filmsQuery from "../films/query";
 import ROUTES from "../appRouter/routes";
 import moment from 'moment';
+import { Button, Form, Image } from "react-bootstrap";
 import Reviews from "../reviews";
 
 const DATE_FORMAT = "YYYY-MM-DD";
@@ -26,7 +27,7 @@ class EditForm extends Component {
         };
     }
     
-    async componentWillMount() {
+    componentWillMount() {
         if (!this.props.isAddingForm) {
             let film = _.get(this.props.location, "state.film", null);
             if (!film) {
@@ -59,7 +60,7 @@ class EditForm extends Component {
         this.setState(prevState => ({film:{...prevState.film, showedDate}}));
     }
 
-    _onfileChange = (e) => {
+    _onFileChange = (e) => {
         var reader = new FileReader();
         const file = e.target.files[0];
         if (!file) {
@@ -68,7 +69,13 @@ class EditForm extends Component {
         reader.readAsDataURL(file);
         this.setState({isUploadingFile: true, photo: ""});
         reader.onload = () => {
-            this.setState(prevState => ({isUploadingFile: false, film:{...prevState.film, photo: reader.result}}));
+            this.setState(prevState => ({
+                isUploadingFile: false, 
+                film: {
+                    ...prevState.film, 
+                    photo: reader.result
+                }}
+            ));
         };
     }
 
@@ -150,46 +157,65 @@ class EditForm extends Component {
             return (
                 <div style={containerStyle}>                
                     <Link to={ROUTES.HOME} style={backButtonStyle}>Back</Link>
-                    <form onSubmit={e => {e.preventDefault(); mutation();}} style={formContainerStyle}>
-                        <span>Film Name:</span>
-                        <div style={inputContainerStyle}>
-                            <input
-                                type='text'
-                                value={film.name}
-                                onChange={this._onNameChange}
-                            />
-                            {_.some(errors, e => e.extensions.code === "EmptyName") 
+                    <Form style={fromStyle} onSubmit={e => {e.preventDefault(); mutation();}}>
+                        <Form.Group>
+                            <Form.Label>Film Name:</Form.Label>
+                                <Form.Control
+                                    type='text'
+                                    value={film.name}
+                                    onChange={this._onNameChange}
+                                />
+                                {_.some(errors, e => e.extensions.code === "EmptyName") 
+                                    ? (
+                                        <Form.Text style={errorStyle}>Film name should not be empty</Form.Text>
+                                    )
+                                    : null}
+                        </Form.Group>                        
+
+                        <Form.Group>
+                            <Form.Label>Premiere Date:</Form.Label>
+                            <Form.Control
+                                    type='date'
+                                    value={film.showedDate.format(DATE_FORMAT)}
+                                    onChange={this._onShowedDateChange}
+                                />
+                                {_.some(errors, e => e.extensions.code === "EmptyDate") 
                                 ? (
-                                    <span style={errorStyle}>Film name should not be empty</span>
+                                    <Form.Text style={errorStyle}>Showed date should not be empty</Form.Text>
                                 )
                                 : null}
-                        </div>
+                        </Form.Group>
 
-                        <span>Premiere Date:</span>
-                        <div style={inputContainerStyle}>
-                            <input
-                                type='date'
-                                value={film.showedDate.format(DATE_FORMAT)}
-                                onChange={this._onShowedDateChange}
-                            />
-                            {_.some(errors, e => e.extensions.code === "EmptyDate") 
-                            ? (
-                                <span style={errorStyle}>Showed date should not be empty</span>
-                            )
-                            : null}
-                        </div>
-
-                        <span>Photo:</span>
-                        <input 
-                            type="file"
-                            onChange={this._onfileChange}
-                        />
-                        <img src={film.photo} style={photoStyle} height={300} width={300}/>
-                        <button type='submit' disabled={isUploadingFile} style={submitStyle}>Ok</button>
-                        {!isAddingForm ? (
-                            <button onClick={deleteFilm}>Delete</button>
-                        ): null}
-                    </form>
+                        <Form.Group>
+                            <Form.Label>Photo:</Form.Label>
+                            <div style={{...photoContainerStyle, ...(!film.photo ? square : null)}}>
+                                <Image src={ film.photo } rounded fluid/>
+                                <div className="input-group" style={uploadPhotoButton}>
+                                    <div className="custom-file">
+                                        <input
+                                        type="file"
+                                        className="custom-file-input"
+                                        id="inputGroupFile01"
+                                        aria-describedby="inputGroupFileAddon01"
+                                        onChange={this._onFileChange}
+                                        />
+                                        <label className="custom-file-label" htmlFor="inputGroupFile01">
+                                            Choose file
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </Form.Group>
+                        <Form.Group>
+                            <Button variant="primary" type="submit" style={submitButtonStyle} disabled={isUploadingFile} block>Ok</Button>
+                        </Form.Group>                                         
+                            {!isAddingForm ? (
+                                <Form.Group>
+                                    <Button variant="danger" onClick={deleteFilm}>Delete</Button>
+                                </Form.Group>       
+                            ): null}
+                        
+                    </Form>
                     {!isAddingForm ? (
                         <div style={reviewsStyle}>
                             <Reviews id={film.id}/>
@@ -206,14 +232,21 @@ export default withApollo(EditForm);
 const containerStyle = {
     display: "flex",
     flexDirection: "column",
-    padding: 20
+    padding: 20,
+}
+
+const fromStyle = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    margin: "0px auto",
+    maxWidth: 512
 }
 
 const reviewsStyle = {
     display: "flex",
     flexDirection: "column",
-    alignSelf: "center",
-    maxWidth: 1024
+    margin: "0px auto"
 }
 
 const errorStyle = {
@@ -221,31 +254,33 @@ const errorStyle = {
     fontSize: 12
 }
 
-const inputContainerStyle = {
-    display: "flex",
-    flexDirection: "column"
-}
-
 const backButtonStyle = {
-    alignSelf: "flex-start",
 }
 
-const formContainerStyle = {
-    padding: 20,
-    display: "grid",
-    maxWidth: 450,
-    justifyContent: "space-between",
-    textAlign: "left",
-    gridTemplateColumns: "1fr 1fr",
-    gridColumnGap: 10,
-    gridRowGap: 10,
-    alignSelf: "center",
+const submitButtonStyle = {
+    maxWidth: 300
 }
 
-const photoStyle = {
-    gridColumn: "1 / span 2",
+const photoContainerStyle = {
+    position: "relative",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
 }
 
-const submitStyle = {
-    gridColumn: "1 / span 2",
+const square = {
+    paddingBottom: "100%",
+    height: 0,
+    border: "1px solid black",
+    borderRadius: 5
+}
+
+const uploadPhotoButton = {
+    position: "absolute",
+    margin: "auto auto 5px auto",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    maxWidth: 300
 }

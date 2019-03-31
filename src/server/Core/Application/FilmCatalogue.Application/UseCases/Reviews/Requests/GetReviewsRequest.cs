@@ -10,8 +10,11 @@ namespace FilmCatalogue.Application.UseCases.Reviews.Requests
         public GetReviewsRequest(Id filmId)
         {
             FilmId = filmId;
+            SpecifiedIds = new List<Id>();
         }
 
         public Id FilmId { get; }
+
+        public IList<Id> SpecifiedIds { get; }
     }
 }

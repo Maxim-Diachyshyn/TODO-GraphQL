@@ -34,8 +34,7 @@ namespace FilmCatalogue.Api.GraphQL.Queries
                 {
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var id = context.GetArgument<Guid>("id");
-                    var films = await mediator.Send(new GetFilmListRequest(new Id(id)));
-                    var film = films.SingleOrDefault();
+                    var film = await mediator.Send(new GetFilmByIdRequest(new Id(id)));
                     if (film == null)
                     {
                         context.Errors.Add(new ExecutionError("Not found") {Code="NotFound"});

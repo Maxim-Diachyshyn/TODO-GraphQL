@@ -88,8 +88,7 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                 {
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var id = context.GetArgument<Guid>("id");
-                    var films = await mediator.Send(new GetFilmListRequest(new Id(id)));
-                    var film = films.Single();
+                    var film = await mediator.Send(new GetFilmByIdRequest(new Id(id)));
                     await mediator.Send(new DeleteFilmCommand { FilmId = new Id(id) });
                     return new FilmViewModel(film);
                 });
@@ -102,7 +101,9 @@ namespace FilmCatalogue.Api.GraphQL.Mutations
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var input = context.GetArgument<AddReviewInput>("review");
                     var command = input.ToCommand();
-                    return new ReviewViewModel(await mediator.Send(command));
+                    var review = await mediator.Send(command);
+                    var film = await mediator.Send(new GetFilmByIdRequest(command.FilmId));
+                    return new ReviewViewModel(review, new FilmViewModel(film));
                 });
         }
     }
