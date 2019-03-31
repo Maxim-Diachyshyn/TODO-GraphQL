@@ -26,10 +26,9 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Builders
             if (request.SpecifiedIds.Any())
             {
                 query = query
-                    .Where(x => request.SpecifiedIds.Contains(x.Id))
-                    .OrderBy(x => x.AddedAt);
+                    .Where(x => request.SpecifiedIds.Contains(x.Id));
             }
-            return query;
+            return query.OrderByDescending(x => x.AddedAt);
         }
     }
 }

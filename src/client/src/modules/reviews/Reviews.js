@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import _ from "lodash";
 import StarRatings from 'react-star-ratings';
+import { CircularProgress } from '@material-ui/core';
 import { Mutation, Query, withApollo, graphql } from "react-apollo";
 import query from "./query";
 import filmsQuery from "../films/query";
@@ -92,8 +93,17 @@ class Reviews extends Component {
     }
 
     render() {
-        const { data: { error }, id } = this.props;
-        const { comment, rate }= this.state;
+        const { data: { error, loading }, id } = this.props;
+        const { comment, rate } = this.state;
+        
+        if (loading) {
+            return (
+                <div style={spinnerContainer}>
+                    <CircularProgress />
+                    <span>Loading Reviews...</span>
+                </div>
+            );
+        }
         if (error) {
             return <span>Error...</span>
         }
@@ -106,7 +116,12 @@ class Reviews extends Component {
                     >
                     {(createReview, { loading, error }) => {
                         if (loading) {
-                            return <span>Adding review...</span>
+                            return (
+                                <div style={spinnerContainer}>
+                                    <CircularProgress />
+                                    <span>Adding review...</span>
+                                </div>
+                            );
                         }
                         if (error) {
                             return <span>{error.message}</span>
@@ -169,4 +184,11 @@ const formStyle = {
 const commentContainerStyle = {
     display: "flex", 
     flexDirection: "row"
+}
+
+const spinnerContainer = {
+    display: "flex",
+    flexDirection: 'column',
+    alignItems: "center",
+    justifyContent: "center"
 }

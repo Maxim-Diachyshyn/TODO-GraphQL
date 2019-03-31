@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { graphql } from "react-apollo";
 import { Link } from 'react-router-dom'
+import { CircularProgress } from '@material-ui/core';
 import _ from "lodash";
 import moment from "moment";
 import StarRatings from 'react-star-ratings';
@@ -18,7 +19,7 @@ class Films extends Component {
               const newFilmAdded = subscriptionData.data.filmAdded;  
               return {
                 ...prev,
-                films: [...prev.films, newFilmAdded]
+                films: [newFilmAdded, ...prev.films]
               };
             }
           });
@@ -57,7 +58,12 @@ class Films extends Component {
     render() {
         const { data } = this.props;
         if (data.loading) {
-            return <span>Loading...</span>
+            return (
+                <div style={loaderStyle}>
+                    <CircularProgress />
+                    <span>Loading films...</span>
+                </div>
+            )
         }
         if (data.error) {
             return <span>{data.error.message}</span>;
@@ -106,6 +112,19 @@ const filmContainerStyle = {
 const filmNameStyle = {
     fontWeight: "bold",
     fontSize: 24
+}
+
+const loaderStyle = {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
 }
   
 export default graphql(query)(Films);

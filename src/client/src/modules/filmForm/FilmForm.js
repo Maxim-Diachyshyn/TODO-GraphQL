@@ -8,6 +8,7 @@ import filmsQuery from "../films/query";
 import ROUTES from "../appRouter/routes";
 import moment from 'moment';
 import { Button, Form, Image } from "react-bootstrap";
+import { CircularProgress } from '@material-ui/core';
 import Reviews from "../reviews";
 
 const DATE_FORMAT = "YYYY-MM-DD";
@@ -145,14 +146,29 @@ class EditForm extends Component {
             const errors = _.get(error, "graphQLErrors", []);
             if (loading) {
                 if (isAddingForm) {
-                    return <span>Adding New Film...</span>
+                    return (
+                        <div style={loaderStyle}>
+                            <CircularProgress />
+                            <span>Adding Film...</span>
+                        </div>
+                    );
                 }
                 else {
-                    return <span>Updating Film...</span>
+                    return (
+                        <div style={loaderStyle}>
+                            <CircularProgress />
+                            <span>Updating Film...</span>
+                        </div>
+                    );
                 }
             }
             if (deleteLoading) {
-                return <span>Deleting Film...</span>
+                return (
+                    <div style={loaderStyle}>
+                        <CircularProgress />
+                        <span>Deleting Film...</span>
+                    </div>
+                );
             }
             return (
                 <div style={containerStyle}>                
@@ -189,21 +205,30 @@ class EditForm extends Component {
                         <Form.Group>
                             <Form.Label>Photo:</Form.Label>
                             <div style={{...photoContainerStyle, ...(!film.photo ? square : null)}}>
-                                <Image src={ film.photo } rounded fluid/>
-                                <div className="input-group" style={uploadPhotoButton}>
-                                    <div className="custom-file">
-                                        <input
-                                        type="file"
-                                        className="custom-file-input"
-                                        id="inputGroupFile01"
-                                        aria-describedby="inputGroupFileAddon01"
-                                        onChange={this._onFileChange}
-                                        />
-                                        <label className="custom-file-label" htmlFor="inputGroupFile01">
-                                            Choose file
-                                        </label>
+                                {this.state.isUploadingFile ? (
+                                    <div style={spinnerContainer}>
+                                        <CircularProgress />
+                                        <span>Uploading photo...</span>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div>
+                                        <Image src={ film.photo } rounded fluid/>
+                                        <div className="input-group" style={uploadPhotoButton}>
+                                            <div className="custom-file">
+                                                <input
+                                                type="file"
+                                                className="custom-file-input"
+                                                id="inputGroupFile01"
+                                                aria-describedby="inputGroupFileAddon01"
+                                                onChange={this._onFileChange}
+                                                />
+                                                <label className="custom-file-label" htmlFor="inputGroupFile01">
+                                                    Choose file
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </Form.Group>
                         <Form.Group>
@@ -233,13 +258,15 @@ const containerStyle = {
     display: "flex",
     flexDirection: "column",
     padding: 20,
+    margin: "0px auto",
+    width: "100%"
 }
 
 const fromStyle = {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-    margin: "0px auto",
+    width: "100%",
+    margin: "auto",
     maxWidth: 512
 }
 
@@ -283,4 +310,24 @@ const uploadPhotoButton = {
     left: 0,
     right: 0,
     maxWidth: 300
+}
+
+const spinnerContainer = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
+}
+
+const loaderStyle = {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
 }
