@@ -1,5 +1,6 @@
 ﻿using FilmCatalogue.Application.UseCases.Films.Commands;
 using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,16 +11,16 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
 {
     public class AddFilmHandler : IRequestHandler<AddFilmCommand, Film>
     {
-        private readonly FilmDbContext _context;
+        private readonly IUnitOfWork<FilmEntity> _unitOfWork;
 
-        public AddFilmHandler(FilmDbContext context)
+        public AddFilmHandler(IUnitOfWork<FilmEntity> unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Film> Handle(AddFilmCommand command, CancellationToken cancellationToken)
         {
-            var entry = _context.Add(
+            var entity = _unitOfWork.Add(
                 new FilmEntity
                 {
                     Name = command.Name,
@@ -28,9 +29,8 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
                     PhotoType = command.Photo?.Type
                 }
             );
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return entry.Entity.ToModel();
+            await _unitOfWork.SaveChangesAsync();
+            return entity.ToModel();
         }
     }
 }

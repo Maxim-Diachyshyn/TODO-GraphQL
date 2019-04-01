@@ -1,10 +1,11 @@
 ﻿using System;
 using FilmCatalogue.Domain.DataTypes.Common;
 using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Persistence.EntityFramework.Base;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities
 {
-    public class FilmEntity
+    public class FilmEntity : IUnique
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

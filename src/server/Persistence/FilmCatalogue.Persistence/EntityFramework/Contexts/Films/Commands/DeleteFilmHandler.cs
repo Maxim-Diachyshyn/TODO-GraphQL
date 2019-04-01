@@ -1,4 +1,5 @@
 ﻿using FilmCatalogue.Application.UseCases.Films.Commands;
+using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,17 +10,17 @@ namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands
 {
     public class DeleteFilmHandler : IRequestHandler<DeleteFilmCommand>
     {
-        private readonly FilmDbContext _context;
+        private readonly IUnitOfWork<FilmEntity> _unitOfWork;
 
-        public DeleteFilmHandler(FilmDbContext context)
+        public DeleteFilmHandler(IUnitOfWork<FilmEntity> unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(DeleteFilmCommand request, CancellationToken cancellationToken)
         {
-            _context.Remove(new FilmEntity { Id = request.FilmId });
-            await _context.SaveChangesAsync();
+            _unitOfWork.Remove(request.FilmId);
+            await _unitOfWork.SaveChangesAsync();
             return Unit.Value;
         }
     }

@@ -1,7 +1,11 @@
 ﻿using System.Linq;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FilmCatalogue.Domain.DataTypes.Films;
+using FilmCatalogue.Persistence.EntityFramework.Base;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Requests;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +28,15 @@ namespace FilmCatalogue.Persistence.EntityFramework
             builder.Populate(services);
 
             builder.RegisterSource(new QueryableRegistrationSource<FilmDbContext>());
+
+            //TODO: automate this
+            builder.RegisterType<UnitOfWork<FilmDbContext, FilmEntity>>()
+                .As<IUnitOfWork<FilmEntity>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<UnitOfWork<FilmDbContext, ReviewEntity>>()
+                .As<IUnitOfWork<ReviewEntity>>()
+                .InstancePerLifetimeScope();
         }
     }
 }

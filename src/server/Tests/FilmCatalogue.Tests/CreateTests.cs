@@ -7,19 +7,23 @@ using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands;
 using FilmCatalogue.Application.UseCases.Films.Commands;
 using System.Threading.Tasks;
 using System.Threading;
+using FilmCatalogue.Persistence.EntityFramework.Base;
+using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 
 namespace FilmCatalogue.Tests
 {
     public class CreateTests : IDisposable
     {
         private readonly FilmDbContext _context;
+        private readonly IUnitOfWork<FilmEntity> _unitOfWork;
         private readonly AddFilmHandler _handler;
 
         public CreateTests()
         {
             _context = new FilmDbContext(new DbContextOptionsBuilder().UseInMemoryDatabase("Create Test DB").Options);
             _context.Database.EnsureCreated();
-            _handler = new AddFilmHandler(_context);
+            _unitOfWork = new UnitOfWork<FilmDbContext, FilmEntity>(_context);
+            _handler = new AddFilmHandler(_unitOfWork);
         }
 
         public void Dispose()

@@ -1,9 +1,10 @@
 using System;
 using FilmCatalogue.Domain.DataTypes.Reviews;
+using FilmCatalogue.Persistence.EntityFramework.Base;
 
 namespace FilmCatalogue.Persistence.EntityFramework.Contexts.Reviews.Entities
 {
-    public class ReviewEntity
+    public class ReviewEntity : IUnique
     {
         public Guid Id { get; set; }
         public string Comment { get; set; }

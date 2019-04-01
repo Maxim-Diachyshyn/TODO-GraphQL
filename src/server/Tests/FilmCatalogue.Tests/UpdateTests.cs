@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FilmCatalogue.Application.UseCases.Films.Commands;
 using FilmCatalogue.Persistence.EntityFramework;
+using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using FluentAssertions;
@@ -14,6 +15,7 @@ namespace FilmCatalogue.Tests
     public class UpdateTests : IDisposable
     {
         private readonly FilmDbContext _context;
+        private readonly IUnitOfWork<FilmEntity> _unitOfWork;
         private readonly UpdateFilmHandler _handler;
         private readonly Guid _addedFilmId;
 
@@ -32,10 +34,11 @@ namespace FilmCatalogue.Tests
             };
             _context.Add(film);
             _context.SaveChanges();
+            _unitOfWork = new UnitOfWork<FilmDbContext, FilmEntity>(_context);
             _context.Films.AsNoTracking().Should().HaveCount(1);
             _context.Entry(film).State = EntityState.Detached;
             _addedFilmId = film.Id;
-            _handler = new UpdateFilmHandler(_context);
+            _handler = new UpdateFilmHandler(_unitOfWork);
         }
 
         public void Dispose()

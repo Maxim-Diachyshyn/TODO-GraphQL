@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FilmCatalogue.Application.UseCases.Films.Commands;
 using FilmCatalogue.Persistence.EntityFramework;
+using FilmCatalogue.Persistence.EntityFramework.Base;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Commands;
 using FilmCatalogue.Persistence.EntityFramework.Contexts.Films.Entities;
 using FluentAssertions;
@@ -14,6 +15,7 @@ namespace FilmCatalogue.Tests
     public class DeleteTests : IDisposable
     {
         private readonly FilmDbContext _context;
+        private readonly IUnitOfWork<FilmEntity> _unitOfWork;
         private readonly Guid _addedFilmId;
 
         public DeleteTests()
@@ -31,6 +33,7 @@ namespace FilmCatalogue.Tests
             };
             _context.Films.Add(film);
             _context.SaveChanges();
+            _unitOfWork = new UnitOfWork<FilmDbContext, FilmEntity>(_context);
             _context.Films.AsNoTracking().Should().HaveCount(1);
             _context.Entry(film).State = EntityState.Detached;
             _addedFilmId = film.Id;
@@ -44,7 +47,7 @@ namespace FilmCatalogue.Tests
         [Fact]
         public async Task Should_delete_film()
         {
-            var handler = new DeleteFilmHandler(_context);
+            var handler = new DeleteFilmHandler(_unitOfWork);
             var command = new DeleteFilmCommand
             {
                 FilmId = _addedFilmId
