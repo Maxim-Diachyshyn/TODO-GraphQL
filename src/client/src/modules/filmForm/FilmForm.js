@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Mutation, withApollo } from "react-apollo";
+import { Mutation, withApollo, Subscription } from "react-apollo";
 import _ from "lodash";
 import { Link } from 'react-router-dom'
 import {editMutation, createMutation, deleteMutation} from "./mutation";
 import filmQuery from "./query";
+import subscription from "./subscription";
 import filmsQuery from "../films/query";
 import ROUTES from "../appRouter/routes";
 import moment from 'moment';
@@ -24,7 +25,8 @@ class EditForm extends Component {
                 showedDate: moment(),
                 photo: ""
             },
-            isUploadingFile: false
+            isUploadingFile: false,
+            isFilmDeleted: false
         };
     }
     
@@ -38,7 +40,7 @@ class EditForm extends Component {
                             ...response.data.film,
                             showedDate: moment(response.data.film.showedDate)
                         };
-                        this.setState({film});
+                        this.setState({ film });
                     });                
             }
             else {
@@ -46,8 +48,8 @@ class EditForm extends Component {
                     ...film,
                     showedDate: moment(film.showedDate)
                 }
-                this.setState({film});
-            }
+                this.setState({ film });
+            }            
         }
     }
 
@@ -139,11 +141,34 @@ class EditForm extends Component {
         );
     }
 
+    withSubscription = handler => {
+        if (this.props.isAddingForm) {
+            return handler(false);
+        }
+        return (
+            <Subscription
+                subscription={subscription.filmDeletedByIdSubscription}
+                variables={{ id: this.state.film.id }}
+            >
+                {({ loading }) => handler(!loading)}
+            </Subscription>
+        )
+    }
+
     render() {
         const { isAddingForm } = this.props;
         const { film, isUploadingFile } = this.state;
-        return this.withMutation((mutation, {loading, error}, deleteFilm, {deleteLoading}) => {
+        return this.withSubscription(filmDeleted => 
+            this.withMutation((mutation, {loading, error}, deleteFilm, {deleteLoading}) => {
             const errors = _.get(error, "graphQLErrors", []);
+            if (filmDeleted) {
+                return (
+                    <div style={containerStyle}>                
+                        <Link to={ROUTES.HOME} style={backButtonStyle}>Back</Link>
+                        <span>Sorry but this film is currently deleted</span>
+                    </div>
+                );
+            }
             if (loading) {
                 if (isAddingForm) {
                     return (
@@ -248,7 +273,7 @@ class EditForm extends Component {
                     ): null}
                 </div>
             )
-        });
+        }));
     }
 }
 
