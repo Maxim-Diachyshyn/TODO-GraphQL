@@ -45,6 +45,16 @@ namespace FilmCatalogue.Api.GraphQL.Subscriptions
                 Resolver = new FuncFieldResolver<FilmViewModel>(ctx => ctx.Source as FilmViewModel),
                 Subscriber = new EventStreamResolver<FilmViewModel>(ctx => accessor.GetService<FilmRemovedHandler>().ById(ctx.GetArgument<Guid>("id")))
             });
+            AddField(new EventStreamFieldType
+            {
+                Name = "filmUpdatedById",
+                Arguments = new QueryArguments(
+                    new QueryArgument<IdGraphType> { Name = "id" }
+                ),
+                Type = typeof(FilmType),
+                Resolver = new FuncFieldResolver<FilmViewModel>(ctx => ctx.Source as FilmViewModel),
+                Subscriber = new EventStreamResolver<FilmViewModel>(ctx => accessor.GetService<FilmUpdatedHandler>().ById(ctx.GetArgument<Guid>("id")))
+            });
         }
     }   
 }

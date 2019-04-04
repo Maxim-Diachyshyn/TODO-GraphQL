@@ -10,8 +10,7 @@ namespace FilmCatalogue.Domain.DataTypes.Common
         {
             if (value == Guid.Empty)
             {
-                //TODO: 
-                throw new Exception();
+                throw new Exception($"{nameof(Id)} should not be empty");
             }
             _value = value;
         }

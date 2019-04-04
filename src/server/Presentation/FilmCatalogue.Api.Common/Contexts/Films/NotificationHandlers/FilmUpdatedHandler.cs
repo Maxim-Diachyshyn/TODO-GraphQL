@@ -9,6 +9,7 @@ using FilmCatalogue.Application.UseCases.Films.Commands;
 using FilmCatalogue.Application.UseCases.Films.Requests;
 using FilmCatalogue.Application.UseCases.Reviews.Commands;
 using FilmCatalogue.Application.UseCases.Reviews.Requests;
+using FilmCatalogue.Domain.DataTypes.Common;
 using FilmCatalogue.Domain.DataTypes.Films;
 using FilmCatalogue.Domain.DataTypes.Reviews;
 using MediatR;
@@ -48,6 +49,11 @@ namespace FilmCatalogue.Api.Common.Contexts.Films.NotificationHandlers
         public IDisposable Subscribe(IObserver<FilmViewModel> observer)
         {
             return _filmStream.Subscribe(observer);
+        }
+
+        public IObservable<FilmViewModel> ById(Id id)
+        {
+            return _filmStream.Where(x => x.Id == id);
         }
     }
 }

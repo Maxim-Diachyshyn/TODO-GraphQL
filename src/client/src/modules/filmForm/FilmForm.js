@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Mutation, withApollo, Subscription } from "react-apollo";
+import { Mutation, withApollo, Subscription, graphql } from "react-apollo";
 import _ from "lodash";
 import { Link } from 'react-router-dom'
 import {editMutation, createMutation, deleteMutation} from "./mutation";
@@ -9,7 +9,7 @@ import filmsQuery from "../films/query";
 import ROUTES from "../appRouter/routes";
 import moment from 'moment';
 import { Button, Form, Image } from "react-bootstrap";
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Snackbar, SnackbarContent } from '@material-ui/core';
 import Reviews from "../reviews";
 
 const DATE_FORMAT = "YYYY-MM-DD";
@@ -141,7 +141,7 @@ class EditForm extends Component {
         );
     }
 
-    withSubscription = handler => {
+    withDeletedSubscription = handler => {
         if (this.props.isAddingForm) {
             return handler(false);
         }
@@ -149,8 +149,22 @@ class EditForm extends Component {
             <Subscription
                 subscription={subscription.filmDeletedByIdSubscription}
                 variables={{ id: this.state.film.id }}
-            >
+                >
                 {({ loading }) => handler(!loading)}
+            </Subscription>
+        )
+    }
+
+    withUpdatedSubscription = handler => {
+        if (this.props.isAddingForm) {
+            return handler(false);
+        }
+        return (
+            <Subscription
+                subscription={subscription.filmUpdatedByIdSubscription}
+                variables={{ id: this.state.film.id }}
+            >
+                {({ filmUpdatedById, loading }) => handler(!loading, filmUpdatedById)}
             </Subscription>
         )
     }
@@ -158,122 +172,136 @@ class EditForm extends Component {
     render() {
         const { isAddingForm } = this.props;
         const { film, isUploadingFile } = this.state;
-        return this.withSubscription(filmDeleted => 
-            this.withMutation((mutation, {loading, error}, deleteFilm, {deleteLoading}) => {
-            const errors = _.get(error, "graphQLErrors", []);
-            if (filmDeleted) {
+        return this.withUpdatedSubscription((filmUpdated, filmUpdatedData) =>
+            this.withDeletedSubscription(filmDeleted => 
+                this.withMutation((mutation, {loading, error}, deleteFilm, {deleteLoading}) => {
+                const errors = _.get(error, "graphQLErrors", []);
+                if (filmDeleted) {
+                    return (
+                        <div style={containerStyle}>                
+                            <Link to={ROUTES.HOME} style={backButtonStyle}>Back</Link>
+                            <span>Sorry but this film is currently deleted</span>
+                        </div>
+                    );
+                }
+                if (loading) {
+                    if (isAddingForm) {
+                        return (
+                            <div style={loaderStyle}>
+                                <CircularProgress />
+                                <span>Adding Film...</span>
+                            </div>
+                        );
+                    }
+                    else {
+                        return (
+                            <div style={loaderStyle}>
+                                <CircularProgress />
+                                <span>Updating Film...</span>
+                            </div>
+                        );
+                    }
+                }
+                if (deleteLoading) {
+                    return (
+                        <div style={loaderStyle}>
+                            <CircularProgress />
+                            <span>Deleting Film...</span>
+                        </div>
+                    );
+                }
                 return (
-                    <div style={containerStyle}>                
+                    <div style={containerStyle}>
+                        <Snackbar
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={filmUpdated}
+                            autoHideDuration={6000}
+                        >
+                        <SnackbarContent message="Someone has changed this film info." action={(
+                            <Button>Sync</Button>
+                        )} />
+                        </Snackbar>
+
                         <Link to={ROUTES.HOME} style={backButtonStyle}>Back</Link>
-                        <span>Sorry but this film is currently deleted</span>
-                    </div>
-                );
-            }
-            if (loading) {
-                if (isAddingForm) {
-                    return (
-                        <div style={loaderStyle}>
-                            <CircularProgress />
-                            <span>Adding Film...</span>
-                        </div>
-                    );
-                }
-                else {
-                    return (
-                        <div style={loaderStyle}>
-                            <CircularProgress />
-                            <span>Updating Film...</span>
-                        </div>
-                    );
-                }
-            }
-            if (deleteLoading) {
-                return (
-                    <div style={loaderStyle}>
-                        <CircularProgress />
-                        <span>Deleting Film...</span>
-                    </div>
-                );
-            }
-            return (
-                <div style={containerStyle}>                
-                    <Link to={ROUTES.HOME} style={backButtonStyle}>Back</Link>
-                    <Form style={fromStyle} onSubmit={e => {e.preventDefault(); mutation();}}>
-                        <Form.Group>
-                            <Form.Label>Film Name:</Form.Label>
+                        <Form style={fromStyle} onSubmit={e => {e.preventDefault(); mutation();}}>
+                            <Form.Group>
+                                <Form.Label>Film Name:</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        value={film.name}
+                                        onChange={this._onNameChange}
+                                    />
+                                    {_.some(errors, e => e.extensions.code === "EmptyName") 
+                                        ? (
+                                            <Form.Text style={errorStyle}>Film name should not be empty</Form.Text>
+                                        )
+                                        : null}
+                            </Form.Group>                        
+
+                            <Form.Group>
+                                <Form.Label>Premiere Date:</Form.Label>
                                 <Form.Control
-                                    type='text'
-                                    value={film.name}
-                                    onChange={this._onNameChange}
-                                />
-                                {_.some(errors, e => e.extensions.code === "EmptyName") 
+                                        type='date'
+                                        value={film.showedDate.format(DATE_FORMAT)}
+                                        onChange={this._onShowedDateChange}
+                                    />
+                                    {_.some(errors, e => e.extensions.code === "EmptyDate") 
                                     ? (
-                                        <Form.Text style={errorStyle}>Film name should not be empty</Form.Text>
+                                        <Form.Text style={errorStyle}>Showed date should not be empty</Form.Text>
                                     )
                                     : null}
-                        </Form.Group>                        
+                            </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Premiere Date:</Form.Label>
-                            <Form.Control
-                                    type='date'
-                                    value={film.showedDate.format(DATE_FORMAT)}
-                                    onChange={this._onShowedDateChange}
-                                />
-                                {_.some(errors, e => e.extensions.code === "EmptyDate") 
-                                ? (
-                                    <Form.Text style={errorStyle}>Showed date should not be empty</Form.Text>
-                                )
-                                : null}
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Photo:</Form.Label>
-                            <div style={{...photoContainerStyle, ...(!film.photo ? square : null)}}>
-                                {this.state.isUploadingFile ? (
-                                    <div style={spinnerContainer}>
-                                        <CircularProgress />
-                                        <span>Uploading photo...</span>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <Image src={ film.photo } rounded fluid/>
-                                        <div className="input-group" style={uploadPhotoButton}>
-                                            <div className="custom-file">
-                                                <input
-                                                type="file"
-                                                className="custom-file-input"
-                                                id="inputGroupFile01"
-                                                aria-describedby="inputGroupFileAddon01"
-                                                onChange={this._onFileChange}
-                                                />
-                                                <label className="custom-file-label" htmlFor="inputGroupFile01">
-                                                    Choose file
-                                                </label>
+                            <Form.Group>
+                                <Form.Label>Photo:</Form.Label>
+                                <div style={{...photoContainerStyle, ...(!film.photo ? square : null)}}>
+                                    {this.state.isUploadingFile ? (
+                                        <div style={spinnerContainer}>
+                                            <CircularProgress />
+                                            <span>Uploading photo...</span>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <Image src={ film.photo } rounded fluid/>
+                                            <div className="input-group" style={uploadPhotoButton}>
+                                                <div className="custom-file">
+                                                    <input
+                                                    type="file"
+                                                    className="custom-file-input"
+                                                    id="inputGroupFile01"
+                                                    aria-describedby="inputGroupFileAddon01"
+                                                    onChange={this._onFileChange}
+                                                    />
+                                                    <label className="custom-file-label" htmlFor="inputGroupFile01">
+                                                        Choose file
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
+                            </Form.Group>
+                            <Form.Group>
+                                <Button variant="primary" type="submit" style={submitButtonStyle} disabled={isUploadingFile} block>Ok</Button>
+                            </Form.Group>                                         
+                                {!isAddingForm ? (
+                                    <Form.Group>
+                                        <Button variant="danger" onClick={deleteFilm}>Delete</Button>
+                                    </Form.Group>       
+                                ): null}
+                            
+                        </Form>
+                        {!isAddingForm ? (
+                            <div style={reviewsStyle}>
+                                <Reviews id={film.id}/>
                             </div>
-                        </Form.Group>
-                        <Form.Group>
-                            <Button variant="primary" type="submit" style={submitButtonStyle} disabled={isUploadingFile} block>Ok</Button>
-                        </Form.Group>                                         
-                            {!isAddingForm ? (
-                                <Form.Group>
-                                    <Button variant="danger" onClick={deleteFilm}>Delete</Button>
-                                </Form.Group>       
-                            ): null}
-                        
-                    </Form>
-                    {!isAddingForm ? (
-                        <div style={reviewsStyle}>
-                            <Reviews id={film.id}/>
-                        </div>
-                    ): null}
-                </div>
-            )
-        }));
+                        ): null}
+                    </div>
+                )
+            })));
     }
 }
 

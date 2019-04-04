@@ -11,7 +11,7 @@ namespace FilmCatalogue.Domain.DataTypes.Reviews
             if (value < 1 || value > 5)
             {
                 //TODO:
-                throw new Exception();
+                throw new Exception($"{nameof(Rank)} should be in range [1-5]");
             }
             _value = value;
         }
