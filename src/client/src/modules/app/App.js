@@ -11,12 +11,12 @@ import './App.css';
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://localhost:5000/graphql'
+  uri: 'http://93.75.198.88/api/graphql'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:5000/graphql`,
+  uri: `ws://93.75.198.88/api/graphql`,
   options: {
     reconnect: true
   }
@@ -59,6 +59,7 @@ class App extends Component {
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
           crossOrigin="anonymous"
         />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
           <AppRouter/>
         </div>
       </ApolloProvider>
