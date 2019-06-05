@@ -6,17 +6,19 @@ import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-boost';
 import { getMainDefinition } from 'apollo-utilities';
+import { ToastContainer } from 'react-toastify';
 import AppRouter from '../appRouter';
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://93.75.198.88/api/graphql'
+  uri: 'http://localhost:5000/api/graphql'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://93.75.198.88/api/graphql`,
+  uri: `ws://localhost:5000/api/graphql`,
   options: {
     reconnect: true
   }
@@ -53,6 +55,7 @@ class App extends Component {
     return (
       <ApolloProvider client={client}>
         <div className="App">
+        <ToastContainer />
         <link
           rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"

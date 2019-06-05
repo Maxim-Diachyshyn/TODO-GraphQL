@@ -1,5 +1,8 @@
 export default {
     HOME: '/',
-    EDIT_FILM: '/:id/edit',
+    EDIT_FILM: {
+        route: '/:id',
+        build: id => `/${id}`
+    },
     CREATE_FILM: '/create'
 }
