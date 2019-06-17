@@ -1,93 +1,104 @@
-import React from 'react';
+import React, { Component } from 'react';
 import _ from "lodash";
-import { Mutation, Subscription } from "react-apollo";
+import { Mutation, Subscription, Query } from "react-apollo";
 import { Modal, Button } from "react-bootstrap";
 import { withRouter } from 'react-router-dom';
-import { mutations } from "../../Board";
-import { toast } from 'react-toastify';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-
-
+import { todoByIdQuery } from "../queries";
+import { updateTodo, deleteTodo } from "../../Board/mutations";
+import NameInput from "./NameInput";
+import DescriptionInput from "./DescriptionInput";
+import StatusInput from "./StatusInput";
+import DeleteButton from "./DeleteButton";
 import ROUTES from "../../appRouter/routes";
 
 
+class Task extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            timer: null,
+            changes: {}
+        };
+    };
+
+    onChange = newValue => {
+        this.setState(prevState => {
+            const { updateTodo, data: { todo } } = this.props;
+            const { timer, changes } = prevState;
+            if (timer) {
+                clearTimeout(timer);
+            }
+
+            const newChanges = {
+                ...changes,
+                ...newValue
+            };
+            return {
+                changes: newChanges,
+                timer: setTimeout(() => {
+                    const updatedTodo = _.pick({ ...todo, ...newChanges }, "id", "name", "description", "status");
+                    updateTodo(updatedTodo);
+                }, 1000)
+            };
+        });
+    }
+
+    onClose = () => {
+        const { history } = this.props;
+        this.setState(prevState => {
+            const { timer } = prevState;
+            if (timer) {
+                clearTimeout(timer);
+            }
+            return { timer: null, changes: {}};
+        }, () => history.push(ROUTES.HOME));
+    }
+
+    render() {
+        const { loading, todoId, data, onDelete } = this.props;
+        const { changes } = this.state;
+        if (loading) {
+            return "loading brooooooo";
+        }
+        const todo = { ..._.get(data, "todo"), ...changes };
+        return (
+            <Modal show={!loading && todoId && todo} onHide={this.onClose}>
+                {(!loading && todoId && todo) ? (
+                    <React.Fragment>
+                        <Modal.Header style={{ width: "100%" }} closeButton>
+                            <NameInput name={todo.name} onChange={this.onChange}/>
+                        </Modal.Header>
+
+                        <Modal.Body>
+                            <DescriptionInput description={todo.description} onChange={this.onChange}/>  
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <StatusInput status={todo.status} onChange={this.onChange}/>
+                            <DeleteButton onDelete={onDelete}/>
+                            <Button variant="secondary" onClick={this.onClose}>Close</Button>
+                        </Modal.Footer>
+                    </React.Fragment>
+                ) : null}
+            </Modal>
+        );
+    }
+}
+
 export default withRouter((props) => {
-    const { todo } = props;        
+    const { todoId } = props;
     return (
-        <Modal show={props.todo} onHide={() => props.history.push(ROUTES.HOME)}>
-            <Modal.Header closeButton>
-                <Modal.Header>
-                    <Mutation mutation={mutations.updateTodo}>
-                            {(updateTodo, { data, loading }) => (
-                                <TextField
-                                label="Task"
-                                value={_.get(todo, "name")}
-                                margin="normal"
-                                variant="outlined"
-                                onChange={event => 
-                                    updateTodo({ 
-                                        variables: { 
-                                            todo: { 
-                                                id: todo.id, 
-                                                name: event.target.value, 
-                                                description: todo.description, 
-                                                status: todo.status 
-                                            } 
-                                        }
-                                    })                                    
-                                } />
-                            )}                                  
-                    </Mutation>          
-                </Modal.Header>
-            </Modal.Header>
-
-            <Modal.Body>
-                <Mutation mutation={mutations.updateTodo}>
-                        {(updateTodo, { data, loading }) => (
-                            <TextField
-                            label="Description"
-                            multiline
-                            rows="4"
-                            value={_.get(todo, "description")}
-                            margin="normal"
-                            variant="outlined"
-                            onChange={event => 
-                                updateTodo({ 
-                                    variables: { 
-                                        todo: { 
-                                            id: todo.id, 
-                                            name: todo.name, 
-                                            description:event.target.value, 
-                                            status: todo.status 
-                                        } 
-                                    }
-                                }) 
-                            } />
-                        )}                                  
-                </Mutation>  
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Mutation mutation={mutations.updateTodo}>
-                    {(updateTodo, { data, loading }) => (
-                        <Select value={_.get(todo, "status")} onChange={event => updateTodo({ variables: { todo: { id: todo.id, name: todo.name, description: todo.description, status: event.target.value } }})}>
-                            <MenuItem value={"PENDING"}>Pending</MenuItem>
-                            <MenuItem value={"IN_PROGRESS"}>In Progress</MenuItem>
-                            <MenuItem value={"REVIEW"}>In Review</MenuItem>
-                            <MenuItem value={"DONE"}>Done</MenuItem>
-                        </Select>     
-                    )}                                   
-                </Mutation>                
-
-                <Mutation mutation={mutations.deleteTodo}>
-                    {(deleteTodo, { data, loading }) => (
-                        <Button disabled={loading} onClick={() => deleteTodo({ variables: { id: todo.id } })}>Delete Task</Button>
-                    )}
-                </Mutation>
-                <Button variant="secondary" onClick={() => props.history.push(ROUTES.HOME)}>Close</Button>
-            </Modal.Footer>
-        </Modal>
+        <Mutation mutation={deleteTodo}>{(deleteTodo) => (
+            <Mutation mutation={updateTodo}>{(updateTodo) => (
+                <Query query={todoByIdQuery} variables={{ id: todoId }}>{({ loading, data }) => (
+                    <Task {...props} 
+                        data={data} 
+                        updateTodo={todo => updateTodo({variables: { todo }})} 
+                        loading={loading} 
+                        onDelete={() => deleteTodo({ variables: { id: todoId } })}
+                    />
+                )}</Query>
+            )}</Mutation>
+        )}</Mutation>
     );
 });
