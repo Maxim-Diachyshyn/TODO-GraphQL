@@ -29,7 +29,7 @@ const styles = {
 const texts = {
     closeButton: "Close",
     createButton: "Save",
-    deleted: "Looks like someone deleted this task."    
+    deleted: "Looks like someone has deleted this task."    
 };
 
 class Task extends Component { 
