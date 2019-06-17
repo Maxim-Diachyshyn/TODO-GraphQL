@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import _ from "lodash";
 import { Sticky } from 'react-sticky';
 import { IconButton } from '@material-ui/core';
-import { AddComment as AddCommentIcon } from '@material-ui/icons';
+import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 
 const styles = {
@@ -39,7 +39,7 @@ const TopPanel = props => {
                 <div />
                 <span style={styles.title}>{texts.title}</span>
                 <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
-                    <AddCommentIcon />
+                    <Create />
                 </IconButton>
             </div>
         )}

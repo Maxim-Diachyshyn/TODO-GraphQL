@@ -8,8 +8,8 @@ import { InMemoryCache } from 'apollo-boost';
 import { getMainDefinition } from 'apollo-utilities';
 import { ToastContainer } from 'react-toastify';
 import AppRouter from '../appRouter';
-import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 
 // Create an http link:
 const httpLink = new HttpLink({

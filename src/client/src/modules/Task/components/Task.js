@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from "lodash";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
+import { toast } from "react-toastify";
 import { withRouter } from 'react-router-dom';
 import NameInput from "./NameInput";
 import DescriptionInput from "./DescriptionInput";
@@ -27,12 +28,22 @@ const styles = {
 
 const texts = {
     closeButton: "Close",
-    createButton: "Save"
+    createButton: "Save",
+    deleted: "Looks like someone deleted this task."    
 };
 
 class Task extends Component { 
+    componentDidMount() {
+        if (this.props.subscribeToRemoved) {
+            this.props.subscribeToRemoved();
+        }
+    }
+
     onClose = () => {
-        const { history } = this.props;
+        const { history, onClose } = this.props;
+        if (onClose) {
+            onClose();
+        }
         history.push(ROUTES.HOME);
     }
 
@@ -42,10 +53,25 @@ class Task extends Component {
         this.onClose();
     }
 
+    onDelete = () => {
+        const { data, onDelete } = this.props;
+        onDelete();
+        this.onClose();
+    }
+
+    handleDeletion = () => {
+        toast.error(texts.deleted);
+        this.onClose();
+    }
+
     render() {
-        const { loading, todoId, data, onDelete, updateTodo, createTodo } = this.props;
+        const { loading, todoId, data, updateTodo, onDelete, createTodo } = this.props;
         if (loading) {
             return "loading brooooooo";
+        }
+        if (_.get(data, "todo", {}) == null) {
+            this.handleDeletion();
+            return null;
         }
         const todo = { ..._.get(data, "todo") };
         return (
@@ -63,7 +89,7 @@ class Task extends Component {
                         <DialogActions style={styles.footer}>
                             <StatusInput style={styles.statusInput} status={todo.status} onChange={updateTodo}/>
                             {onDelete ? (
-                                <DeleteButton onDelete={onDelete}/>
+                                <DeleteButton onDelete={this.onDelete}/>
                             ) : null}
                             {createTodo ? (
                                 <Button style={styles.createButton} onClick={this.onCreate}>{texts.createButton}</Button>

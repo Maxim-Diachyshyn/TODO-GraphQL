@@ -15,32 +15,36 @@ class CreateTask extends Component {
             todo: {
                 name: "New Task",
                 description: "",
-                status: TASK_STATUSES.Pending
+                status: TASK_STATUSES.Open
             }
         };
     }
 
     render() {
         return (
-            <Mutation mutation={mutations.createTodo}>{(createTodo) => (
-                <Task {...this.props}
-                    data={{todo: this.state.todo}}
-                    createTodo={todo => {
-                        const todoToSend = _.omit(todo, "__typename");
-                        createTodo({ variables: {...todoToSend } });
-                    }}
-                    updateTodo={updates => {           
-                        const exitingTodo = this.state.todo;
-                        const todo = {
-                            ...exitingTodo,
-                            ...updates
-                        };
-                        this.setState({ todo });
-                    }}
-                />
-            )}</Mutation>
-        );
-    }   
-}
+            <Task {...this.props}
+                data={{todo: this.state.todo}}
+                createTodo={this.props.createTodo}
+                updateTodo={updates => {           
+                    const exitingTodo = this.state.todo;
+                    const todo = {
+                        ...exitingTodo,
+                        ...updates
+                    };
+                    this.setState({ todo });
+                }}
+            />
+        )
+    }
+}   
 
-export default withRouter(CreateTask);
+export default withRouter(props => (
+    <Mutation mutation={mutations.createTodo}>{createTodo => (
+        <CreateTask {...props} 
+            createTodo={todo => {
+                const todoToSend = _.omit(todo, "__typename");
+                createTodo({ variables: {...todoToSend } });
+            }
+        }/>
+    )}</Mutation>
+));

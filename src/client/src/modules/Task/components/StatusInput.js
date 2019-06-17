@@ -12,18 +12,18 @@ const styles = {
     select: {
         borderRadius: 4,
     },
-    [`select${TASK_STATUSES.Pending}`]: {
-        background: "#b71c1c",
+    [`select${TASK_STATUSES.Open}`]: {
+        background: "#bdbdbd",
         color: "white"
     },
     [`select${TASK_STATUSES["In Progress"]}`]: {
-        background: "green"
+        background: "#03a9f4"
     },
     [`select${TASK_STATUSES.Review}`]: {
-        background: "yellow"
+        background: "#9575cd"
     },
     [`select${TASK_STATUSES.Done}`]: {
-        background: "blue"
+        background: "#388e3c"
     },
 }
 
