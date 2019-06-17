@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import _ from "lodash";
-import { Mutation, Subscription, Query, ApolloConsumer } from "react-apollo";
-import { Modal, Button } from "react-bootstrap";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
 import { withRouter } from 'react-router-dom';
-import { todoByIdQuery } from "../queries";
-import { updateTodo, deleteTodo } from "../../Board/mutations";
 import NameInput from "./NameInput";
 import DescriptionInput from "./DescriptionInput";
 import StatusInput from "./StatusInput";
@@ -12,9 +9,25 @@ import DeleteButton from "./DeleteButton";
 import ROUTES from "../../appRouter/routes";
 
 const styles = {
-    header: {
-        width: "100%"
+    closeButton: {
+        background: "#979797",
+        color: "#FFF"
+    },
+    createButton: {
+        background: "green",
+        color: "#FFF"
+    },
+    statusInput: {
+        marginRight: 20
+    },
+    footer: {
+        paddingLeft: 24
     }
+};
+
+const texts = {
+    closeButton: "Close",
+    createButton: "Save"
 };
 
 class Task extends Component { 
@@ -23,69 +36,45 @@ class Task extends Component {
         history.push(ROUTES.HOME);
     }
 
+    onCreate = () => {
+        const { data, createTodo } = this.props;
+        createTodo(data.todo);
+        this.onClose();
+    }
+
     render() {
-        const { loading, todoId, data, onDelete, updateTodo } = this.props;
+        const { loading, todoId, data, onDelete, updateTodo, createTodo } = this.props;
         if (loading) {
             return "loading brooooooo";
         }
         const todo = { ..._.get(data, "todo") };
         return (
-            <Modal show={!loading && todoId && todo} onHide={this.onClose}>
-                {(!loading && todoId && todo) ? (
+            <Dialog open={(!loading && todoId && todo) || !!createTodo} onClose={this.onClose}>
+                {((!loading && todoId && todo) || !!createTodo) ? (
                     <React.Fragment>
-                        <Modal.Header style={styles.header} closeButton={true}>
+                        <DialogTitle disableTypography={true}>
                             <NameInput name={todo.name} onChange={updateTodo}/>
-                        </Modal.Header>
+                        </DialogTitle>
 
-                        <Modal.Body>
+                        <DialogContent>
                             <DescriptionInput description={todo.description} onChange={updateTodo}/>  
-                        </Modal.Body>
+                        </DialogContent>
 
-                        <Modal.Footer>
-                            <StatusInput status={todo.status} onChange={updateTodo}/>
-                            <DeleteButton onDelete={onDelete}/>
-                            <Button variant="secondary" onClick={this.onClose}>Close</Button>
-                        </Modal.Footer>
+                        <DialogActions style={styles.footer}>
+                            <StatusInput style={styles.statusInput} status={todo.status} onChange={updateTodo}/>
+                            {onDelete ? (
+                                <DeleteButton onDelete={onDelete}/>
+                            ) : null}
+                            {createTodo ? (
+                                <Button style={styles.createButton} onClick={this.onCreate}>{texts.createButton}</Button>
+                            ) : null}
+                            <Button style={styles.closeButton} onClick={this.onClose}>{texts.closeButton}</Button>                            
+                        </DialogActions>
                     </React.Fragment>
                 ) : null}
-            </Modal>
+            </Dialog>
         );
     }
 }
 
-let timer = null;
-export default withRouter((props) => {
-    const { todoId } = props;
-
-    return (
-        <ApolloConsumer>{client => (
-            <Mutation mutation={deleteTodo}>{(deleteTodo) => (
-                <Mutation mutation={updateTodo}>{(updateTodo) => (
-                    <Query query={todoByIdQuery} variables={{ id: todoId }}>{({ loading, data }) => (
-                        <Task {...props} 
-                            data={data} 
-                            updateTodo={updates => {
-                                if (timer) {
-                                    clearTimeout(timer);
-                                }
-                    
-                                const exitingTodo = data.todo;
-                                const newTodo = {
-                                    ...exitingTodo,
-                                    ...updates
-                                };
-    
-                                client.writeData({ data: { todo: newTodo } });
-    
-                                const todoToSend = _.omit(newTodo, "__typename");
-                                timer = setTimeout(() => updateTodo({ variables: { todo: todoToSend } }), 1000);
-                            }}
-                            loading={loading} 
-                            onDelete={() => deleteTodo({ variables: { id: todoId } })}
-                        />
-                    )}</Query>
-                )}</Mutation>
-            )}</Mutation>
-        )}</ApolloConsumer>
-    );
-});
+export default withRouter(Task);

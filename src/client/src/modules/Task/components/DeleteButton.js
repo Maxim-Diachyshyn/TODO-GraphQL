@@ -1,12 +1,21 @@
 import React from 'react';
 import _ from "lodash";
-import { Mutation, Subscription, Query } from "react-apollo";
-import { Button } from "react-bootstrap";
-import { deleteTodo } from "../../Board/mutations";
+import { Button } from "@material-ui/core";
+
+const styles = {
+    main: {
+        background: "#f44336",
+        color: "#FFF"
+    }
+};
+
+const texts = {
+    delete: "Delete Task"
+};
 
 export default props => {
-    const { id, loading, onDelete } = props;
+    const { loading, onDelete } = props;
     return (
-        <Button disabled={loading} variant="danger" onClick={onDelete}>Delete Task</Button>
+        <Button style={styles.main} disabled={loading} onClick={onDelete}>{texts.delete}</Button>
     );
 }

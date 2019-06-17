@@ -5,9 +5,9 @@ import { StickyContainer } from 'react-sticky';
 import { List, CircularProgress } from '@material-ui/core';
 import ROUTES from "../../appRouter/routes"
 import { queries, subscriptions } from "../../Board";
-import { components as taskComponents } from "../../Task";
 import BoardTask from './BoardTask';
 import TopPanel from "./TopPanel";
+import { UpdateTask, CreateTask } from "../../Task/components"
 
 let unsubscribeForAdded = null;
 let unsubscribeForRemoved = null;
@@ -39,7 +39,7 @@ const styles = {
 
 class Board extends Component {
     render() {
-        const { history } = this.props;
+        const { history, isCreating } = this.props;
 
         return (
             <Query query={queries.todosQuery}>
@@ -83,8 +83,6 @@ class Board extends Component {
                             updateQuery: (prev, { subscriptionData }) => {
                                 if (!subscriptionData.data) return prev;
                                 const { todoUpdated } = subscriptionData.data;
-                                var todoToUpdate = _.find(prev.todos, t => t.id === todoUpdated.id);
-                                todoToUpdate = {...todoUpdated};
                                 return {
                                     ...prev,
                                 }
@@ -103,7 +101,8 @@ class Board extends Component {
                                     />
                                 ))}
                             </List>
-                            {id && _.some(data.todos, t => t.id === id) ? <taskComponents.default id="modal" todoId={id} /> : null}
+                            {id && _.some(data.todos, t => t.id === id) ? <UpdateTask id="modal" todoId={id} /> : null}
+                            {isCreating ? <CreateTask /> : null}
                         </StickyContainer>
                     );
                 }}

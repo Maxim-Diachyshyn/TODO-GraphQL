@@ -1,3 +1,4 @@
 import * as components from './components';
+import * as mutations from "./mutations"; 
 
-export { components };
+export { components, mutations };

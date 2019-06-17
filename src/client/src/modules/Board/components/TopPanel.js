@@ -1,11 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import _ from "lodash";
-import { Mutation } from "react-apollo";
 import { Sticky } from 'react-sticky';
 import { IconButton } from '@material-ui/core';
 import { AddComment as AddCommentIcon } from '@material-ui/icons';
-import { mutations } from "../../Board";
-import { TASK_STATUSES } from "../../Task/constants";
+import ROUTES from "../../appRouter/routes";
 
 const styles = {
     container: {
@@ -24,7 +23,7 @@ const styles = {
     button: {
         fontSize: 18,
         color: "white",
-        background: "coral"
+        background: "#f44336"
     }
 };
 
@@ -48,16 +47,9 @@ const TopPanel = props => {
     )
 };
 
-export default () => (
-    <Mutation mutation={mutations.createTodo}>
-        {createTodo => (
-            <TopPanel createTodo={() => createTodo({ 
-                variables: { 
-                    name: "Task", 
-                    description: "description", 
-                    status: TASK_STATUSES.Done
-                }
-            })} />
-        )
-    }</Mutation>
-);
+export default withRouter(props => {
+    const { history } = props;
+    return (
+        <TopPanel createTodo={() => history.push(ROUTES.CREATE_FILM)} />
+    );
+});
