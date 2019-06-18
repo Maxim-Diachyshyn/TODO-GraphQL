@@ -12,6 +12,8 @@ const texts = {
     notFound: "Looks like this task doesn't exist anymore."
 }
 
+const timeout = 500;
+
 class UpdateTask extends Component {
     constructor(props) {
         super(props);
@@ -64,7 +66,7 @@ class UpdateTask extends Component {
                                     client.writeData({ data: { todo: newTodo } });
         
                                     const todoToSend = _.omit(newTodo, "__typename");
-                                    this.setState({ timer: setTimeout(() => updateTodo({ variables: { todo: todoToSend } }), 1000) });
+                                    this.setState({ timer: setTimeout(() => updateTodo({ variables: { todo: todoToSend } }), timeout) });
                                 }}
                                 loading={loading} 
                                 onDelete={() => deleteTodo({ variables: { id } })}
