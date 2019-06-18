@@ -40,7 +40,7 @@ const cache = new InMemoryCache({
   cacheRedirects: {
     Query: {
       film: (_, args, { getCacheKey }) =>
-        getCacheKey({ __typename: 'FilmType', id: args.id })
+        getCacheKey({ __typename: 'TodoType', id: args.id })
     },
   },
 });

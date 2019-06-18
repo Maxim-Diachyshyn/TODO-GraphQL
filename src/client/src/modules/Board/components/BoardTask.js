@@ -3,7 +3,7 @@ import _ from "lodash";
 import { ListItemSecondaryAction, ListItemText, IconButton, ListItemIcon, ListSubheader } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import ListItem from '@material-ui/core/ListItem';
-import { Mutation, Subscription, Query } from "react-apollo";
+import { Mutation } from "react-apollo";
 import { deleteTodo } from "../mutations";
 import { TASK_STATUSES } from "../../Task/constants";
 
@@ -18,6 +18,10 @@ const styles = {
         borderRadius: "50%",
         width: 25,
         height: 25
+    },
+    text: {
+        overflow: "hidden",
+        textOverflow: "ellipsis"
     },
     [`status${TASK_STATUSES.Open}`]: {
         background: "#bdbdbd",
@@ -49,7 +53,7 @@ const BoardTask = props => {
             <ListItemIcon>
                 <div style={{...styles.circle, ...styles[`status${status}`]}}></div>
             </ListItemIcon>
-            <ListItemText primary={name} />
+            <ListItemText primary={<p style={styles.text}>{name}</p>} />
             <ListItemSecondaryAction>
                 <IconButton style={styles.deleteButton} edge="end" aria-label={texts.delete} onClick={onDelete}>
                     <DeleteIcon />

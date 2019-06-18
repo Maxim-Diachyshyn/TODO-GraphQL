@@ -30,10 +30,7 @@ const styles = {
 
 class Board extends Component {    
     componentDidMount() {
-        const { subscribeToAdded, subscribeToRemoved, subscribeToUpdated  } = this.props;
-        subscribeToAdded();
-        subscribeToRemoved();
-        subscribeToUpdated();
+        this.props.onLoaded();
     }
 
     render() {
@@ -73,38 +70,33 @@ export default withRouter((props) => {
                 id={id}
                 loading={loading} 
                 data={data} 
-                subscribeToAdded={() => subscribeToMore({
-                    document: subscriptions.todoAdded,
-                    updateQuery: (prev, { subscriptionData }) => {
-                        if (!subscriptionData.data) return prev;
-                        const { todoAdded } = subscriptionData.data;
-                        return {
-                            ...prev,
-                            todos: [...prev.todos, todoAdded]
+                onLoaded={() => {
+                    subscribeToMore({
+                        document: subscriptions.todoAdded,
+                        updateQuery: (prev, { subscriptionData }) => {
+                            if (!subscriptionData.data) return prev;
+                            const { todoAdded } = subscriptionData.data;
+                            return {
+                                ...prev,
+                                todos: [...prev.todos, todoAdded]
+                            }
                         }
-                    }
-                })}
-                subscribeToRemoved={() => subscribeToMore({
-                    document: subscriptions.deleteTodo,
-                    updateQuery: (prev, { subscriptionData }) => {
-                        if (!subscriptionData.data) return prev;
-                        const { todoDeleted } = subscriptionData.data;
-                        return {
-                            ...prev,
-                            todos: _.filter(prev.todos, t => t.id !== todoDeleted.id)
+                    });
+                    subscribeToMore({
+                        document: subscriptions.deleteTodo,
+                        updateQuery: (prev, { subscriptionData }) => {
+                            if (!subscriptionData.data) return prev;
+                            const { todoDeleted } = subscriptionData.data;
+                            return {
+                                ...prev,
+                                todos: _.filter(prev.todos, t => t.id !== todoDeleted.id)
+                            }
                         }
-                    }
-                })}
-                subscribeToUpdated={() => subscribeToMore({
-                    document: subscriptions.todoUpdated,
-                    updateQuery: (prev, { subscriptionData }) => {
-                        if (!subscriptionData.data) return prev;
-                        const { todoUpdated } = subscriptionData.data;
-                        return {
-                            ...prev,
-                        }
-                    }
-                })}
+                    });
+                    subscribeToMore({
+                        document: subscriptions.todoUpdated
+                    });
+                }}
             />
         )}</Query>
     );
