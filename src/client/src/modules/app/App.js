@@ -7,6 +7,7 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-boost';
 import { getMainDefinition } from 'apollo-utilities';
 import { ToastContainer } from 'react-toastify';
+import { Scrollbars } from 'react-custom-scrollbars';
 import AppRouter from '../appRouter';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -54,11 +55,13 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <div className="App">
-        <ToastContainer />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-          <AppRouter/>
-        </div>
+        <Scrollbars style={{ width: "100vw", height: "100vh" }}>
+          <div className="App">
+          <ToastContainer />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+            <AppRouter/>
+          </div>
+        </Scrollbars>
       </ApolloProvider>
     );
   }

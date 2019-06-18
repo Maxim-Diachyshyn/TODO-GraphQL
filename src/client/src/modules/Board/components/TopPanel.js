@@ -7,13 +7,15 @@ import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 
 const styles = {
+    sticky: {
+        zIndex: 1
+    },
     container: {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         padding: "8px 8px",
-        background: "darkblue",
-        zIndex: 1
+        background: "darkblue"
     },
     title: {
         fontSize: 24,
@@ -35,12 +37,14 @@ const texts = {
 const TopPanel = props => {
     return (        
         <Sticky>{({ style }) => (
-            <div style={{...styles.container, ...style}}>
-                <div />
-                <span style={styles.title}>{texts.title}</span>
-                <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
-                    <Create />
-                </IconButton>
+            <div style={{ ...styles.sticky, ...style }}>
+                <div style={styles.container}>
+                    <div />
+                    <span style={styles.title}>{texts.title}</span>
+                    <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
+                        <Create />
+                    </IconButton>
+                </div>
             </div>
         )}
         </Sticky>
