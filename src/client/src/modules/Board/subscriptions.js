@@ -14,6 +14,7 @@ const deleteTodo = gql`
 subscription{
     todoDeleted{
       id
+      status
     }
 }`;
 

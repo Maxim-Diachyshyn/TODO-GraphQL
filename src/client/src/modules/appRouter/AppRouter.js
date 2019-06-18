@@ -8,7 +8,7 @@ class AppRouter extends Component {
       return (
         <BrowserRouter>
           <Switch>
-            <Route exact path={ROUTES.HOME} component={boardComponents.default}/>
+            <Route exact path={ROUTES.HOME} render={props => <boardComponents.default {...props} />} />
             <Route exact path={ROUTES.CREATE_FILM} render={props => <boardComponents.default {...props} isCreating={true} />} />
             <Route exact path={ROUTES.EDIT_FILM.route} component={boardComponents.default}/>
             <Redirect to={ROUTES.HOME} />

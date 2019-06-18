@@ -46,7 +46,7 @@ const texts = {
     delete: "Delete"
 };
 
-const BoardTask = props => {
+const SectionTask = props => {
     const { name, status, onSelect, onDelete } = props;
     return (
         <ListItem button={true} style={styles.link} onClick={onSelect}>
@@ -67,7 +67,7 @@ export default props => {
     const { id } = props;
     return (
         <Mutation mutation={deleteTodo}>{(deleteTodo) => (
-            <BoardTask {...props} onDelete={() => deleteTodo({ variables: { id } })} />
+            <SectionTask {...props} onDelete={() => deleteTodo({ variables: { id } })} />
         )}</Mutation>
     );
 }

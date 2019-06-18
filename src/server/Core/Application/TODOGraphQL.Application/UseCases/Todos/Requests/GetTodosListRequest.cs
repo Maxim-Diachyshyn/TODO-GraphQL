@@ -8,6 +8,6 @@ namespace TODOGraphQL.Application.UseCases.Todos.Requests
 {
     public class GetTodosListRequest : IRequest<IDictionary<Id, Todo>>
     {
-
+        public TodoStatus? Status { get; set; }
     }
 }

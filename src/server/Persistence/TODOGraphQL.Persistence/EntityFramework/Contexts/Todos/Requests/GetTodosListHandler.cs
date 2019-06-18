@@ -24,7 +24,14 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
 
         public async Task<IDictionary<Id, Todo>> Handle(GetTodosListRequest request, CancellationToken cancellationToken)
         {
-            var entities = await _items
+            var query = _items;
+            if (request.Status.HasValue)
+            {
+                var val = request.Status.Value;
+                query = query
+                    .Where(x => x.Status == val);
+            }
+            var entities = await query
                 .ToListAsync(cancellationToken);
             return entities.ToDictionary(x => (Id)x.Id, x => x.ToModel());
         }

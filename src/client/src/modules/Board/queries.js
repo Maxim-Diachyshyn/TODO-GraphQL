@@ -1,8 +1,8 @@
 import { gql } from "apollo-boost";
 
 const todosQuery = gql`
-query{
-    todos{
+query($status: TodoStatus){
+    todos(status:$status){
       id
       name
       description
