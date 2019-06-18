@@ -6,7 +6,7 @@ import { mutations } from "../../Board";
 import { subscriptions } from "../../Board"
 import { todoByIdQuery } from "../queries";
 import Task from "./Task";
-import { Snackbar, SnackbarContent } from '@material-ui/core';
+import MySnackbar from "./MySnackbar";
 import ROUTES from "../../appRouter/routes";
 
 const texts = {
@@ -40,19 +40,11 @@ class UpdateTask extends Component {
                         variables={{ id }}>{({ loading, data, client, error, subscribeToMore }) => {
                         return (
                             <React.Fragment>
-                                <Snackbar
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={!loading && error && !errorHandled}
-                                    autoHideDuration={6000}
+                                <MySnackbar 
+                                    open={!loading && error && !errorHandled} 
+                                    text={texts.notFound}
                                     onClose={this.handleError}
-                                >
-                                    <SnackbarContent message={
-                                        <p>{texts.notFound}</p>
-                                    } />
-                                </Snackbar>
+                                />
                                 <Task {...this.props} 
                                 data={data}
                                 subscribeToRemoved={() => subscribeToMore({

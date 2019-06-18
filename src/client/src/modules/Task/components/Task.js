@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import _ from "lodash";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import { Snackbar, SnackbarContent } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import NameInput from "./NameInput";
 import DescriptionInput from "./DescriptionInput";
 import StatusInput from "./StatusInput";
 import DeleteButton from "./DeleteButton";
 import ROUTES from "../../appRouter/routes";
+import MySnackbar from "./MySnackbar";
 
 const styles = {
     closeButton: {
@@ -81,19 +81,11 @@ class Task extends Component {
         const todo = { ..._.get(data, "todo") };
         return (
             <React.Fragment>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={_.get(data, "todo", {}) == null && !deletedHandled}
-                    autoHideDuration={6000}
+                <MySnackbar 
+                    open={_.get(data, "todo", {}) == null && !deletedHandled} 
+                    text={texts.deleted}
                     onClose={this.handleError}
-                >
-                    <SnackbarContent message={
-                        <p>{texts.deleted}</p>
-                    }/>
-                </Snackbar>
+                />
                 <Dialog open={(!loading && todoId && todo) || !!createTodo} onClose={this.onClose}>
                 {((!loading && todoId && todo) || !!createTodo) ? (
                     <React.Fragment>
