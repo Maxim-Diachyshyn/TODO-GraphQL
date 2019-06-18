@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Query, Mutation } from "react-apollo";
 import { withRouter } from 'react-router-dom';
-import { toast } from "react-toastify";
 import _ from "lodash";
 import { mutations } from "../../Board";
 import { subscriptions } from "../../Board"
 import { todoByIdQuery } from "../queries";
 import Task from "./Task";
+import { Snackbar, SnackbarContent } from '@material-ui/core';
+import ROUTES from "../../appRouter/routes";
 
 const texts = {
     notFound: "Looks like this task doesn't exist anymore."
@@ -20,26 +21,39 @@ class UpdateTask extends Component {
     
         this.state = {
             timer: null,
-            errorShowed: false
+            errorHandled: false
         };
     }
 
+    handleError = () => {
+        this.setState({ errorHandled: true }, () => this.props.history.push(ROUTES.HOME));
+    }
+        
+
     render() {
         const { id } = this.props.match.params;
-        const { timer, errorShowed } = this.state;
+        const { timer, errorHandled } = this.state;
         return (
             <Mutation mutation={mutations.deleteTodo}>{(deleteTodo) => (
                 <Mutation mutation={mutations.updateTodo}>{(updateTodo) => (
                     <Query query={todoByIdQuery} 
                         variables={{ id }}>{({ loading, data, client, error, subscribeToMore }) => {
-                        if (!loading && error ) {
-                            if (!errorShowed) {
-                                this.setState({ errorShowed: true }, () => toast.error(texts.notFound));
-                            }
-                            return null;
-                        }
                         return (
-                            <Task {...this.props} 
+                            <React.Fragment>
+                                <Snackbar
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={!loading && error && !errorHandled}
+                                    autoHideDuration={6000}
+                                    onClose={this.handleError}
+                                >
+                                    <SnackbarContent message={
+                                        <p>{texts.notFound}</p>
+                                    } />
+                                </Snackbar>
+                                <Task {...this.props} 
                                 data={data}
                                 subscribeToRemoved={() => subscribeToMore({
                                     document: subscriptions.deleteTodo,
@@ -72,6 +86,7 @@ class UpdateTask extends Component {
                                 onDelete={() => deleteTodo({ variables: { id } })}
                                 onClose={() => this.setState({ errorShowed: false })}
                             />
+                            </React.Fragment>
                         )
                     }}</Query>
                 )}</Mutation>

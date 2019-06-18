@@ -44,17 +44,17 @@ class Board extends Component {
         return (
             <StickyContainer>
                 <TopPanel />
-                <List style={styles.boardTasksContainer}>
-                    {_.map(data.todos, t => (
-                        <BoardTask id={t.id}
-                            name={t.name} 
-                            status={t.status}
-                            onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
-                        />
-                    ))}
-                </List>
-                {id ? <UpdateTask id="modal" todoId={id} /> : null}
-                {isCreating ? <CreateTask /> : null}
+                    <List style={styles.boardTasksContainer}>
+                        {_.map(data.todos, t => (
+                            <BoardTask id={t.id}
+                                name={t.name} 
+                                status={t.status}
+                                onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
+                            />
+                        ))}
+                    </List>
+                    {id ? <UpdateTask id="modal" todoId={id} /> : null}
+                    {isCreating ? <CreateTask /> : null}
             </StickyContainer>
         );
     }

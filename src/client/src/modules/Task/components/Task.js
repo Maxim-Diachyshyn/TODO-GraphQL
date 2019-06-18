@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from "lodash";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import { toast } from "react-toastify";
+import { Snackbar, SnackbarContent } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import NameInput from "./NameInput";
 import DescriptionInput from "./DescriptionInput";
@@ -32,7 +32,15 @@ const texts = {
     deleted: "Looks like someone has deleted this task."    
 };
 
-class Task extends Component { 
+class Task extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            deletedHandled: false
+        };
+    }
+
     componentDidMount() {
         if (this.props.subscribeToRemoved) {
             this.props.subscribeToRemoved();
@@ -59,23 +67,34 @@ class Task extends Component {
         this.onClose();
     }
 
-    handleDeletion = () => {
-        toast.error(texts.deleted);
+    handleError = () => {
+        this.setState({ deletedHandled: true });
         this.onClose();
-    }
+    } 
 
     render() {
         const { loading, todoId, data, updateTodo, onDelete, createTodo } = this.props;
+        const { deletedHandled } = this.state;
         if (loading) {
             return "loading brooooooo";
         }
-        if (_.get(data, "todo", {}) == null) {
-            this.handleDeletion();
-            return null;
-        }
         const todo = { ..._.get(data, "todo") };
         return (
-            <Dialog open={(!loading && todoId && todo) || !!createTodo} onClose={this.onClose}>
+            <React.Fragment>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={_.get(data, "todo", {}) == null && !deletedHandled}
+                    autoHideDuration={6000}
+                    onClose={this.handleError}
+                >
+                    <SnackbarContent message={
+                        <p>{texts.deleted}</p>
+                    }/>
+                </Snackbar>
+                <Dialog open={(!loading && todoId && todo) || !!createTodo} onClose={this.onClose}>
                 {((!loading && todoId && todo) || !!createTodo) ? (
                     <React.Fragment>
                         <DialogTitle disableTypography={true}>
@@ -98,7 +117,8 @@ class Task extends Component {
                         </DialogActions>
                     </React.Fragment>
                 ) : null}
-            </Dialog>
+                </Dialog>
+            </React.Fragment>
         );
     }
 }
