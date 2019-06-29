@@ -72,7 +72,13 @@ class UpdateTask extends Component {
                                     client.writeData({ data: { todo: newTodo } });
         
                                     const todoToSend = _.omit(newTodo, "__typename");
-                                    this.setState({ timer: setTimeout(() => updateTodo({ variables: { todo: todoToSend } }), timeout) });
+                                    const updateFunc = () => updateTodo({ variables: { todo: todoToSend } });
+                                    if (exitingTodo.status !== newTodo.status) {
+                                        updateFunc();
+                                    }
+                                    else {
+                                        this.setState({ timer: setTimeout(updateFunc, timeout) });
+                                    }                                    
                                 }}
                                 loading={loading} 
                                 onDelete={() => deleteTodo({ variables: { id } })}

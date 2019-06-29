@@ -122,7 +122,22 @@ export default withRouter(props => {
                         }
                     });
                     subscribeToMore({
-                        document: subscriptions.todoUpdated
+                        document: subscriptions.todoUpdated,
+                        updateQuery: (prev, { subscriptionData }) => {
+                            if (!subscriptionData.data) return prev;
+                            const { todoUpdated } = subscriptionData.data;
+                            let newTodos = _.filter(prev.todos, t => t.id === todoUpdated);
+                            if (todoUpdated.status === status) {
+                                return {
+                                    ...prev,
+                                    todos: [...newTodos, todoUpdated]
+                                }
+                            }
+                            return {
+                                ...prev,
+                                todos: newTodos
+                            };
+                        }
                     });
                 }}
             />

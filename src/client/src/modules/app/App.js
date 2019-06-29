@@ -37,7 +37,7 @@ const link = split(
 const cache = new InMemoryCache({
   cacheRedirects: {
     Query: {
-      film: (_, args, { getCacheKey }) =>
+      todo: (_, args, { getCacheKey }) =>
         getCacheKey({ __typename: 'TodoType', id: args.id })
     },
   },
