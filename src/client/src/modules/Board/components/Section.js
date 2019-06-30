@@ -83,7 +83,7 @@ class Section extends Component {
                                             status={t.status}
                                             onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
                                         />
-                                        {i !== data.todos.length ? (
+                                        {i !== data.todos.length - 1 ? (
                                             <Divider variant="inset" component="li" />
                                         ) : null}
                                     </React.Fragment>
@@ -123,7 +123,7 @@ export default withRouter(props => {
                             return {
                                 ...prev,
                             }
-                        }
+                        },
                     });
                     subscribeToMore({
                         document: subscriptions.deleteTodo,
@@ -139,7 +139,7 @@ export default withRouter(props => {
                             return {
                                 ...prev,
                             }
-                        }
+                        },
                     });
                     subscribeToMore({
                         document: subscriptions.todoUpdated,
@@ -157,7 +157,7 @@ export default withRouter(props => {
                                 ...prev,
                                 todos: newTodos
                             };
-                        }
+                        },
                     });
                 }}
             />

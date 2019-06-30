@@ -9,7 +9,7 @@ import { TASK_STATUSES } from "../../Task/constants"
 
 const styles = {
     scrollContainer: {
-        height: "calc(100vh - 84px)",
+        height: "calc(100vh - 68px)",
         marginTop: "64px"
     },
     scrollView: {
