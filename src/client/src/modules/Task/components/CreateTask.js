@@ -23,7 +23,7 @@ class CreateTask extends Component {
     render() {
         return (
             <Task {...this.props}
-                data={{todo: this.state.todo}}
+                todo={this.state.todo}
                 createTodo={this.props.createTodo}
                 updateTodo={updates => {           
                     const exitingTodo = this.state.todo;
@@ -40,7 +40,7 @@ class CreateTask extends Component {
 
 export default withRouter(props => (
     <Mutation mutation={mutations.createTodo}>{createTodo => (
-        <CreateTask {...props} 
+        <CreateTask {...props}
             createTodo={todo => {
                 const todoToSend = _.omit(todo, "__typename");
                 createTodo({ variables: {...todoToSend } });

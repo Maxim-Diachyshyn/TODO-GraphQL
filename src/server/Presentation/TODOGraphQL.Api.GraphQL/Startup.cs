@@ -72,12 +72,12 @@ namespace TODOGraphQL.Api.GraphQL
                 app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
                 {
                     Path = "/ui/playground",
-                    GraphQLEndPoint = "/api/graphql"
+                    GraphQLEndPoint = "/graphql"
                 });
                 app.UseGraphiQLServer(new GraphiQLOptions
                 {
                     GraphiQLPath = "/ui/graphiql",
-                    GraphQLEndPoint = "/api/graphql"
+                    GraphQLEndPoint = "/graphql"
                 });
                 app.UseGraphQLVoyager(new GraphQLVoyagerOptions()
                 {
@@ -94,8 +94,8 @@ namespace TODOGraphQL.Api.GraphQL
             });
 
             app.UseWebSockets();
-            app.UseGraphQLWebSockets<TodoSchema>("/api/graphql");
-            app.UseGraphQL<TodoSchema>("/api/graphql");
+            app.UseGraphQLWebSockets<TodoSchema>("/graphql");
+            app.UseGraphQL<TodoSchema>("/graphql");
 
             context.Database.EnsureDeleted();
             if (context.Database.EnsureCreated())

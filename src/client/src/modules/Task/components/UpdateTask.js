@@ -36,57 +36,56 @@ class UpdateTask extends Component {
         return (
             <Mutation mutation={mutations.deleteTodo}>{(deleteTodo) => (
                 <Mutation mutation={mutations.updateTodo}>{(updateTodo) => (
-                    <Query query={todoByIdQuery} 
+                    <Query query={todoByIdQuery}
                         variables={{ id }}>{({ loading, data, client, error, subscribeToMore }) => {
-                        return (
-                            <React.Fragment>
-                                <MySnackbar 
-                                    open={!loading && error && !errorHandled} 
-                                    text={texts.notFound}
-                                    onClose={this.handleError}
-                                />
-                                <Task {...this.props} 
-                                data={data}
-                                subscribeToRemoved={() => subscribeToMore({
-                                    document: subscriptions.deleteTodo,
-                                    updateQuery: (prev, { subscriptionData }) => {
-                                        if (!subscriptionData.data) return prev;
-                                        const { todoDeleted } = subscriptionData.data;
-                                        return {
-                                            ...prev,
-                                            todo: prev.todo.id === todoDeleted.id ? null : prev.todo
-                                        }
-                                    }
-                                })}
-                                updateTodo={updates => {
-                                    if (timer) {
-                                        clearTimeout(timer);
-                                    }
-                        
-                                    const exitingTodo = data.todo;
-                                    const newTodo = {
-                                        ...exitingTodo,
-                                        ...updates
-                                    };
-        
-                                    client.writeData({ data: { todo: newTodo } });
-        
-                                    const todoToSend = _.omit(newTodo, "__typename");
-                                    const updateFunc = () => updateTodo({ variables: { todo: todoToSend } });
-                                    if (exitingTodo.status !== newTodo.status) {
-                                        updateFunc();
-                                    }
-                                    else {
-                                        this.setState({ timer: setTimeout(updateFunc, timeout) });
-                                    }                                    
-                                }}
-                                loading={loading} 
-                                onDelete={() => deleteTodo({ variables: { id } })}
-                                onClose={() => this.setState({ errorShowed: false })}
-                            />
-                            </React.Fragment>
-                        )
-                    }}</Query>
+                            return (
+                                <React.Fragment>
+                                    <MySnackbar 
+                                        open={!loading && error && !errorHandled} 
+                                        text={texts.notFound}
+                                        onClose={this.handleError}
+                                    />
+                                    <Task {...this.props} 
+                                        todo={_.get(data, "todo", {})}
+                                        subscribeToRemoved={() => subscribeToMore({
+                                        document: subscriptions.deleteTodo,
+                                        updateQuery: (prev, { subscriptionData }) => {
+                                            if (!subscriptionData.data) return prev;
+                                            const { todoDeleted } = subscriptionData.data;
+                                            return {
+                                                ...prev,
+                                                todo: prev.todo.id === todoDeleted.id ? null : prev.todo
+                                            }
+                                        }})}
+                                        updateTodo={updates => {
+                                            if (timer) {
+                                                clearTimeout(timer);
+                                            }
+                                
+                                            const exitingTodo = data.todo;
+                                            const newTodo = {
+                                                ...exitingTodo,
+                                                ...updates
+                                            };
+                
+                                            client.writeData({ data: { todo: newTodo } });
+                
+                                            const todoToSend = _.omit(newTodo, "__typename");
+                                            const updateFunc = () => updateTodo({ variables: { todo: todoToSend } });
+                                            if (exitingTodo.status !== newTodo.status) {
+                                                updateFunc();
+                                            }
+                                            else {
+                                                this.setState({ timer: setTimeout(updateFunc, timeout) });
+                                            }                                    
+                                        }}
+                                        loading={loading} 
+                                        onDelete={() => deleteTodo({ variables: { id } })}
+                                        onClose={() => this.setState({ errorShowed: false })}
+                                    />
+                                    </React.Fragment>
+                                )
+                            }}</Query>
                 )}</Mutation>
             )}</Mutation>
         );

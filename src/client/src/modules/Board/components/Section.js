@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Query } from "react-apollo";
 import _ from "lodash";
-import { List, CircularProgress } from '@material-ui/core';
+import { List, CircularProgress, Divider } from '@material-ui/core';
+import { Scrollbars } from 'react-custom-scrollbars';
 import ROUTES from "../../appRouter/routes";
 import { queries, subscriptions } from "../../Board";
 import BoardTask from './SectionTask';
@@ -13,17 +14,16 @@ const styles = {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
         background: "floralwhite"
     },
     boardTasksContainer: {
         display: "flex",
         flex: 1,
         flexDirection: "column",
-        // maxWidth: 300,
-        padding: "4px",
         margin: "2px 2px",
-        borderRadius: 10
+        padding: 10,
+        borderRadius: 10,
+        background: "##f5f5f5"
     },
     headerText: {
         fontWeight: "bold",
@@ -41,6 +41,20 @@ const styles = {
     [`headerText${TASK_STATUSES.Done}`]: {
         color: "#388e3c"
     },
+    wrapper: {
+        position: "relative",
+        // height: "100%",
+        overflowY: "scroll"
+    },
+    list: {
+        overflowY: "auto",
+        position: "absolute",
+        top: 0,
+        bottom: 0
+    },
+    scrollBars: {
+        padding: 5
+    }
 };
 
 class Section extends Component {    
@@ -48,30 +62,36 @@ class Section extends Component {
         this.props.onLoaded();
     }
 
+    renderView = ({ style, ...props }) =>
+        <div style={{...style, ...styles.scrollBars}} {...props} />
+
     render() {
         const { history, loading, data, status } = this.props;
-
-        if (loading) return (
-            null
-            // <div style={styles.spinnerContainer}>
-            //     <CircularProgress />
-            // </div>
-        );
         return (
-            <div style={styles.boardTasksContainer}>
-                <div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
-                    {_.findKey(TASK_STATUSES, x => x === status)}
+                <div style={styles.boardTasksContainer}>
+                    <div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
+                        {_.findKey(TASK_STATUSES, x => x === status)}
+                    </div>
+                    {loading ? null : (
+                        <Scrollbars style={styles.scrollBars}
+                        renderView={this.renderView}>
+                            <List>
+                                {_.map(data.todos, (t, i) => (
+                                    <React.Fragment>
+                                        <BoardTask id={t.id}
+                                            name={t.name} 
+                                            status={t.status}
+                                            onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
+                                        />
+                                        {i !== data.todos.length ? (
+                                            <Divider variant="inset" component="li" />
+                                        ) : null}
+                                    </React.Fragment>
+                                ))}
+                            </List>
+                        </Scrollbars>
+                    )}                
                 </div>
-                <List>
-                {_.map(data.todos, t => (
-                    <BoardTask id={t.id}
-                        name={t.name} 
-                        status={t.status}
-                        onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
-                    />
-                ))}
-            </List>
-            </div>
         );
     }
 }
@@ -113,7 +133,7 @@ export default withRouter(props => {
                             if (todoDeleted.status === status) {
                                 return {
                                     ...prev,
-                                    todos: _.filter(prev.todos, t => t.id !== todoDeleted.id)
+                                    todos: _.reject(prev.todos, t => t.id === todoDeleted.id)
                                 }
                             }
                             return {
@@ -126,7 +146,7 @@ export default withRouter(props => {
                         updateQuery: (prev, { subscriptionData }) => {
                             if (!subscriptionData.data) return prev;
                             const { todoUpdated } = subscriptionData.data;
-                            let newTodos = _.filter(prev.todos, t => t.id === todoUpdated);
+                            const newTodos = _.reject(prev.todos, t => t.id === todoUpdated.id);
                             if (todoUpdated.status === status) {
                                 return {
                                     ...prev,

@@ -22,13 +22,13 @@ namespace TODOGraphQL.Persistence.EntityFramework.Base
             return (T)_context.Add(entity).CurrentValues.ToObject();
         }
 
-        public T Update<T>(Id id, Action<T> action)
+        public T Update<T>(T entity, Action<T> action)
             where T : class, IUnique, new()
         {
-            var entry = _context.Entry(new T { Id = id });
+            var entry = _context.Entry(entity);
             if (entry.State == EntityState.Detached)
             {
-                entry = _context.Attach(new T { Id = id });
+                entry = _context.Attach(entity);
             }
             action(entry.Entity);
             return (T)entry.CurrentValues.ToObject();

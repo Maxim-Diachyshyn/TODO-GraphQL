@@ -6,17 +6,18 @@ import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-boost';
 import { getMainDefinition } from 'apollo-utilities';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import AppRouter from '../appRouter';
 import './App.css';
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://localhost:5000/api/graphql'
+  uri: 'http://localhost:5000/graphql'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:5000/api/graphql`,
+  uri: `ws://localhost:5000/graphql`,
   options: {
     reconnect: true
   }
@@ -54,6 +55,7 @@ class App extends Component {
       <ApolloProvider client={client}>
         <div className="App">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+        <CssBaseline />
           <AppRouter/>
         </div>
       </ApolloProvider>

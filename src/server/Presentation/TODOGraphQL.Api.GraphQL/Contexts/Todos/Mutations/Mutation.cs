@@ -10,6 +10,7 @@ using TODOGraphQL.Api.GraphQL.ViewModels;
 using TODOGraphQL.Api.GraphQL.InputTypes;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
+using TODOGraphQL.Application.UseCases.Todos.Requests;
 
 namespace TODOGraphQL.Api.GraphQL.Mutations
 {
@@ -57,6 +58,12 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                         return null;
                     }
                     var request = input.ToCommand();
+                    var currentItemsRequest = new GetTodosByIdsRequest
+                    {
+                        SpecifiedIds = request.Todos.Keys
+                    };
+                    var oldTodos = await mediator.Send(currentItemsRequest);
+                    request.OldTodos = oldTodos;
                     var result = await mediator.Send(request);
                     return new TodoViewModel(result.Single());
                 });

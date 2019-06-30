@@ -6,11 +6,10 @@ import { TASK_STATUSES } from "../constants";
 const styles = {
     container: {
         minWidth: 250,
-        marginRight: 20,
         paddingLeft: 8
     },
     select: {
-        borderRadius: 4,
+
     },
     [`select${TASK_STATUSES.Open}`]: {
         background: "#bdbdbd",

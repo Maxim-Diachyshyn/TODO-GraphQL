@@ -10,7 +10,7 @@ const styles = {
 };
 
 const texts = {
-    delete: "Delete Task"
+    delete: "Delete"
 };
 
 export default props => {

@@ -9,7 +9,7 @@ const MySnackbar = props => {
                 horizontal: 'right',
             }}
             open={props.open}
-            autoHideDuration={2000}
+            autoHideDuration={props.autoHideDuration || 2000}
             onClose={props.onClose}
         >
             <SnackbarContent message={

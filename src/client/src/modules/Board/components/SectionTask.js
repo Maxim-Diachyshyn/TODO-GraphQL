@@ -2,16 +2,16 @@ import React from 'react';
 import _ from "lodash";
 import { ListItemSecondaryAction, ListItemText, IconButton, ListItemIcon, ListSubheader } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons';
-import ListItem from '@material-ui/core/ListItem';
+import { ListItem } from '@material-ui/core';
 import { Mutation } from "react-apollo";
 import { deleteTodo } from "../mutations";
 import { TASK_STATUSES } from "../../Task/constants";
 
 const styles = {
     link: {
-        borderRadius: 8,
-        margin: "2px 0px",
-        background: "#eceff1",
+        // borderRadius: 8,
+        // margin: "2px 0px",
+        background: "#FFFF",
         minHeight: 75
     },
     circle: {
@@ -54,11 +54,6 @@ const SectionTask = props => {
                 <div style={{...styles.circle, ...styles[`status${status}`]}}></div>
             </ListItemIcon>
             <ListItemText primary={<p style={styles.text}>{name}</p>} />
-            <ListItemSecondaryAction>
-                <IconButton style={styles.deleteButton} edge="end" aria-label={texts.delete} onClick={onDelete}>
-                    <DeleteIcon />
-                </IconButton>
-            </ListItemSecondaryAction>
         </ListItem>
     )
 };

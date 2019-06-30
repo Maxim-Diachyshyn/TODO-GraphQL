@@ -1,15 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
-import { Sticky } from 'react-sticky';
-import { IconButton } from '@material-ui/core';
+import { IconButton, AppBar } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 
 const styles = {
-    sticky: {
-        zIndex: 1
-    },
     container: {
         display: "flex",
         justifyContent: "space-between",
@@ -36,18 +32,15 @@ const texts = {
 
 const TopPanel = props => {
     return (        
-        <Sticky>{({ style }) => (
-            <div style={{ ...styles.sticky, ...style }}>
-                <div style={styles.container}>
-                    <div />
-                    <span style={styles.title}>{texts.title}</span>
-                    <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
-                        <Create />
-                    </IconButton>
-                </div>
+        <AppBar>
+            <div style={styles.container}>
+                <div />
+                <span style={styles.title}>{texts.title}</span>
+                <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
+                    <Create />
+                </IconButton>
             </div>
-        )}
-        </Sticky>
+        </AppBar>
     )
 };
 

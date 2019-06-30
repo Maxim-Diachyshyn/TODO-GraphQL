@@ -56,13 +56,13 @@ class Task extends Component {
     }
 
     onCreate = () => {
-        const { data, createTodo } = this.props;
-        createTodo(data.todo);
+        const { todo, createTodo } = this.props;
+        createTodo(todo);
         this.onClose();
     }
 
     onDelete = () => {
-        const { data, onDelete } = this.props;
+        const { onDelete } = this.props;
         onDelete();
         this.onClose();
     }
@@ -73,20 +73,19 @@ class Task extends Component {
     } 
 
     render() {
-        const { loading, todoId, data, updateTodo, onDelete, createTodo } = this.props;
+        const { loading, todoId, todo, updateTodo, onDelete, createTodo } = this.props;
         const { deletedHandled } = this.state;
         if (loading) {
             return "loading brooooooo";
         }
-        const todo = { ..._.get(data, "todo") };
         return (
             <React.Fragment>
                 <MySnackbar 
-                    open={_.get(data, "todo", {}) == null && !deletedHandled} 
+                    open={todo === null && !deletedHandled} 
                     text={texts.deleted}
                     onClose={this.handleError}
                 />
-                <Dialog open={(!loading && todoId && todo) || !!createTodo} onClose={this.onClose}>
+                <Dialog open={(!loading && todoId && todo) || !!createTodo} onClose={this.onClose} scroll="body">
                 {((!loading && todoId && todo) || !!createTodo) ? (
                     <React.Fragment>
                         <DialogTitle disableTypography={true}>
@@ -94,11 +93,11 @@ class Task extends Component {
                         </DialogTitle>
 
                         <DialogContent>
-                            <DescriptionInput description={todo.description} onChange={updateTodo}/>  
+                            <DescriptionInput description={todo.description} onChange={updateTodo}/>
+                            <StatusInput style={styles.statusInput} status={todo.status} onChange={updateTodo}/>
                         </DialogContent>
 
                         <DialogActions style={styles.footer}>
-                            <StatusInput style={styles.statusInput} status={todo.status} onChange={updateTodo}/>
                             {onDelete ? (
                                 <DeleteButton onDelete={this.onDelete}/>
                             ) : null}

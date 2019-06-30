@@ -25,11 +25,13 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
             var entities = new List<TodoEntity>();
             foreach (var todo in command.Todos)
             {
+                var oldTodo = command.OldTodos[todo.Key];
                 var todoEntity = new TodoEntity
                 {
                     Id = todo.Key
                 };
-                todoEntity = _unitOfWork.Update<TodoEntity>(todo.Key, e => e.FromModel(todo.Value));
+                todoEntity.FromModel(oldTodo);
+                todoEntity = _unitOfWork.Update<TodoEntity>(todoEntity, e => e.FromModel(todo.Value));
                 entities.Add(todoEntity);
             }
 
