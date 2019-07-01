@@ -22,12 +22,6 @@ namespace TODOGraphQL.Persistence.EntityFramework
                 options.UseInMemoryDatabase("TestDatabase");
             });
 
-            services.AddDbContextPool<IdentityDbContext>(options =>
-            {
-                // options.UseSqlServer("Data Source=\".\";Initial Catalog=TodosIdentity;Integrated Security=False;User ID=sa;Password=Password1;MultipleActiveResultSets=true");
-                options.UseInMemoryDatabase("TestIdentityDatabase");
-            });
-
             builder.Populate(services);
 
             builder.RegisterSource(new QueryableRegistrationSource<TodoDbContext>());

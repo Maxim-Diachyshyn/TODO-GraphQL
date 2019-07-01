@@ -18,6 +18,7 @@ namespace TODOGraphQL.Api.GraphQL
             
             builder.RegisterType<IdGraphType>().SingleInstance();
             builder.RegisterType<TodoStatusType>().SingleInstance();
+            builder.RegisterType<UserType>().SingleInstance();
 
             builder.RegisterType<TodoType>().SingleInstance();
             builder.RegisterType<AddTodoInputType>().SingleInstance();

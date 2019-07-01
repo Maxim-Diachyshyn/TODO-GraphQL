@@ -72,7 +72,7 @@ namespace TODOGraphQL.Api.GraphQL
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, TodoDbContext context, IdentityDbContext identityContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, TodoDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -115,7 +115,6 @@ namespace TODOGraphQL.Api.GraphQL
             app.UseGraphQL<TodoSchema>("/graphql");
 
             context.Database.EnsureCreated();
-            identityContext.Database.EnsureCreated();
         }
     }
 }

@@ -16,7 +16,12 @@ mutation($todo: UpdateTodoInputType!) {
 
 const signIn = gql`
 mutation($token: String!) {
-    signIn(token: $token) 
+    signIn(token: $token) {
+        id
+        username
+        email
+        picture
+    }
 }`;
 
 export { deleteTodo, updateTodo, signIn };

@@ -12,6 +12,9 @@ using TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
 using TODOGraphQL.Application.UseCases.Todos.Requests;
 using TODOGraphQL.Application.UseCases.Identity;
+using TODOGraphQL.Api.GraphQL.Contexts.Todos.GraphTypes;
+using TODOGraphQL.Domain.DataTypes.Identity;
+using System.Collections.Generic;
 
 namespace TODOGraphQL.Api.GraphQL.Mutations
 {
@@ -84,7 +87,7 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                     return new TodoViewModel(result.Single());
                 });
 
-            Field<StringGraphType, string>()
+            Field<UserType, KeyValuePair<Id, User>>()
                 .Name("signIn")
                 .Argument<NonNullGraphType<StringGraphType>>("token", "Google token.")
                 .ResolveAsync(async context => 

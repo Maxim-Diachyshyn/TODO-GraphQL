@@ -38,18 +38,16 @@ const TopPanel = props => {
         console.log(response);
     }
 
+    const { onSignIn } = props;
+
     return (        
         <AppBar>
             <div style={styles.container}>
-                <Mutation mutation={signIn}>{(signIn) => (
                     <GoogleLogin
                         clientId="ID"
                         buttonText="Login with Google"
-                        onSuccess={r => signIn({ variables: { token: r.idToken }})}
+                        onSuccess={r => onSignIn(r.tokenId)}
                     />
-                )}
-
-                </Mutation>
                 <span style={styles.title}>{texts.title}</span>
                 <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
                     <Create />
@@ -62,6 +60,8 @@ const TopPanel = props => {
 export default withRouter(props => {
     const { history } = props;
     return (
-        <TopPanel createTodo={() => history.push(ROUTES.CREATE_FILM)} />
+        <Mutation mutation={signIn}>{signIn => (
+            <TopPanel {...props} onSignIn={token => signIn({ variables: { token }})} createTodo={() => history.push(ROUTES.CREATE_FILM)} />
+        )}</Mutation>
     );
 });
