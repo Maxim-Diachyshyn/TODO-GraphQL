@@ -14,4 +14,9 @@ mutation($todo: UpdateTodoInputType!) {
     }
 }`;
 
-export { deleteTodo, updateTodo };
+const signIn = gql`
+mutation($token: String!) {
+    signIn(token: $token) 
+}`;
+
+export { deleteTodo, updateTodo, signIn };

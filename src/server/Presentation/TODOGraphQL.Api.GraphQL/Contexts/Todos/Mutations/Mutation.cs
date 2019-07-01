@@ -11,6 +11,7 @@ using TODOGraphQL.Api.GraphQL.InputTypes;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
 using TODOGraphQL.Application.UseCases.Todos.Requests;
+using TODOGraphQL.Application.UseCases.Identity;
 
 namespace TODOGraphQL.Api.GraphQL.Mutations
 {
@@ -81,6 +82,21 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                     };
                     var result = await mediator.Send(command);
                     return new TodoViewModel(result.Single());
+                });
+
+            Field<StringGraphType, string>()
+                .Name("signIn")
+                .Argument<NonNullGraphType<StringGraphType>>("token", "Google token.")
+                .ResolveAsync(async context => 
+                {
+                    var mediator = accessor.GetMediator();
+                    var input = context.GetArgument<string>("token");
+                    var command = new SignInCommand
+                    {
+                        Token = input
+                    };
+                    var result = await mediator.Send(command);
+                    return result;
                 });
         }
     }

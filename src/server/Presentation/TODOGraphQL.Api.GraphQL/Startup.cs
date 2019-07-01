@@ -1,9 +1,10 @@
 ﻿using Autofac;
 using TODOGraphQL.Api.GraphQL.Schemas;
-using TODOGraphQL.Persistence.EntityFramework;
+using TODOGraphQL.Persistence.EntityFramework.Contexts.Todos;
 using GraphiQl;
 using GraphQL;
 using GraphQL.DataLoader;
+
 using GraphQL.Server;
 using GraphQL.Server.Ui.GraphiQL;
 using GraphQL.Server.Ui.Playground;
@@ -13,6 +14,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TODOGraphQL.Persistence.EntityFramework.Contexts.Identity;
+using Google.Apis.Auth.OAuth2;
 
 namespace TODOGraphQL.Api.GraphQL
 {
@@ -46,16 +49,30 @@ namespace TODOGraphQL.Api.GraphQL
 
             services.AddHttpContextAccessor();
             services.AddCors();
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection = 
+                        Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new Persistence.Module());
             builder.RegisterModule(new Module());
+
+            builder.Register(ctx => Configuration.GetSection("Authentication:Google").Get<ClientSecrets>())
+                .AsSelf()
+                .InstancePerDependency();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, FilmDbContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, TodoDbContext context, IdentityDbContext identityContext)
         {
             if (env.IsDevelopment())
             {
@@ -97,11 +114,8 @@ namespace TODOGraphQL.Api.GraphQL
             app.UseGraphQLWebSockets<TodoSchema>("/graphql");
             app.UseGraphQL<TodoSchema>("/graphql");
 
-            context.Database.EnsureDeleted();
-            if (context.Database.EnsureCreated())
-            {
-                context.SeedDataAsync().Wait();
-            }
+            context.Database.EnsureCreated();
+            identityContext.Database.EnsureCreated();
         }
     }
 }

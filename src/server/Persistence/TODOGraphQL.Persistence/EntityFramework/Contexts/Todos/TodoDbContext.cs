@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Configurations;
 using TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities;
 
-namespace TODOGraphQL.Persistence.EntityFramework
+namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos
 {
-    public class FilmDbContext : DbContext
+    public class TodoDbContext : DbContext
     {
-        public FilmDbContext(DbContextOptions options) : base(options)
+        public TodoDbContext(DbContextOptions options) : base(options)
         {
             
         }
@@ -15,7 +16,7 @@ namespace TODOGraphQL.Persistence.EntityFramework
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(FilmDbContext).Assembly);
+            modelBuilder.ApplyConfiguration(new TodoConfiguration());
         }
     }
 }

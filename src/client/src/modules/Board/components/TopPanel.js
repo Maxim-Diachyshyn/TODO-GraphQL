@@ -1,9 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
+import { Mutation } from "react-apollo";
 import { IconButton, AppBar } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
+import { GoogleLogin } from 'react-google-login';
+import { signIn } from "../mutations";
 
 const styles = {
     container: {
@@ -31,10 +34,22 @@ const texts = {
 }
 
 const TopPanel = props => {
+    const responseGoogle = (response) => {
+        console.log(response);
+    }
+
     return (        
         <AppBar>
             <div style={styles.container}>
-                <div />
+                <Mutation mutation={signIn}>{(signIn) => (
+                    <GoogleLogin
+                        clientId="ID"
+                        buttonText="Login with Google"
+                        onSuccess={r => signIn({ variables: { token: r.idToken }})}
+                    />
+                )}
+
+                </Mutation>
                 <span style={styles.title}>{texts.title}</span>
                 <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
                     <Create />
