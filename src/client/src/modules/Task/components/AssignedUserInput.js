@@ -1,10 +1,12 @@
 import React from 'react';
 import _ from "lodash";
-import { Select, MenuItem, Typography, Avatar } from '@material-ui/core';
+import { Select, MenuItem, Avatar, Typography } from '@material-ui/core';
+import { PersonAdd as PersonAddIcon } from "@material-ui/icons";
 import { TASK_STATUSES } from "../constants";
 
 const styles = {
     container: {
+        // width: "100%"
         // minWidth: 250,
     },
     item: {
@@ -12,20 +14,7 @@ const styles = {
         gridTemplateColumns: "auto 1fr",
         gridColumnGap: 8,
         alignItems: "center"
-    },
-    [`select${TASK_STATUSES.Open}`]: {
-        background: "#bdbdbd",
-        color: "white"
-    },
-    [`select${TASK_STATUSES["In Progress"]}`]: {
-        background: "#03a9f4"
-    },
-    [`select${TASK_STATUSES.Review}`]: {
-        background: "#9575cd"
-    },
-    [`select${TASK_STATUSES.Done}`]: {
-        background: "#388e3c"
-    },
+    }
 }
 
 export default props => {
@@ -36,14 +25,18 @@ export default props => {
     }
     
     return (
-        <Select style={styles.container} value={status} disabled={loading} onChange={onChange}>
+        <Select  style={styles.container} value={status} disabled={loading} onChange={onChange}>
             {_.map(TASK_STATUSES, (v, k) => (
-                <MenuItem key={k} value={v}>
+                <MenuItem style={{...styles.select, ...styles[`select${v}`]}} key={k} value={v}>
                     <div style={styles.item}>
-                        <Avatar style={styles[`select${v}`]} />
+                        <Avatar>
+                            {/* TODO: user pictures here */}
+                            <PersonAddIcon/>
+                        </Avatar> 
                         <Typography variant="button">{k}</Typography>
                     </div>
-                </MenuItem>))}
-        </Select>     
+                </MenuItem>)
+            )}
+        </Select>    
     );                               
 }

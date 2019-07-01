@@ -23,7 +23,7 @@ const styles = {
     sections: {
         display: "grid",
         gridAutoColumns: "minmax(350px, 1fr)",
-        gridColumnGap: 4,
+        gridColumnGap: 8,
         gridAutoFlow: "column",
     }
 }

@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import NameInput from "./NameInput";
 import DescriptionInput from "./DescriptionInput";
 import StatusInput from "./StatusInput";
+import AssignedUserInput from "./AssignedUserInput";
 import DeleteButton from "./DeleteButton";
 import ROUTES from "../../appRouter/routes";
 import MySnackbar from "./MySnackbar";
@@ -18,8 +19,11 @@ const styles = {
         background: "green",
         color: "#FFF"
     },
-    statusInput: {
-        marginRight: 20
+    selectorsContainer: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+        gridColumnGap: 16,
+        width: "100%"
     },
     footer: {
         paddingLeft: 24
@@ -94,7 +98,10 @@ class Task extends Component {
 
                         <DialogContent>
                             <DescriptionInput description={todo.description} onChange={updateTodo}/>
-                            <StatusInput style={styles.statusInput} status={todo.status} onChange={updateTodo}/>
+                            <div style={styles.selectorsContainer}>
+                                <StatusInput status={todo.status} onChange={updateTodo}/>
+                                <AssignedUserInput status={todo.status} onChange={updateTodo}/>
+                            </div>
                         </DialogContent>
 
                         <DialogActions style={styles.footer}>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Query } from "react-apollo";
 import _ from "lodash";
-import { List, CircularProgress, Divider } from '@material-ui/core';
+import { List, CircularProgress, Divider, Card, CardHeader, CardContent } from '@material-ui/core';
 import { Scrollbars } from 'react-custom-scrollbars';
 import ROUTES from "../../appRouter/routes";
 import { queries, subscriptions } from "../../Board";
@@ -17,16 +17,12 @@ const styles = {
         background: "floralwhite"
     },
     boardTasksContainer: {
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        margin: "2px 2px",
-        padding: 10,
-        borderRadius: 10,
-        background: "##f5f5f5"
+        margin: "12px 2px",
+    },
+    header: {
+        background: "#f9f7f7"
     },
     headerText: {
-        fontWeight: "bold",
         textAlign: "center",
     },
     [`headerText${TASK_STATUSES.Open}`]: {
@@ -40,17 +36,6 @@ const styles = {
     },
     [`headerText${TASK_STATUSES.Done}`]: {
         color: "#388e3c"
-    },
-    wrapper: {
-        position: "relative",
-        // height: "100%",
-        overflowY: "scroll"
-    },
-    list: {
-        overflowY: "auto",
-        position: "absolute",
-        top: 0,
-        bottom: 0
     },
     scrollBars: {
         padding: 5
@@ -68,30 +53,31 @@ class Section extends Component {
     render() {
         const { history, loading, data, status } = this.props;
         return (
-                <div style={styles.boardTasksContainer}>
-                    <div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
+                <Card style={styles.boardTasksContainer}>
+                    <CardHeader style={styles.header} title={(<div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
                         {_.findKey(TASK_STATUSES, x => x === status)}
-                    </div>
+                    </div>)} />
+                    <Divider />
                     {loading ? null : (
-                        <Scrollbars style={styles.scrollBars}
-                        renderView={this.renderView}>
-                            <List>
-                                {_.map(data.todos, (t, i) => (
-                                    <React.Fragment>
-                                        <BoardTask id={t.id}
-                                            name={t.name} 
-                                            status={t.status}
-                                            onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
-                                        />
-                                        {i !== data.todos.length - 1 ? (
-                                            <Divider variant="inset" component="li" />
-                                        ) : null}
-                                    </React.Fragment>
-                                ))}
-                            </List>
-                        </Scrollbars>
+                            <Scrollbars style={styles.scrollBars}
+                            renderView={this.renderView}>
+                                <List>
+                                    {_.map(data.todos, (t, i) => (
+                                        <React.Fragment>
+                                            <BoardTask id={t.id}
+                                                name={t.name} 
+                                                status={t.status}
+                                                onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
+                                            />
+                                            {i !== data.todos.length - 1 ? (
+                                                <Divider variant="inset" component="li" />
+                                            ) : null}
+                                        </React.Fragment>
+                                    ))}
+                                </List>
+                            </Scrollbars>
                     )}                
-                </div>
+                </Card>
         );
     }
 }

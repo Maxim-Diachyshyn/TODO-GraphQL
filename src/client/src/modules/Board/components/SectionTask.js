@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from "lodash";
-import { ListItemSecondaryAction, ListItemText, IconButton, ListItemIcon, ListSubheader } from '@material-ui/core';
-import { Delete as DeleteIcon } from '@material-ui/icons';
+import { ListItemSecondaryAction, ListItemText, IconButton, ListItemIcon, ListSubheader, ListItemAvatar, Avatar } from '@material-ui/core';
+import { Delete as DeleteIcon, PersonAdd as PersonAddIcon } from '@material-ui/icons';
 import { ListItem } from '@material-ui/core';
 import { Mutation } from "react-apollo";
 import { deleteTodo } from "../mutations";
@@ -16,8 +16,8 @@ const styles = {
     },
     circle: {
         borderRadius: "50%",
-        width: 25,
-        height: 25
+        width: 40,
+        height: 40
     },
     text: {
         overflow: "hidden",
@@ -50,9 +50,13 @@ const SectionTask = props => {
     const { name, status, onSelect, onDelete } = props;
     return (
         <ListItem button={true} style={styles.link} onClick={onSelect}>
-            <ListItemIcon>
-                <div style={{...styles.circle, ...styles[`status${status}`]}}></div>
-            </ListItemIcon>
+            <ListItemAvatar style={styles[`status${status}`]}>
+                {/* <Avatar src="https://sophosnews.files.wordpress.com/2014/04/anonymous-250.jpg?w=250"> */}
+                {/* TODO: ternary operator with checcking if any user is assigned */}
+                <Avatar>
+                    <PersonAddIcon/>
+                </Avatar>
+            </ListItemAvatar>
             <ListItemText primary={<p style={styles.text}>{name}</p>} />
         </ListItem>
     )
