@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace TODOGraphQL.Application.UseCases.Todos.Commands
 {
-    public class UpdateTodosCommand : IRequest<IDictionary<Id, Todo>>
+    public class UpdateTodosCommand : IRequest<IDictionary<Id, Tuple<Todo, Id>>>
     {
-        public IDictionary<Id, Todo> OldTodos { get; set; }
-        public IDictionary<Id, Todo> Todos { get; set; }
+        public IDictionary<Id, Tuple<Todo, Id>> OldTodos { get; set; }
+        public IDictionary<Id, Tuple<Todo, Id>> Todos { get; set; }
     }
 }

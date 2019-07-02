@@ -10,13 +10,33 @@ namespace TODOGraphQL.Domain.DataTypes.Common
         {
             if (value == Guid.Empty)
             {
-                throw new Exception($"{nameof(value)} should not be empty");
+                throw new Exception($"{nameof(Id)} should not be empty");
             }
             _value = value;
         }
 
-        public static implicit operator Guid(Id id) => id._value;
-        public static implicit operator Id(Guid id) => new Id(id);
+        public static implicit operator Guid(Id id)
+        {
+            return id._value;
+        }
+
+        public static implicit operator Id(Guid id)
+        {
+            return new Id(id);
+        }
+
+        public static implicit operator Guid?(Id id)
+        {
+            return id?._value;
+        }
+
+        public static implicit operator Id(Guid? id)
+        {
+            return id.HasValue 
+                ? new Id(id.Value)
+                : null;
+        }
+
         public override string ToString() => _value.ToString();
 
         public static bool operator == (Id id1, Id id2)
@@ -33,7 +53,7 @@ namespace TODOGraphQL.Domain.DataTypes.Common
         {
             if (obj is Id id)
             {
-                return _value.Equals(id._value); 
+                return _value.Equals(id._value);
             }
             return _value.Equals(obj);
         }

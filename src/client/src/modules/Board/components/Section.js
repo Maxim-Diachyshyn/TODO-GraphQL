@@ -64,9 +64,7 @@ class Section extends Component {
                                 <List>
                                     {_.map(data.todos, (t, i) => (
                                         <React.Fragment>
-                                            <BoardTask id={t.id}
-                                                name={t.name} 
-                                                status={t.status}
+                                            <BoardTask {...t}
                                                 onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
                                             />
                                             {i !== data.todos.length - 1 ? (

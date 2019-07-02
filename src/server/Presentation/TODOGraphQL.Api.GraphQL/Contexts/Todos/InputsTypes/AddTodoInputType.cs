@@ -14,6 +14,9 @@ namespace TODOGraphQL.Api.GraphQL.InputTypes
             Field<TodoStatusType>()
                 .Name(nameof(AddTodoInput.Status))
                 .Resolve(x => x.Source.Status);
+            Field<IdGraphType>()
+                .Name(nameof(AddTodoInput.AssingedUserId))
+                .Resolve(x => x.Source.AssingedUserId);
         }
     }
 }

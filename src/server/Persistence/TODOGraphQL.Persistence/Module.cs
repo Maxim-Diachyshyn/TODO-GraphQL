@@ -46,15 +46,15 @@ namespace TODOGraphQL.Persistence
                 .WithParameter("bufferSize", 0)
                 .As(typeof(ISubject<>));
 
-            builder.RegisterType<GenericObservable<AddTodosCommand, Todo>>()
+            builder.RegisterType<GenericObservable<AddTodosCommand, Tuple<Todo, Id>>>()
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .SingleInstance();
-            builder.RegisterType<GenericObservable<UpdateTodosCommand, Todo>>()
+            builder.RegisterType<GenericObservable<UpdateTodosCommand, Tuple<Todo, Id>>>()
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .SingleInstance();
-            builder.RegisterType<GenericObservable<DeleteTodosCommand, Todo>>()
+            builder.RegisterType<GenericObservable<DeleteTodosCommand, Tuple<Todo, Id>>>()
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .SingleInstance();

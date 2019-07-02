@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
 {
-    public class DeleteTodosHandler : IRequestHandler<DeleteTodosCommand, IDictionary<Id, Todo>>
+    public class DeleteTodosHandler : IRequestHandler<DeleteTodosCommand, IDictionary<Id, Tuple<Todo, Id>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IQueryable<TodoEntity> _items;
@@ -24,7 +24,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
             _items = items;
         }
 
-        public async Task<IDictionary<Id, Todo>> Handle(DeleteTodosCommand request, CancellationToken cancellationToken)
+        public async Task<IDictionary<Id, Tuple<Todo, Id>>> Handle(DeleteTodosCommand request, CancellationToken cancellationToken)
         {
             var idList = request.TodoIds
                 .Select(x => (Guid)x)
@@ -41,7 +41,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
             await _unitOfWork.SaveChangesAsync();
 
             return todosToDelete
-                .ToDictionary(x => (Id)x.Id, x => x.ToModel());
+                .ToDictionary(x => (Id)x.Id, x => Tuple.Create(x.ToModel(), (Id)x.AssignedUserId));
         }
     }
 }

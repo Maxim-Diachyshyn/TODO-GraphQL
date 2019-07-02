@@ -2,11 +2,9 @@
 using TODOGraphQL.Domain.DataTypes.Common;
 using GraphQL;
 using GraphQL.Types;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
-using TODOGraphQL.Api.GraphQL.ViewModels;
 using TODOGraphQL.Api.GraphQL.InputTypes;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
@@ -15,6 +13,7 @@ using TODOGraphQL.Application.UseCases.Identity.Commands;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.GraphTypes;
 using TODOGraphQL.Domain.DataTypes.Identity;
 using System.Collections.Generic;
+using TODOGraphQL.Domain.DataTypes.Todos;
 
 namespace TODOGraphQL.Api.GraphQL.Mutations
 {
@@ -22,7 +21,7 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
     {
         public Mutation(IHttpContextAccessor accessor)
         {
-            Field<TodoType, TodoViewModel>()
+            Field<TodoType, KeyValuePair<Id, Tuple<Todo, Id>>>()
                 .Name("createTodo")
                 .Argument<NonNullGraphType<AddTodoInputType>>("todo", "Todo input.")
                 .ResolveAsync(async context => 
@@ -35,14 +34,14 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                     }
                     if (context.Errors.Any())
                     {
-                        return null;
+                        return new KeyValuePair<Id, Tuple<Todo, Id>>(null, null);
                     }
                     var request = input.ToCommand();
                     var result = await mediator.Send(request);
-                    return new TodoViewModel(result.Single());
+                    return result.Single();
                 });
 
-            Field<TodoType, TodoViewModel>()
+            Field<TodoType, KeyValuePair<Id, Tuple<Todo, Id>>>()
                 .Name("updateTodo")
                 .Argument<NonNullGraphType<UpdateTodoInputType>>("todo", "Todo input.")
                 .ResolveAsync(async context =>
@@ -59,20 +58,20 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                     }
                     if (context.Errors.Any())
                     {
-                        return null;
+                        return new KeyValuePair<Id, Tuple<Todo, Id>>(null, null);
                     }
                     var request = input.ToCommand();
-                    var currentItemsRequest = new GetTodosByIdsRequest
+                    var currentItemsRequest = new GetTodosListRequest
                     {
                         SpecifiedIds = request.Todos.Keys
                     };
                     var oldTodos = await mediator.Send(currentItemsRequest);
                     request.OldTodos = oldTodos;
                     var result = await mediator.Send(request);
-                    return new TodoViewModel(result.Single());
+                    return result.Single();
                 });
 
-            Field<TodoType, TodoViewModel>()
+            Field<TodoType, KeyValuePair<Id, Tuple<Todo, Id>>>()
                 .Name("deleteTodo")
                 .Argument<NonNullGraphType<IdGraphType>, Guid>("Id", "Todo id.")
                 .ResolveAsync(async context =>
@@ -84,7 +83,7 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                         TodoIds = new [] { (Id)id }
                     };
                     var result = await mediator.Send(command);
-                    return new TodoViewModel(result.Single());
+                    return result.Single();
                 });
 
             Field<UserType, KeyValuePair<Id, User>>()

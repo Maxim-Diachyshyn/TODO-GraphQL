@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TODOGraphQL.Persistence.EntityFramework.Extensions;
 using TODOGraphQL.Application.UseCases.Todos.Requests;
 using TODOGraphQL.Domain.DataTypes.Todos;
 using TODOGraphQL.Domain.DataTypes.Common;
@@ -13,7 +12,7 @@ using TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities;
 
 namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
 {
-    public class GetTodosListHandler : IRequestHandler<GetTodosListRequest, IDictionary<Id, Todo>>
+    public class GetTodosListHandler : IRequestHandler<GetTodosListRequest, IDictionary<Id, Tuple<Todo, Id>>>
     {
         private IQueryable<TodoEntity> _items;
 
@@ -22,7 +21,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
             _items = items;
         }
 
-        public async Task<IDictionary<Id, Todo>> Handle(GetTodosListRequest request, CancellationToken cancellationToken)
+        public async Task<IDictionary<Id, Tuple<Todo, Id>>> Handle(GetTodosListRequest request, CancellationToken cancellationToken)
         {
             var query = _items;
             if (request.Status.HasValue)
@@ -31,9 +30,18 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
                 query = query
                     .Where(x => x.Status == val);
             }
+            if (request.SpecifiedIds != null)
+            {            
+                var idList = request.SpecifiedIds
+                    .Select(x => (Guid)x)
+                    .ToList();
+                query = query
+                    .Where(x => idList.Contains(x.Id));
+            }
+
             var entities = await query
                 .ToListAsync(cancellationToken);
-            return entities.ToDictionary(x => (Id)x.Id, x => x.ToModel());
+            return entities.ToDictionary(x => (Id)x.Id, x => Tuple.Create(x.ToModel(), (Id)x.AssignedUserId));
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
+using TODOGraphQL.Domain.DataTypes.Common;
 using TODOGraphQL.Domain.DataTypes.Todos;
 
 namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
@@ -9,6 +10,7 @@ namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
         public string Name { get; set; }
         public string Description { get; set; }
         public TodoStatus Status { get; set; }
+        public Guid? AssingedUserId { get; set; }
 
         public AddTodosCommand ToCommand()
         {
@@ -16,12 +18,13 @@ namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
             {
                 Todos = new []
                 {
-                    new Todo
+                    Tuple.Create(new Todo
                     {
                         Name = Name,
                         Description = Description,
                         Status = Status
-                    }
+                    }, (Id)AssingedUserId)
+                    
                 }
             };
         }

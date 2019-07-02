@@ -10,6 +10,10 @@ const texts = {
     unassigned: "Unassigned"
 }
 
+const keys = {
+    unassigned: "unassigned"
+};
+
 const styles = {
     container: {
         // width: "100%"
@@ -24,15 +28,16 @@ const styles = {
 }
 
 const AssignedUserInput = props => {
-    const { loading, users } = props;
+    const { loading, users, assignedUserId } = props;
 
     const onChange = e => {
-        props.onChange({ status: e.target.value });
+        const { value } = e.target;
+        props.onChange({ assignedUserId: value === keys.unassigned ? null : value });
     }
     
     return (
-        <Select style={styles.container} defaultValue="unassigned" disabled={loading} onChange={onChange}>
-            <MenuItem style={styles.select} key="unassigned" value="unassigned">
+        <Select style={styles.container} value={assignedUserId || keys.unassigned} disabled={loading} onChange={onChange}>
+            <MenuItem style={styles.select} key={keys.unassigned} value={keys.unassigned}>
                 <div style={styles.item}>
                     <Avatar>
                         <PersonAddIcon/>
@@ -41,7 +46,7 @@ const AssignedUserInput = props => {
                 </div>
             </MenuItem>
             {_.map(users, u => (
-                <MenuItem style={styles.select} key={u.id} value={u.username}>
+                <MenuItem style={styles.select} key={u.id} value={u.id}>
                     <div style={styles.item}>
                         <Avatar src={u.picture} />
                         <Typography variant="button">{u.username}</Typography>

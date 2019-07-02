@@ -15,7 +15,8 @@ class CreateTask extends Component {
             todo: {
                 name: "New Task",
                 description: "",
-                status: TASK_STATUSES.Open
+                status: TASK_STATUSES.Open,
+                assignedUserId: null
             }
         };
     }

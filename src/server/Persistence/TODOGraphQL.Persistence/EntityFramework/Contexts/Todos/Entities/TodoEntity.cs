@@ -11,6 +11,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public TodoStatus Status { get; set; }
+        public Guid? AssignedUserId { get; set; }
 
         public Todo ToModel()
         {
@@ -22,11 +23,13 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities
             };
         }
 
-        public void FromModel(Todo model)
+        public void FromModel(Todo model, Guid? assignedUserId)
         {
             Name = model.Name;
             Description = model.Description;
             Status = model.Status;
+
+            AssignedUserId = assignedUserId;
         }
     }
 }

@@ -12,19 +12,20 @@ namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
         public string Name { get; set; }
         public string Description { get; set; }
         public TodoStatus Status { get; set; }
+        public Guid? AssignedUserId { get; set; }
 
         public UpdateTodosCommand ToCommand()
         {
             return new UpdateTodosCommand
             {
-                Todos = new Dictionary<Id, Todo>
+                Todos = new Dictionary<Id, Tuple<Todo, Id>>
                 {
-                    [Id] = new Todo
+                    [Id] = Tuple.Create(new Todo
                     {
                         Name = Name,
                         Description = Description,
                         Status = Status
-                    }
+                    }, (Id)AssignedUserId)
                 }
             };
         }

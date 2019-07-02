@@ -9,12 +9,16 @@ namespace TODOGraphQL.Api.GraphQL.InputTypes
         public UpdateTodoInputType()
         {
             Field<IdGraphType>()
-                .Name(nameof(UpdateTodoInput.Id));
+                .Name(nameof(UpdateTodoInput.Id))
+                .Resolve(x => x.Source.Id);
             Field(x => x.Name);
             Field(x => x.Description);
             Field<TodoStatusType>()
                 .Name(nameof(UpdateTodoInput.Status))
                 .Resolve(x => x.Source.Status);
+            Field<IdGraphType>()
+                .Name(nameof(UpdateTodoInput.AssignedUserId))
+                .Resolve(x => x.Source.AssignedUserId);
         }
     }
 }

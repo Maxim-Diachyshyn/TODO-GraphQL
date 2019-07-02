@@ -100,7 +100,7 @@ class Task extends Component {
                             <DescriptionInput description={todo.description} onChange={updateTodo}/>
                             <div style={styles.selectorsContainer}>
                                 <StatusInput status={todo.status} onChange={updateTodo}/>
-                                <AssignedUserInput status={todo.status} onChange={updateTodo}/>
+                                <AssignedUserInput status={todo.status} onChange={updateTodo} assignedUserId={todo.assignedUserId}/>
                             </div>
                         </DialogContent>
 

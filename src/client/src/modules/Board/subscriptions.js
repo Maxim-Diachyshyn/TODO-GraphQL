@@ -7,6 +7,7 @@ subscription{
       name
       description
       status
+      assignedUserId
     }
   }`;
 
@@ -25,6 +26,7 @@ subscription{
       name
       description
       status
+      assignedUserId
     }
 }`;
 

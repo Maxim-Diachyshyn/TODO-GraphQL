@@ -6,8 +6,9 @@ using TODOGraphQL.Domain.DataTypes.Common;
 
 namespace TODOGraphQL.Application.UseCases.Todos.Commands
 {
-    public class AddTodosCommand : IRequest<IDictionary<Id, Todo>>
+    public class AddTodosCommand : IRequest<IDictionary<Id, Tuple<Todo, Id>>>
     {
-        public IEnumerable<Todo> Todos { get; set; }
+        // TOD0, assigned user id
+        public IEnumerable<Tuple<Todo, Id>> Todos { get; set; }
     }
 }

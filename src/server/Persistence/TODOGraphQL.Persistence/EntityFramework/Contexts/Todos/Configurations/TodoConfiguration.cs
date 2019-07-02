@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Entities;
 using TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities;
 
 namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Configurations
@@ -9,6 +10,10 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Configurations
         public void Configure(EntityTypeBuilder<TodoEntity> builder)
         {
             builder.HasKey(x => x.Id);
+
+            builder.HasOne<UserEntity>()
+                .WithMany()
+                .HasForeignKey(x => x.AssignedUserId);
         }
     }
 }

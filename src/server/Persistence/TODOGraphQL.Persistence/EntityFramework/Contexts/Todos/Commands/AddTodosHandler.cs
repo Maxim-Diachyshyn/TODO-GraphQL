@@ -8,10 +8,11 @@ using TODOGraphQL.Domain.DataTypes.Common;
 using TODOGraphQL.Domain.DataTypes.Todos;
 using TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities;
 using System.Linq;
+using System;
 
 namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
 {
-    public class AddTodosHandler : IRequestHandler<AddTodosCommand, IDictionary<Id, Todo>>
+    public class AddTodosHandler : IRequestHandler<AddTodosCommand, IDictionary<Id, Tuple<Todo, Id>>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -21,13 +22,14 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IDictionary<Id, Todo>> Handle(AddTodosCommand command, CancellationToken cancellationToken)
+        public async Task<IDictionary<Id, Tuple<Todo, Id>>> Handle(AddTodosCommand command, CancellationToken cancellationToken)
         {
             var addedTodos = new List<TodoEntity>();
             foreach (var todo in command.Todos)
             {
                 var entity = new TodoEntity();
-                entity.FromModel(todo);
+                entity.FromModel(todo.Item1, todo.Item2);
+                entity.AssignedUserId = todo.Item2;
                 _unitOfWork.Add(entity);
                 addedTodos.Add(entity);
             }
@@ -35,7 +37,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
             await _unitOfWork.SaveChangesAsync();
             
             return addedTodos
-                .ToDictionary(x => (Id)x.Id, x => x.ToModel());
+                .ToDictionary(x => (Id)x.Id, x => Tuple.Create(x.ToModel(), (Id)x.AssignedUserId));
         }
     }
 }
