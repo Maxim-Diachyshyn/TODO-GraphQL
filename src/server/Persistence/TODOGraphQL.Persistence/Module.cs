@@ -9,6 +9,10 @@ using System.Reactive.Subjects;
 using TODOGraphQL.Persistence.ReactiveExtensions;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
 using TODOGraphQL.Domain.DataTypes.Todos;
+using TODOGraphQL.Application.UseCases.Identity.Commands;
+using System.Collections.Generic;
+using TODOGraphQL.Domain.DataTypes.Common;
+using TODOGraphQL.Domain.DataTypes.Identity;
 
 namespace TODOGraphQL.Persistence
 {
@@ -51,6 +55,11 @@ namespace TODOGraphQL.Persistence
                 .AsImplementedInterfaces()
                 .SingleInstance();
             builder.RegisterType<GenericObservable<DeleteTodosCommand, Todo>>()
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
+            builder.RegisterType<GenericObservable<SignInCommand, User>>()
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .SingleInstance();

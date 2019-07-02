@@ -8,7 +8,7 @@ using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Plus.v1;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TODOGraphQL.Application.UseCases.Identity;
+using TODOGraphQL.Application.UseCases.Identity.Commands;
 using TODOGraphQL.Domain.DataTypes.Common;
 using TODOGraphQL.Domain.DataTypes.Identity;
 using TODOGraphQL.Persistence.EntityFramework.Base;
@@ -16,7 +16,7 @@ using TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Entities;
 
 namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Commands
 {
-    public class SignInHandler : IRequestHandler<SignInCommand, KeyValuePair<Id, User>>
+    public class SignInHandler : IRequestHandler<SignInCommand, IDictionary<Id, User>>
     {
         private readonly ClientSecrets _secrets;
         private readonly IQueryable<UserEntity> _items;
@@ -29,7 +29,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Commands
             _uow = uow;
         }
 
-        public async Task<KeyValuePair<Id, User>> Handle(SignInCommand request, CancellationToken cancellationToken)
+        public async Task<IDictionary<Id, User>> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
             var authData = await GoogleJsonWebSignature.ValidateAsync(request.Token);
             
@@ -53,7 +53,10 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Commands
             }
             await _uow.SaveChangesAsync();
 
-            return new KeyValuePair<Id, User>(currentUserEntity.Id, user);
+            return new Dictionary<Id, User>
+            {
+                [currentUserEntity.Id] = user
+            };
         }
     }
 }

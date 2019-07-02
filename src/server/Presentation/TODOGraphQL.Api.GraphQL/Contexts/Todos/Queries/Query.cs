@@ -11,6 +11,8 @@ using TODOGraphQL.Api.GraphQL.ViewModels;
 using TODOGraphQL.Application.UseCases.Todos.Requests;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.GraphTypes;
 using TODOGraphQL.Domain.DataTypes.Todos;
+using TODOGraphQL.Domain.DataTypes.Identity;
+using TODOGraphQL.Application.UseCases.Identity.Requests;
 
 namespace TODOGraphQL.Api.GraphQL.Queries
 {
@@ -47,6 +49,16 @@ namespace TODOGraphQL.Api.GraphQL.Queries
                         context.Errors.Add(new ExecutionError("Not found") {Code="NotFound"});
                     }
                     return new TodoViewModel(todo);
+                });
+
+
+            Field<ListGraphType<UserType>, IDictionary<Id, User>>()
+                .Name("users")
+                .ResolveAsync(async context =>
+                {
+                    var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
+                    var status = context.GetArgument<TodoStatus?>("status");
+                    return await mediator.Send(new GetUsersRequest());
                 });
         }
     }

@@ -8,6 +8,11 @@ using TODOGraphQL.Api.GraphQL.ViewModels;
 using TODOGraphQL.Persistence.ReactiveExtensions;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
 using TODOGraphQL.Domain.DataTypes.Todos;
+using TODOGraphQL.Api.GraphQL.Contexts.Todos.GraphTypes;
+using System.Collections.Generic;
+using TODOGraphQL.Domain.DataTypes.Common;
+using TODOGraphQL.Domain.DataTypes.Identity;
+using TODOGraphQL.Application.UseCases.Identity.Commands;
 
 namespace TODOGraphQL.Api.GraphQL.Subscriptions
 {
@@ -44,6 +49,18 @@ namespace TODOGraphQL.Api.GraphQL.Subscriptions
                 Subscriber = new EventStreamResolver<TodoViewModel>(ctx => accessor
                     .GetService<GenericObservable<DeleteTodosCommand, Todo>>()
                     .Select(x => new TodoViewModel(x))
+                    .AsObservable()
+                )
+            });
+
+            AddField(new EventStreamFieldType
+            {
+                Name = "userAdded",
+                Type = typeof(UserType),
+                Resolver = new FuncFieldResolver<KeyValuePair<Id, User>>(ctx => (KeyValuePair<Id, User>)ctx.Source),
+                Subscriber = new EventStreamResolver<object>(ctx => accessor
+                    .GetService<GenericObservable<SignInCommand, User>>()
+                    .Select(x => x as object)
                     .AsObservable()
                 )
             });

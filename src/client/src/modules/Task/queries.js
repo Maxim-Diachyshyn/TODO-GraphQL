@@ -10,4 +10,14 @@ query($id: ID!){
     }
 }`
 
-export { todoByIdQuery };
+const usersQuery = gql`
+query {
+  users {
+    id
+    email
+    picture
+    username
+  }
+}`
+
+export { todoByIdQuery, usersQuery };

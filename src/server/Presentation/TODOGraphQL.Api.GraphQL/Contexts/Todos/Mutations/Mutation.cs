@@ -11,7 +11,7 @@ using TODOGraphQL.Api.GraphQL.InputTypes;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
 using TODOGraphQL.Application.UseCases.Todos.Requests;
-using TODOGraphQL.Application.UseCases.Identity;
+using TODOGraphQL.Application.UseCases.Identity.Commands;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.GraphTypes;
 using TODOGraphQL.Domain.DataTypes.Identity;
 using System.Collections.Generic;
@@ -99,7 +99,7 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                         Token = input
                     };
                     var result = await mediator.Send(command);
-                    return result;
+                    return result.Single();
                 });
         }
     }

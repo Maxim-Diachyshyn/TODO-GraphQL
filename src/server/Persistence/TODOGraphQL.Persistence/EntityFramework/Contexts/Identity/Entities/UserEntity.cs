@@ -17,5 +17,12 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Entities
             Email = model.Email;
             Picture = model.Picture;
         }
+
+        public User ToModel() =>
+            new User(
+                username: Username,
+                email: Email,
+                picture: Picture
+            );
     }
 }
