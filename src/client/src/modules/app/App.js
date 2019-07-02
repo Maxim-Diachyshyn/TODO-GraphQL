@@ -14,10 +14,10 @@ import { components as SignIn } from "../SignIn";
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://localhost:5000/graphql'
+  uri: process.env.REACT_APP_API_HTTP
 });
 
-const wsClient = new SubscriptionClient('ws://localhost:5000/graphql', { reconnect: true });
+const wsClient = new SubscriptionClient(process.env.REACT_APP_API_WS, { reconnect: true });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink(wsClient);

@@ -20,7 +20,7 @@ const GoogleSignIn = props => {
         </DialogContent>
         <DialogActions>
             <GoogleLogin
-                clientId="ID"
+                clientId={process.env.REACT_APP_GOOGLE_ID}
                 buttonText="Login with Google"
                 onSuccess={r => onSignIn(r.tokenId)}
             />                        

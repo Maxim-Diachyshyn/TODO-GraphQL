@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -32,6 +33,12 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Commands
         public async Task<IDictionary<Id, User>> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
             var authData = await GoogleJsonWebSignature.ValidateAsync(request.Token);
+
+            if (!authData.AudienceAsList.Contains(_secrets.ClientId))
+            {
+                // generated with other client id 
+                throw new NotImplementedException();
+            }
             
             var user = new User(
                 username: authData.Name,

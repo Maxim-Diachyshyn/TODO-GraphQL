@@ -288,11 +288,12 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 *.log
-src/IronFitness/wwwroot/lib/**/*
-src/IronFitness/Content/
 
 #KDiff files
 *.orig
+
+#app settings
+**/*appsettings.json
 
 #Saved files
 Files/
