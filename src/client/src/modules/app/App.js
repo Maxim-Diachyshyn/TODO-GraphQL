@@ -10,6 +10,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppRouter from '../appRouter';
 import './App.css';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { components as SignIn } from "../SignIn";
 
 // Create an http link:
 const httpLink = new HttpLink({
@@ -53,11 +54,13 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <div className="App">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-        <CssBaseline />
-          <AppRouter/>
-        </div>
+        <SignIn.GoogleSignIn>
+          <div className="App">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+            <CssBaseline />
+            <AppRouter/>
+          </div>
+        </SignIn.GoogleSignIn>
       </ApolloProvider>
     );
   }

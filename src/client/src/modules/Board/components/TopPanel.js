@@ -1,12 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
-import { Mutation } from "react-apollo";
 import { IconButton, AppBar } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
-import { GoogleLogin } from 'react-google-login';
-import { signIn } from "../mutations";
 
 const styles = {
     container: {
@@ -34,20 +31,10 @@ const texts = {
 }
 
 const TopPanel = props => {
-    const responseGoogle = (response) => {
-        console.log(response);
-    }
-
-    const { onSignIn } = props;
-
     return (        
         <AppBar>
             <div style={styles.container}>
-                    <GoogleLogin
-                        clientId="ID"
-                        buttonText="Login with Google"
-                        onSuccess={r => onSignIn(r.tokenId)}
-                    />
+                <div />
                 <span style={styles.title}>{texts.title}</span>
                 <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
                     <Create />
@@ -60,8 +47,6 @@ const TopPanel = props => {
 export default withRouter(props => {
     const { history } = props;
     return (
-        <Mutation mutation={signIn}>{signIn => (
-            <TopPanel {...props} onSignIn={token => signIn({ variables: { token }})} createTodo={() => history.push(ROUTES.CREATE_FILM)} />
-        )}</Mutation>
+        <TopPanel {...props} createTodo={() => history.push(ROUTES.CREATE_FILM)} />
     );
 });
