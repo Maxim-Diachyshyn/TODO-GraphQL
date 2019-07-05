@@ -79,29 +79,35 @@ namespace TODOGraphQL.Api.GraphQL
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-
             if (Environment.IsDevelopment())
             {
-                app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
+                app.UseDeveloperExceptionPage();
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
-                    Path = "/ui/playground",
-                    GraphQLEndPoint = "/graphql"
-                });
-                app.UseGraphiQLServer(new GraphiQLOptions
-                {
-                    GraphiQLPath = "/ui/graphiql",
-                    GraphQLEndPoint = "/graphql"
-                });
-                app.UseGraphQLVoyager(new GraphQLVoyagerOptions()
-                {
-                    Path = "/ui/voyager",
-                    GraphQLEndPoint = "/graphql"
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
             }
+            else 
+            {
+                app.UseHttpsRedirection();
+                app.UseHsts();
+            }
+
+            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
+            {
+                Path = "/ui/playground",
+                GraphQLEndPoint = "/graphql"
+            });
+            app.UseGraphiQLServer(new GraphiQLOptions
+            {
+                GraphiQLPath = "/ui/graphiql",
+                GraphQLEndPoint = "/graphql"
+            });
+            app.UseGraphQLVoyager(new GraphQLVoyagerOptions()
+            {
+                Path = "/ui/voyager",
+                GraphQLEndPoint = "/graphql"
+            });
 
             app.UseCors(options => 
             {
@@ -113,6 +119,16 @@ namespace TODOGraphQL.Api.GraphQL
             app.UseWebSockets();
             app.UseGraphQLWebSockets<TodoSchema>("/graphql");
             app.UseGraphQL<TodoSchema>("/graphql");
+
+            app.UseStaticFiles();
+
+            app.Use(async (ctx, next) =>
+            {
+                ctx.Request.Path = "/index.html";
+                await next();
+            }); 
+
+            app.UseStaticFiles();
 
             context.Database.EnsureCreated();
         }

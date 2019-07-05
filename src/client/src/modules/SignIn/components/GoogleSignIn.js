@@ -23,6 +23,8 @@ const GoogleSignIn = props => {
                 clientId={process.env.REACT_APP_GOOGLE_ID}
                 buttonText="Login with Google"
                 onSuccess={r => onSignIn(r.tokenId)}
+                onFailure={e => {throw e;}}
+                cookiePolicy={'single_host_origin'}
             />                        
         </DialogActions>
 

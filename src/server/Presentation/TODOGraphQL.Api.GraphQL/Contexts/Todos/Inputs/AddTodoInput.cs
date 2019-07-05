@@ -10,7 +10,7 @@ namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
         public string Name { get; set; }
         public string Description { get; set; }
         public TodoStatus Status { get; set; }
-        public Guid? AssingedUserId { get; set; }
+        public Guid? AssignedUserId { get; set; }
 
         public AddTodosCommand ToCommand()
         {
@@ -23,7 +23,7 @@ namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
                         Name = Name,
                         Description = Description,
                         Status = Status
-                    }, (Id)AssingedUserId)
+                    }, (Id)AssignedUserId)
                     
                 }
             };
