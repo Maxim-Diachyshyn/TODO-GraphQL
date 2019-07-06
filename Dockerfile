@@ -24,4 +24,4 @@ FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 WORKDIR /app
 COPY --from=build ["/app/Presentation/TODOGraphQL.Api.GraphQL/out", "./"]
 COPY --from=web-build ["/app/build", "./wwwroot"]
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet TODOGraphQL.Api.GraphQL.dll
+CMD ASPNETCORE_URLS=http://*:$PORT ASPNETCORE_HTTPS_PORT=443 dotnet TODOGraphQL.Api.GraphQL.dll

@@ -78,20 +78,17 @@ namespace TODOGraphQL.Api.GraphQL
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            if (Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseForwardedHeaders(new ForwardedHeadersOptions
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                });
-            }
             else 
             {
-                app.UseHttpsRedirection();
                 app.UseHsts();
             }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
+            app.UseHttpsRedirection();
 
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
             {
