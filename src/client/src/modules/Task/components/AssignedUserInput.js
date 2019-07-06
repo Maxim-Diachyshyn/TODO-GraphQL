@@ -68,7 +68,7 @@ export default props => {
                     updateQuery: (prev, { subscriptionData }) => {
                         if (!subscriptionData.data) return prev;
                         const { userAdded } = subscriptionData.data;
-                        const users = _.reject(prev.todos, x => x.id === userAdded.id);
+                        const users = _.reject(prev.users, x => x.id === userAdded.id);
                         return {
                             ...prev,
                             users: [...users, userAdded]
