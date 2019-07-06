@@ -1,0 +1,17 @@
+**/Dockerfile
+**/docker-compose.yml
+
+**/.vscode
+**/.dockerignore
+**/.gitignore
+**/.git
+
+./src/server/**/bin
+./src/server/**/obj
+
+./src/client/**/build
+./src/client/**/node_modules
+
+./src/client/**/yarn.**
+
+**/README.md
