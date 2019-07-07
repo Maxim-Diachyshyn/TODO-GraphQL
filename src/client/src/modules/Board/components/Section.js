@@ -3,11 +3,12 @@ import { withRouter } from 'react-router-dom';
 import { Query } from "react-apollo";
 import _ from "lodash";
 import { List, CircularProgress, Divider, Card, CardHeader, CardContent } from '@material-ui/core';
-import { Scrollbars } from 'react-custom-scrollbars';
+import PerfectScrollbar from 'react-perfect-scrollbar'
 import ROUTES from "../../appRouter/routes";
 import { queries, subscriptions } from "../../Board";
 import BoardTask from './SectionTask';
 import { TASK_STATUSES } from "../../Task/constants";
+import withLoader from '../../shared/withLoader';
 
 const styles = {
     spinnerContainer: {
@@ -18,6 +19,8 @@ const styles = {
     },
     boardTasksContainer: {
         margin: "12px 2px",
+        display: "grid",
+        gridTemplateRows: "auto auto 1fr",
     },
     header: {
         background: "#f9f7f7"
@@ -37,8 +40,13 @@ const styles = {
     [`headerText${TASK_STATUSES.Done}`]: {
         color: "#388e3c"
     },
-    scrollBars: {
-        padding: 5
+    scrollbarContainer: {
+        paddingLeft: 0,
+        paddingRight: 0,
+        overflowY : "hidden"
+    },
+    list: {
+        padding: "0px 8px"
     }
 };
 
@@ -47,40 +55,40 @@ class Section extends Component {
         this.props.onLoaded();
     }
 
-    renderView = ({ style, ...props }) =>
-        <div style={{...style, ...styles.scrollBars}} {...props} />
-
     render() {
         const { history, loading, data, status } = this.props;
         return (
-                <Card style={styles.boardTasksContainer}>
-                    <CardHeader style={styles.header} title={(<div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
+            <Card style={styles.boardTasksContainer}>
+                <CardHeader style={styles.header} title={(
+                    <div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
                         {_.findKey(TASK_STATUSES, x => x === status)}
-                    </div>)} />
-                    <Divider />
-                    {loading ? null : (
-                            <Scrollbars style={styles.scrollBars}
-                            renderView={this.renderView}>
-                                <List>
-                                    {_.map(data.todos, (t, i) => (
-                                        <React.Fragment>
-                                            <BoardTask {...t}
-                                                onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
-                                            />
-                                            {i !== data.todos.length - 1 ? (
-                                                <Divider variant="inset" component="li" />
-                                            ) : null}
-                                        </React.Fragment>
-                                    ))}
-                                </List>
-                            </Scrollbars>
-                    )}                
-                </Card>
+                    </div>)} 
+                />
+                <Divider />
+                {loading ? null : (
+                    <CardContent style={styles.scrollbarContainer}>
+                        <PerfectScrollbar>
+                            <List style={styles.list}>
+                                {_.map(data.todos, (t, i) => (
+                                    <React.Fragment>
+                                        <BoardTask {...t}
+                                            onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
+                                        />
+                                        {i !== data.todos.length - 1 ? (
+                                            <Divider variant="inset" component="li" />
+                                        ) : null}
+                                    </React.Fragment>
+                                ))}
+                            </List>
+                        </PerfectScrollbar>
+                    </CardContent>
+                )}                
+            </Card>
         );
     }
 }
 
-export default withRouter(props => {
+export default withLoader(withRouter(props => {
     const { id } = props.match.params;
     const { status } = props;
 
@@ -147,4 +155,4 @@ export default withRouter(props => {
             />
         )}</Query>
     );
-});
+}));

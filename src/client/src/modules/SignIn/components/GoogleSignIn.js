@@ -9,8 +9,15 @@ const texts = {
     content: "Sign in with Google Account"
 }
 
+const googleKey = "todo-graph-ql:google";
+
 const GoogleSignIn = props => {
     const { onSignIn } = props;
+    
+    const googleToken = localStorage.getItem(googleKey);
+    if (googleToken) {
+        onSignIn(googleToken);
+    }
 
     return (
         <Dialog open={true}>
@@ -33,11 +40,14 @@ const GoogleSignIn = props => {
     );
 }
 
-export default props => {
+export default WrappedComponent => props => {
     return (
-        <Mutation mutation={signIn}>{(signIn, { data }) => {
-            if (data) return props.children;
-            return <GoogleSignIn {...props} onSignIn={token => signIn({ variables: { token }})} />
+        <Mutation mutation={signIn}>{(signIn, { data, loading }) => {
+            if (data || loading) return <WrappedComponent {...props} loading={loading}>{props.children}</WrappedComponent>
+            return <GoogleSignIn {...props} loading={loading} onSignIn={token => {
+                localStorage.setItem(googleKey, token);
+                signIn({ variables: { token }})
+            }} />
         }}</Mutation>
     );
 }

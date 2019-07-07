@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
-import { IconButton, AppBar } from '@material-ui/core';
+import { IconButton, AppBar, Typography } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 
@@ -14,7 +14,6 @@ const styles = {
         background: "darkblue"
     },
     title: {
-        fontSize: 24,
         color: "#FFFF",
         fontWeight: "bold"
     },
@@ -35,7 +34,7 @@ const TopPanel = props => {
         <AppBar>
             <div style={styles.container}>
                 <div />
-                <span style={styles.title}>{texts.title}</span>
+                <Typography variant="h5" style={styles.title}>{texts.title}</Typography>
                 <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
                     <Create />
                 </IconButton>

@@ -1,3 +1,3 @@
-import GoogleSignIn from "./GoogleSignIn";
+import withSignIn from "./GoogleSignIn";
 
-export { GoogleSignIn }
+export { withSignIn }
