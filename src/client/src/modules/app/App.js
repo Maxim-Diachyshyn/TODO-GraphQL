@@ -8,9 +8,13 @@ import { InMemoryCache } from 'apollo-boost';
 import { getMainDefinition } from 'apollo-utilities';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppRouter from '../appRouter';
-import './App.css';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { components as SignIn } from "../SignIn";
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import './App.css';
+import { compose } from 'recompose';
+import withLoader from '../shared/withLoader';
+import { signIn } from '../SignIn/mutations';
 
 // Create an http link:
 const httpLink = new HttpLink({
@@ -50,20 +54,21 @@ const client = new ApolloClient({
 
 wsClient.onReconnecting(client.resetStore);
 
-class App extends Component {
-  render() {
-    return (
-      <ApolloProvider client={client}>
-        <SignIn.GoogleSignIn>
-          <div className="App">
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-            <CssBaseline />
-            <AppRouter/>
-          </div>
-        </SignIn.GoogleSignIn>
-      </ApolloProvider>
-    );
-  }
-}
+const witApollo = WrappedComponent => props => (
+  <ApolloProvider client={client}>
+    <WrappedComponent {...props}>{props.children}</WrappedComponent>
+  </ApolloProvider>
+);
 
-export default App;
+const App = () => (
+  <div className="App">
+    <CssBaseline />
+    <AppRouter/>
+  </div>
+);
+
+export default compose(
+  witApollo,
+  SignIn.withSignIn,
+  withLoader
+)(App);

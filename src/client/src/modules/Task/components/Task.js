@@ -9,6 +9,8 @@ import AssignedUserInput from "./AssignedUserInput";
 import DeleteButton from "./DeleteButton";
 import ROUTES from "../../appRouter/routes";
 import MySnackbar from "./MySnackbar";
+import { compose } from 'recompose';
+import withError from '../../shared/withError';
 
 const styles = {
     closeButton: {
@@ -84,11 +86,6 @@ class Task extends Component {
         }
         return (
             <React.Fragment>
-                <MySnackbar 
-                    open={todo === null && !deletedHandled} 
-                    text={texts.deleted}
-                    onClose={this.handleError}
-                />
                 <Dialog open={(!loading && todoId && todo) || !!createTodo} onClose={this.onClose} scroll="body">
                 {((!loading && todoId && todo) || !!createTodo) ? (
                     <React.Fragment>

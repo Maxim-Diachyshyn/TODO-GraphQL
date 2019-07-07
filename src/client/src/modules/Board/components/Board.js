@@ -51,9 +51,11 @@ class Board extends Component {
                 <PerfectScrollbar style={styles.scrollContainer} options={{ suppressScrollY: true }}>
                     <div style={styles.boardsContainer}>
                         <div />
-                        <div style={styles.sectionsContainer}>
-                            <div style={styles.sections}>
-                                {_.map(TASK_STATUSES, st => <Section status={st} />)}
+                        <div>
+                            <div style={styles.sectionsContainer}>
+                                <div style={styles.sections}>
+                                    {_.map(TASK_STATUSES, st => <Section status={st} />)}
+                                </div>
                             </div>
                         </div>
                         <div />
