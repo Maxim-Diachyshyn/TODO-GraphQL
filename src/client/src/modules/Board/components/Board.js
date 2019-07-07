@@ -12,24 +12,11 @@ const styles = {
         height: "calc(100vh - 68px)",
         marginTop: "64px"
     },
-    boardsContainer: {
-        display: "grid",
-        gridTemplateColumns: "12px 1fr 12px",
-        gridAutoFlow: "column",
-        height: "100%"
-    },
-    sectionsContainer: {
-        height: "100%",
-        width: "100%",
-        position: "relative"
-    },
     sections: {
         display: "grid",
         gridAutoColumns: "minmax(350px, 1fr)",
         gridColumnGap: 8,
         gridAutoFlow: "column",
-        position: "absolute",
-        width: "100%",
         height: "100%"
     },
     modalContainer: {
@@ -49,16 +36,8 @@ class Board extends Component {
             <React.Fragment>
                 <TopPanel />
                 <PerfectScrollbar style={styles.scrollContainer} options={{ suppressScrollY: true }}>
-                    <div style={styles.boardsContainer}>
-                        <div />
-                        <div>
-                            <div style={styles.sectionsContainer}>
-                                <div style={styles.sections}>
-                                    {_.map(TASK_STATUSES, st => <Section status={st} />)}
-                                </div>
-                            </div>
-                        </div>
-                        <div />
+                    <div style={styles.sections}>
+                        {_.map(TASK_STATUSES, st => <Section status={st} />)}
                     </div>
                 </PerfectScrollbar>
                 {id || isCreating ? (

@@ -1,10 +1,12 @@
 import React from 'react';
+import _ from "lodash";
 import { GoogleLogin } from 'react-google-login';
-import { Mutation } from "react-apollo";
+import { Mutation, Query, withApollo } from "react-apollo";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@material-ui/core";
 import { signIn } from "../mutations";
 import { compose } from 'recompose';
 import withError from '../../shared/withError';
+import { currentUserQuery } from '../../Board/queries';
 
 const texts = {
     header: "Sign in",
@@ -14,16 +16,7 @@ const texts = {
 const googleKey = "todo-graph-ql:google";
 
 const GoogleSignIn = props => {
-    const { onSignIn, error } = props;
-    
-    if (error) {
-        localStorage.removeItem(googleKey);
-    }
-
-    const googleToken = localStorage.getItem(googleKey);
-    if (googleToken) {
-        onSignIn(googleToken);
-    }
+    const { onSignIn, onError } = props;
 
     return (
         <Dialog open={true}>
@@ -36,7 +29,7 @@ const GoogleSignIn = props => {
                 clientId={process.env.REACT_APP_GOOGLE_ID}
                 buttonText="Login with Google"
                 onSuccess={r => onSignIn(r.tokenId)}
-                onFailure={e => localStorage.removeItem(googleKey)}
+                onFailure={onError}
                 cookiePolicy={'single_host_origin'}
             />                        
         </DialogActions>
@@ -47,20 +40,58 @@ const GoogleSignIn = props => {
 }
 
 const withData = WrappedComponent => props => (
-    <Mutation mutation={signIn}>{(signIn, { data, loading, error }) => (
-        <WrappedComponent {...props} data={data} loading={loading} error={error} signIn={signIn}/>
-    )}</Mutation>
+    <Query query={currentUserQuery} fetchPolicy="cache-only">{({ data }) => (
+        <Mutation 
+            mutation={signIn} 
+            update={(cache, { data: { signIn } }) => {
+                cache.writeQuery({
+                    query: currentUserQuery,
+                    data: { 
+                        currentUser: {
+                            ...signIn,
+                            logoutRequested: false
+                        }  
+                    },
+                });
+            }}
+            >{(signIn, { loading, error }) => (
+            <WrappedComponent {...props} data={_.get(data, "currentUser", null)} loading={loading} error={error} signIn={signIn}/>
+        )}</Mutation>
+    )}</Query>
 );
 
 export default compose(
     withData,
     withError,
+    withApollo,
     WrappedComponent => props => {
-        const { loading, data, error, signIn } = props;
-        if ((data || loading) && !error) return <WrappedComponent {...props} loading={loading}>{props.children}</WrappedComponent>
-        return <GoogleSignIn {...props} loading={loading} error={error} onSignIn={token => {
+        const { loading, data, error, signIn, client } = props;
+
+        const onSignIn = token => {
             localStorage.setItem(googleKey, token);
             signIn({ variables: { token }})
-        }} />
+        };
+
+        const onError = () => localStorage.removeItem(googleKey);
+
+        if (_.get(data, "logoutRequested", false)) {
+            localStorage.removeItem(googleKey);
+            client.writeQuery({
+                query: currentUserQuery,
+                data: {
+                    currentUser: null
+                }
+            });
+        }
+       
+        if ((data || loading) && !error) return <WrappedComponent {...props} loading={loading}>{props.children}</WrappedComponent>
+        const googleToken = localStorage.getItem(googleKey);
+        if (googleToken) {
+            onSignIn(googleToken);
+        }
+        if (error) {
+            localStorage.removeItem(googleKey);
+        }
+        return <GoogleSignIn {...props} loading={loading} error={error} onSignIn={onSignIn} onError={onError} />
     }
 );

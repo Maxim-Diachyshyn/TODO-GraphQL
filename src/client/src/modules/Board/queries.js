@@ -10,4 +10,15 @@ query($status: TodoStatus){
     }
 }`;
 
-export { todosQuery };
+const currentUserQuery = gql`
+query {
+    currentUser {
+      id
+      username
+      email
+      picture
+      logoutRequested
+    }
+}`;
+
+export { todosQuery, currentUserQuery };

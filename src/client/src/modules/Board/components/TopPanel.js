@@ -4,6 +4,7 @@ import _ from "lodash";
 import { IconButton, AppBar, Typography } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
+import UserMenu from "./UserMenu"
 
 const styles = {
     container: {
@@ -33,7 +34,7 @@ const TopPanel = props => {
     return (        
         <AppBar>
             <div style={styles.container}>
-                <div />
+                <UserMenu />
                 <Typography variant="h5" style={styles.title}>{texts.title}</Typography>
                 <IconButton style={styles.button} edge="end" aria-label={texts.create} onClick={props.createTodo}>
                     <Create />
