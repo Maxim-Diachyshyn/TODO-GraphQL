@@ -16,7 +16,7 @@ class CreateTask extends Component {
                 name: "New Task",
                 description: "",
                 status: TASK_STATUSES.Open,
-                assignedUserId: null
+                assignedUser: null
             }
         };
     }

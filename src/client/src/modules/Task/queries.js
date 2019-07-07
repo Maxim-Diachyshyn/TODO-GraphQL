@@ -7,7 +7,9 @@ query($id: ID!){
       name
       description
       status
-      assignedUserId
+      assignedUser {
+        id
+      }
     }
 }`
 

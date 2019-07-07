@@ -1,12 +1,12 @@
 import { gql } from "apollo-boost";
 
 const createTodo = gql`
-mutation($name: String!, $description: String!, $status: TodoStatus, $assignedUserId: ID){
+mutation($name: String!, $description: String!, $status: TodoStatus, $assignedUser: OnlyIdObjectType){
   createTodo(todo: {
     name: $name,
     description: $description
     status: $status
-    assignedUserId: $assignedUserId
+    assignedUser: $assignedUser
   }) {
     id
   }

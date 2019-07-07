@@ -6,7 +6,9 @@ query($status: TodoStatus){
       id
       name
       status
-      assignedUserId
+      assignedUser {
+        id
+      }
     }
 }`;
 

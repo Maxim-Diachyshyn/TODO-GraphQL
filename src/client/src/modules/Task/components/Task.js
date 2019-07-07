@@ -39,14 +39,6 @@ const texts = {
 };
 
 class Task extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            deletedHandled: false
-        };
-    }
-
     componentDidMount() {
         if (this.props.subscribeToRemoved) {
             this.props.subscribeToRemoved();
@@ -74,13 +66,11 @@ class Task extends Component {
     }
 
     handleError = () => {
-        this.setState({ deletedHandled: true });
         this.onClose();
     } 
 
     render() {
         const { loading, todoId, todo, updateTodo, onDelete, createTodo } = this.props;
-        const { deletedHandled } = this.state;
         if (loading) {
             return "loading brooooooo";
         }
@@ -97,7 +87,7 @@ class Task extends Component {
                             <DescriptionInput description={todo.description} onChange={updateTodo}/>
                             <div style={styles.selectorsContainer}>
                                 <StatusInput status={todo.status} onChange={updateTodo}/>
-                                <AssignedUserInput status={todo.status} onChange={updateTodo} assignedUserId={todo.assignedUserId}/>
+                                <AssignedUserInput status={todo.status} onChange={updateTodo} assignedUser={todo.assignedUser}/>
                             </div>
                         </DialogContent>
 

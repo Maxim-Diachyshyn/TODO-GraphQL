@@ -38,6 +38,14 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
                 query = query
                     .Where(x => idList.Contains(x.Id));
             }
+            if (request.AssignedUserIds != null) 
+            {
+                var idList = request.AssignedUserIds
+                    .Select(x => (Guid)x)
+                    .ToList();
+                query = query
+                    .Where(x => x.AssignedUserId.HasValue && idList.Contains(x.AssignedUserId.Value));
+            }
 
             var entities = await query
                 .ToListAsync(cancellationToken);

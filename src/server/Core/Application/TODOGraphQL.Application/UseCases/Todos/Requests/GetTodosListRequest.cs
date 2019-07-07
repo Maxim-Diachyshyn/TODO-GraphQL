@@ -10,5 +10,6 @@ namespace TODOGraphQL.Application.UseCases.Todos.Requests
     {
         public TodoStatus? Status { get; set; }
         public IEnumerable<Id> SpecifiedIds { get; set; }
+        public IEnumerable<Id> AssignedUserIds { get; set; }
     }
 }

@@ -7,6 +7,6 @@ namespace TODOGraphQL.Application.UseCases.Identity.Requests
 {
     public class GetUsersRequest : IRequest<IDictionary<Id, User>>
     {
-        
+        public IEnumerable<Id> SpecifiedIds { get; set; }
     }
 }

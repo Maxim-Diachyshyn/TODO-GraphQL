@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using TODOGraphQL.Domain.DataTypes.Todos;
 using TODOGraphQL.Api.GraphQL.Contexts.Todos.GraphTypes;
 using TODOGraphQL.Domain.DataTypes.Common;
+using TODOGraphQL.Application.UseCases.Identity.Requests;
+using System.Linq;
+using TODOGraphQL.Domain.DataTypes.Identity;
 
 namespace TODOGraphQL.Api.GraphQL.GraphTypes
 {
@@ -20,9 +23,30 @@ namespace TODOGraphQL.Api.GraphQL.GraphTypes
             Field<TodoStatusType>()
                 .Name(nameof(Todo.Status))
                 .Resolve(x => x.Source.Value.Item1.Status);
-            Field<IdGraphType>()
-                .Name("AssignedUserId")
-                .Resolve(x => x.Source.Value.Item2);
+            Field<UserType>()
+                .Name("AssignedUser")
+                .ResolveAsync(async x => 
+                {
+                    var userId = x.Source.Value.Item2;
+                    if (userId == null)
+                    {
+                        return null;
+                    }
+                    if (x.SubFields.Count == 1 && x.SubFields.ContainsKey("id"))
+                    {
+                        return new KeyValuePair<Id, User>(userId, null);
+                    }
+                    var mediator = accessor.GetMediator();
+                    var request = new GetUsersRequest
+                    {
+                        SpecifiedIds = new [] 
+                        {
+                            userId
+                        }
+                    };
+                    var result = await mediator.Send(request);
+                    return result.Single();
+                });
         }
     }
 }

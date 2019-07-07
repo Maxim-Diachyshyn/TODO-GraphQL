@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,7 +23,17 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Identity.Requests
 
         public async Task<IDictionary<Id, User>> Handle(GetUsersRequest request, CancellationToken cancellationToken)
         {
-            return await _items
+            var query = _items;
+            if (request.SpecifiedIds != null)
+            {            
+                var idList = request.SpecifiedIds
+                    .Select(x => (Guid)x)
+                    .ToList();
+                query = query
+                    .Where(x => idList.Contains(x.Id));
+            }
+            
+            return await query
                 .ToDictionaryAsync(x => (Id)x.Id, x => x.ToModel());
         }
     }

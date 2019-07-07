@@ -64,7 +64,8 @@ const SectionTask = props => {
 };
 
 export default props => {
-    const { id, assignedUserId } = props;
+    const { id, assignedUser } = props;
+    const assignedUserId = _.get(assignedUser, "id", null);
     return (
         <Query query={usersQuery}>
         {({ loading, error, data, subscribeToMore }) => {

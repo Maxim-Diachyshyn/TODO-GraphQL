@@ -28,6 +28,7 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                 {
                     var mediator = accessor.GetMediator();
                     var input = context.GetArgument<AddTodoInput>("todo");
+                    
                     if (string.IsNullOrEmpty(input.Name))
                     {
                         context.Errors.Add(new ExecutionError("Name should not be empty") {Code = "EmptyName"});
@@ -48,6 +49,7 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                 {
                     var mediator = accessor.GetMediator();
                     var input = context.GetArgument<UpdateTodoInput>("todo");
+
                     if (string.IsNullOrEmpty(input.Name))
                     {
                         context.Errors.Add(new ExecutionError("Name should not be empty") {Code = "EmptyName"});

@@ -28,15 +28,26 @@ const styles = {
 }
 
 const AssignedUserInput = props => {
-    const { loading, users, assignedUserId } = props;
+    const { loading, users, assignedUser } = props;
 
     const onChange = e => {
         const { value } = e.target;
-        props.onChange({ assignedUserId: value === keys.unassigned ? null : value });
+        if (value === keys.unassigned) {
+            props.onChange({ 
+                assignedUser: null 
+            });
+        }
+        else {
+            props.onChange({ 
+                assignedUser: {
+                    id: value
+                }
+            });
+        }
     }
     
     return (
-        <Select style={styles.container} value={assignedUserId || keys.unassigned} disabled={loading} onChange={onChange}>
+        <Select style={styles.container} value={_.get(assignedUser, "id", keys.unassigned)} disabled={loading} onChange={onChange}>
             <MenuItem style={styles.select} key={keys.unassigned} value={keys.unassigned}>
                 <div style={styles.item}>
                     <Avatar>
