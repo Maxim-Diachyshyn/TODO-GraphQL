@@ -14,7 +14,6 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { components as SignIn } from "../SignIn";
 import './App.css';
 import { compose } from 'recompose';
-import withLoader from '../shared/withLoader';
 
 // Create an http link:
 const httpLink = new HttpLink({
@@ -81,6 +80,5 @@ const App = () => (
 
 export default compose(
   withApollo,
-  withStyles,
-  withLoader
+  withStyles
 )(App);

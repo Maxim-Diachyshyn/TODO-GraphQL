@@ -7,6 +7,7 @@ import { signIn } from "../mutations";
 import { compose } from 'recompose';
 import withError from '../../shared/withError';
 import { currentUserQuery } from '../../Board/queries';
+import withLoader from '../../shared/withLoader';
 
 const texts = {
     header: "Sign in",
@@ -61,9 +62,10 @@ const withData = WrappedComponent => props => (
 );
 
 export default compose(
+    withApollo,
     withData,
     withError,
-    withApollo,
+    withLoader,
     WrappedComponent => props => {
         const { loading, data, error, signIn, client } = props;
 
@@ -82,16 +84,19 @@ export default compose(
                     currentUser: null
                 }
             });
+            client.resetStore();
         }
        
-        if ((data || loading) && !error) return <WrappedComponent {...props} loading={loading}>{props.children}</WrappedComponent>
-        const googleToken = localStorage.getItem(googleKey);
-        if (googleToken) {
-            onSignIn(googleToken);
+        if ((data || loading) && !error) return <WrappedComponent {...props}>{props.children}</WrappedComponent>
+        else if (!loading) {
+            const googleToken = localStorage.getItem(googleKey);
+            if (googleToken) {
+                onSignIn(googleToken);
+            }
+            if (error) {
+                localStorage.removeItem(googleKey);
+            }
         }
-        if (error) {
-            localStorage.removeItem(googleKey);
-        }
-        return <GoogleSignIn {...props} loading={loading} error={error} onSignIn={onSignIn} onError={onError} />
+        return <GoogleSignIn {...props} onSignIn={onSignIn} onError={onError} />
     }
 );

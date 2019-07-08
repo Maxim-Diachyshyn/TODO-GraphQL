@@ -89,17 +89,13 @@ class Section extends Component {
     }
 }
 
-export default compose(
-    withRouter,
-    withLoader
-)(props => {
-    const { id } = props.match.params;
-    const { status } = props;
+const withData = WrappedComponent => props => {
+    const { status, match: { params: { id } } } = props;
 
     return (
         <Query query={queries.todosQuery} variables={{ status }}>
         {({ loading, error, data, subscribeToMore }) => (
-            <Section
+            <WrappedComponent
                 {...props}
                 id={id}
                 loading={loading} 
@@ -156,7 +152,13 @@ export default compose(
                         },
                     });
                 }}
-            />
+            >{props.children}</WrappedComponent>
         )}</Query>
     );
-});
+}
+
+export default compose(
+    withRouter,
+    withData,
+    withLoader
+)(Section);
