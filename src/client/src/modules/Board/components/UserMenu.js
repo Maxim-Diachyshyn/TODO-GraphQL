@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
-import { IconButton, AppBar, Typography, Avatar, Menu, MenuItem } from '@material-ui/core';
+import { IconButton, AppBar, Typography, Avatar, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import { Delete as DeleteIcon, Person as PersonIcon } from '@material-ui/icons';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
@@ -22,11 +22,17 @@ const styles = {
         color: "#FFFF",
         fontWeight: "bold"
     },
-    avatar: {
-        margin: 0,
-        height: 48,
-        width: 48,
+    avatarButton: {
+        padding: 0
+    },
+    iconButton: {
+        background: "#979797",
+        color: "white",
         fontSize: 18
+    },
+    avatar: {
+        height: "100%",
+        width: "100%"
     }
 };
 
@@ -36,7 +42,7 @@ const texts = {
 }
 
 const UserMenu = props => {
-    const { name, picture, onLogout } = props;
+    const { username, picture, onLogout } = props;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -55,11 +61,15 @@ const UserMenu = props => {
 
     return (
         <React.Fragment>
-            <Avatar src={picture} style={styles.avatar} onClick={handleClick}>
-            {picture ? null : (
-                <PersonIcon />
-            )}
-            </Avatar> 
+            <Tooltip title={username}>
+                <IconButton style={picture ? styles.avatarButton : styles.iconButton} onClick={handleClick}>
+                    {picture ? (
+                        <Avatar src={picture} style={styles.avatar} />
+                    ) : (
+                        <PersonIcon />
+                    )}
+                </IconButton>
+            </Tooltip>
             <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
@@ -75,7 +85,7 @@ const UserMenu = props => {
 
 const withData = WrappedComponent => props => (
     <Query query={currentUserQuery} fetchPolicy="cache-only">{({ data }) => (
-        <WrappedComponent {...props} picture={_.get(data, "currentUser.picture", null)} />
+        <WrappedComponent {...props} {..._.get(data, "currentUser", {})} />
     )}</Query>
 );
 

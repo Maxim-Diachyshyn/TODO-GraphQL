@@ -46,15 +46,17 @@ const withData = WrappedComponent => props => {
                             }
                 
                             const exitingTodo = data.todo;
-                            const newTodo = {
-                                ...exitingTodo,
-                                ...updates
-                            };
-        
-                            client.writeData({ data: { todo: newTodo } });
-        
-                            const todoToSend = _.omit(newTodo, "__typename");
-                            const updateFunc = () => updateTodo({ variables: { todo: todoToSend } });
+
+                            const newTodo = _.assign(_.cloneDeep(exitingTodo), updates);
+
+                            let updateFunc = () => {};
+                            
+                            if (!_.isEqual(exitingTodo, newTodo)) {                                
+                                client.writeData({ data: { todo: newTodo } });
+                                const todoToSend = _.omit(newTodo, "__typename");
+                                updateFunc = () => updateTodo({ variables: { todo: todoToSend } })
+                            }
+
                             if (exitingTodo.status !== newTodo.status) {
                                 updateFunc();
                             }

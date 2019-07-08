@@ -3,12 +3,13 @@ import { withRouter } from 'react-router-dom';
 import { Query } from "react-apollo";
 import _ from "lodash";
 import { List, CircularProgress, Divider, Card, CardHeader, CardContent } from '@material-ui/core';
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import { Scrollbars } from 'react-custom-scrollbars';
 import ROUTES from "../../appRouter/routes";
 import { queries, subscriptions } from "../../Board";
 import BoardTask from './SectionTask';
 import { TASK_STATUSES } from "../../Task/constants";
 import withLoader from '../../shared/withLoader';
+import { compose } from 'recompose';
 
 const styles = {
     spinnerContainer: {
@@ -67,7 +68,7 @@ class Section extends Component {
                 <Divider />
                 {loading ? null : (
                     <CardContent style={styles.scrollbarContainer}>
-                        <PerfectScrollbar>
+                        <Scrollbars autoHide={true}>
                             <List style={styles.list}>
                                 {_.map(data.todos, (t, i) => (
                                     <React.Fragment>
@@ -80,7 +81,7 @@ class Section extends Component {
                                     </React.Fragment>
                                 ))}
                             </List>
-                        </PerfectScrollbar>
+                        </Scrollbars>
                     </CardContent>
                 )}                
             </Card>
@@ -88,7 +89,10 @@ class Section extends Component {
     }
 }
 
-export default withLoader(withRouter(props => {
+export default compose(
+    withRouter,
+    withLoader
+)(props => {
     const { id } = props.match.params;
     const { status } = props;
 
@@ -155,4 +159,4 @@ export default withLoader(withRouter(props => {
             />
         )}</Query>
     );
-}));
+});

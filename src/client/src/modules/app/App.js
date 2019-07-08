@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { split } from 'apollo-link';
@@ -7,14 +7,14 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-boost';
 import { getMainDefinition } from 'apollo-utilities';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider, StylesProvider } from "@material-ui/styles";
 import AppRouter from '../appRouter';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { components as SignIn } from "../SignIn";
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import './App.css';
 import { compose } from 'recompose';
 import withLoader from '../shared/withLoader';
-import { signIn } from '../SignIn/mutations';
 
 // Create an http link:
 const httpLink = new HttpLink({
@@ -54,10 +54,22 @@ const client = new ApolloClient({
 
 wsClient.onReconnecting(client.resetStore);
 
-const witApollo = WrappedComponent => props => (
+const withApollo = WrappedComponent => props => (
   <ApolloProvider client={client}>
     <WrappedComponent {...props}>{props.children}</WrappedComponent>
   </ApolloProvider>
+);
+
+const theme = createMuiTheme({
+  shape: {
+    borderRadius: 6
+  },
+});
+
+const withStyles = WrappedComponent => props => (
+  <ThemeProvider theme={theme}>
+    <WrappedComponent {...props}>{props.children}</WrappedComponent>
+  </ThemeProvider>
 );
 
 const App = () => (
@@ -68,7 +80,7 @@ const App = () => (
 );
 
 export default compose(
-  witApollo,
-  SignIn.withSignIn,
+  withApollo,
+  withStyles,
   withLoader
 )(App);

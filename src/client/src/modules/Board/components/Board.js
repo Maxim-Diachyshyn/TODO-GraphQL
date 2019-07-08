@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
 import _ from "lodash";
 import { Grid } from '@material-ui/core';
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import { Scrollbars } from 'react-custom-scrollbars';
 import TopPanel from "./TopPanel";
 import { UpdateTask, CreateTask } from "../../Task/components";
 import Section from "./Section";
 import { TASK_STATUSES } from "../../Task/constants"
+import { withSignIn } from '../../SignIn/components';
+import { compose } from 'recompose';
+import withLoader from '../../shared/withLoader';
 
 const styles = {
     scrollContainer: {
-        height: "calc(100vh - 68px)",
+        display: "grid",
+        gridTemplateRows: "calc(100vh - 68px)",
         marginTop: "64px"
+    },
+    sectionsContainer: {
+        display: "grid",
+        gridTemplateColumns: "12px auto 12px",
+        gridTemplateRows: "minmax(calc(100vh - 68px), 200px)",
+        // height: "100%"
     },
     sections: {
         display: "grid",
         gridAutoColumns: "minmax(350px, 1fr)",
         gridColumnGap: 8,
-        gridAutoFlow: "column",
-        height: "100%"
+        gridAutoFlow: "column"
     },
     modalContainer: {
         top: 0,
@@ -34,12 +43,15 @@ class Board extends Component {
         const { isCreating } = this.props;
         return (
             <React.Fragment>
-                <TopPanel />
-                <PerfectScrollbar style={styles.scrollContainer} options={{ suppressScrollY: true }}>
-                    <div style={styles.sections}>
-                        {_.map(TASK_STATUSES, st => <Section status={st} />)}
+                <Scrollbars style={styles.scrollContainer} autoHide={true} >
+                    <div style={styles.sectionsContainer}>
+                        <div />
+                        <div style={styles.sections}>
+                            {_.map(TASK_STATUSES, st => <Section status={st} />)}
+                        </div>
+                        <div />
                     </div>
-                </PerfectScrollbar>
+                </Scrollbars>
                 {id || isCreating ? (
                 <div style={styles.modalContainer}>
                     {id ? <UpdateTask id="modal" todoId={id} /> : null}
@@ -52,4 +64,7 @@ class Board extends Component {
     }
 }
 
-export default Board;
+export default compose(
+    withSignIn,
+    withLoader,
+)(Board);

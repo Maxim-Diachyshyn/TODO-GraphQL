@@ -28,7 +28,7 @@ export default WrappedComponent => props => {
             <Snackbar
                 anchorOrigin={anchor}
                 open={showState === showStates.shown}
-                onClose={() => props.onClose(props)}
+                onClose={() => props.onClose && props.onClose(props)}
             >
                 <SnackbarContent message={
                     <p>{_.get(props.error, "message", "")}</p>

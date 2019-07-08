@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from "lodash";
-import { ListItemSecondaryAction, ListItemText, IconButton, ListItemIcon, ListSubheader, ListItemAvatar, Avatar } from '@material-ui/core';
+import { ListItemSecondaryAction, ListItemText, IconButton, ListItemIcon, ListSubheader, ListItemAvatar, Avatar, Tooltip } from '@material-ui/core';
 import { Delete as DeleteIcon, PersonAdd as PersonAddIcon } from '@material-ui/icons';
 import { ListItem } from '@material-ui/core';
 import { Query, Mutation } from "react-apollo";
@@ -40,24 +40,32 @@ const styles = {
     deleteButton: {
         padding: 5,
         color: "#f44336"
+    },
+    listItemAvatar: {
+        minWidth: "unset",
+        borderRadius: "50%",
+        marginRight: 12
     }
 };
 
 const texts = {
-    delete: "Delete"
+    delete: "Delete",
+    unassigned: "Unassigned"
 };
 
 const SectionTask = props => {
-    const { name, status, picture, onSelect, onDelete } = props;
+    const { name, username, status, picture, onSelect, onDelete } = props;
     return (
         <ListItem button={true} style={styles.link} onClick={onSelect}>
-            <ListItemAvatar style={styles[`status${status}`]}>
-                <Avatar src={picture}>
-                    {picture ? null : (
-                        <PersonAddIcon/>
-                    )}                    
-                </Avatar>
-            </ListItemAvatar>
+            <Tooltip title={username || texts.unassigned}>
+                <ListItemAvatar style={{...styles.listItemAvatar, ...styles[`status${status}`]}}>
+                    <Avatar src={picture}>
+                        {picture ? null : (
+                            <PersonAddIcon/>
+                        )}                    
+                    </Avatar>
+                </ListItemAvatar>
+            </Tooltip>
             <ListItemText primary={<p style={styles.text}>{name}</p>} />
         </ListItem>
     )
@@ -70,11 +78,10 @@ export default props => {
         <Query query={usersQuery}>
         {({ loading, error, data, subscribeToMore }) => {
             const users = _.get(data, "users", []);
-            const assignedUser = _.find(users, x => x.id === assignedUserId);
-            const picture = _.get(assignedUser, "picture");
+            const assignedUser = _.find(users, x => x.id === assignedUserId) ;
             return (
                 <Mutation mutation={deleteTodo}>{(deleteTodo) => (
-                    <SectionTask {...props} picture={picture} onDelete={() => deleteTodo({ variables: { id } })} />
+                    <SectionTask {...props} {...assignedUser} onDelete={() => deleteTodo({ variables: { id } })} />
                 )}</Mutation>
             );
         }}</Query>
