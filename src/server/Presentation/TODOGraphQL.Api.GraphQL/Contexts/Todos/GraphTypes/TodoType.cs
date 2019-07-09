@@ -25,7 +25,7 @@ namespace TODOGraphQL.Api.GraphQL.GraphTypes
             Field<TodoStatusType>()
                 .Name(nameof(Todo.Status))
                 .Resolve(x => x.Source.Value.Item1.Status);
-            Field<UserType>()
+            Field<UserType, KeyValuePair<Id, User>?>()
                 .Name("AssignedUser")
                 .ResolveAsync(async x => 
                 {

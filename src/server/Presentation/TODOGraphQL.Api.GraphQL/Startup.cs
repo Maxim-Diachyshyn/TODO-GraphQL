@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TODOGraphQL.Persistence.EntityFramework.Contexts.Identity;
 using Google.Apis.Auth.OAuth2;
+using GraphQL.Validation.Complexity;
 
 namespace TODOGraphQL.Api.GraphQL
 {
@@ -40,7 +41,10 @@ namespace TODOGraphQL.Api.GraphQL
                 options.EnableMetrics = true;
                 options.ExposeExceptions = Environment.IsDevelopment();
                 // TODO: use this for security
-                // options.ComplexityConfiguration
+                options.ComplexityConfiguration = new ComplexityConfiguration
+                {
+                    MaxDepth = 20
+                };
                 options.SetFieldMiddleware = false;
             })
             // .AddUserContextBuilder(httpContext => new { httpContext.User })
