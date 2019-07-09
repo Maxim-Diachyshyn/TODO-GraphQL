@@ -11,6 +11,7 @@
     "graphql": "^14.0.2",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
+    "omit-deep-lodash": "^1.1.4",
     "react": "^16.7.0",
     "react-apollo": "^2.3.3",
     "react-custom-scrollbars": "^4.2.1",

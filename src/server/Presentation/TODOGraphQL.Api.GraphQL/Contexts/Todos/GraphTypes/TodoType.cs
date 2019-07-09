@@ -8,12 +8,14 @@ using TODOGraphQL.Domain.DataTypes.Common;
 using TODOGraphQL.Application.UseCases.Identity.Requests;
 using System.Linq;
 using TODOGraphQL.Domain.DataTypes.Identity;
+using GraphQL.DataLoader;
 
 namespace TODOGraphQL.Api.GraphQL.GraphTypes
 {
     public class TodoType : ObjectGraphType<KeyValuePair<Id, Tuple<Todo, Id>>>
     {
-        public TodoType(IHttpContextAccessor accessor)
+        private const string UsersByTaskKey = "GetUserByTask";
+        public TodoType(IHttpContextAccessor accessor, IDataLoaderContextAccessor dataLoaderContextAccessor)
         {
             Field<IdGraphType>()
                 .Name("Id")
@@ -27,6 +29,7 @@ namespace TODOGraphQL.Api.GraphQL.GraphTypes
                 .Name("AssignedUser")
                 .ResolveAsync(async x => 
                 {
+                    var todoId = x.Source.Key;
                     var userId = x.Source.Value.Item2;
                     if (userId == null)
                     {
@@ -36,16 +39,28 @@ namespace TODOGraphQL.Api.GraphQL.GraphTypes
                     {
                         return new KeyValuePair<Id, User>(userId, null);
                     }
+                    
                     var mediator = accessor.GetMediator();
-                    var request = new GetUsersRequest
-                    {
-                        SpecifiedIds = new [] 
+                    
+                    var loader = dataLoaderContextAccessor.Context.GetOrAddCollectionBatchLoader<Tuple<Id, Id>, KeyValuePair<Id, User>>(  
+                        UsersByTaskKey, async (ids, cancellationToken) =>
                         {
-                            userId
-                        }
-                    };
-                    var result = await mediator.Send(request);
-                    return result.Single();
+                            var userIds = ids
+                                .Select(id => id.Item2)
+                                .Distinct()
+                                .ToArray();
+                            var request = new GetUsersRequest
+                            {
+                                SpecifiedIds = userIds
+                            };
+                            var users = await mediator.Send(request, cancellationToken);
+                            return ids
+                                .ToLookup(id => id, id => users.Single(u => u.Key == id.Item2));
+                        });
+  
+                    var allUsers = await loader.LoadAsync(Tuple.Create(todoId, userId));
+                    
+                    return allUsers.Single(u => u.Key == userId);
                 });
         }
     }

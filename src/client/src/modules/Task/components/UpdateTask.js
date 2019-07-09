@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Query, Mutation } from "react-apollo";
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
+import omitDeep from "omit-deep-lodash";
 import { mutations } from "../../Board";
 import { subscriptions } from "../../Board"
 import { todoByIdQuery } from "../queries";
@@ -9,7 +10,6 @@ import Task from "./Task";
 import { compose } from 'recompose';
 import withLoader from '../../shared/withLoader';
 import withError from '../../shared/withError';
-
 
 const timeout = 500;
 
@@ -53,7 +53,7 @@ const withData = WrappedComponent => props => {
                             
                             if (!_.isEqual(exitingTodo, newTodo)) {                                
                                 client.writeData({ data: { todo: newTodo } });
-                                const todoToSend = _.omit(newTodo, "__typename", "assignedUser.__typename");
+                                const todoToSend = omitDeep(newTodo, "__typename");
                                 updateFunc = () => updateTodo({ variables: { todo: todoToSend } })
                             }
 
