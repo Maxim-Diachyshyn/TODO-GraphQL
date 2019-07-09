@@ -8,6 +8,9 @@ query($status: TodoStatus){
       status
       assignedUser {
         id
+        username
+        email
+        picture
       }
     }
 }`;

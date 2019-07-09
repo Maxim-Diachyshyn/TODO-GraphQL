@@ -9,6 +9,9 @@ query($id: ID!){
       status
       assignedUser {
         id
+        username
+        email
+        picture
       }
     }
 }`

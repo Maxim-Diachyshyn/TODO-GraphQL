@@ -73,18 +73,10 @@ const SectionTask = props => {
 
 export default props => {
     const { id, assignedUser } = props;
-    const assignedUserId = _.get(assignedUser, "id", null);
     return (
-        <Query query={usersQuery}>
-        {({ loading, error, data, subscribeToMore }) => {
-            const users = _.get(data, "users", []);
-            const assignedUser = _.find(users, x => x.id === assignedUserId) ;
-            return (
-                <Mutation mutation={deleteTodo}>{(deleteTodo) => (
-                    <SectionTask {...props} {...assignedUser} onDelete={() => deleteTodo({ variables: { id } })} />
-                )}</Mutation>
-            );
-        }}</Query>
+        <Mutation mutation={deleteTodo}>{(deleteTodo) => (
+            <SectionTask {...props} {...assignedUser} onDelete={() => deleteTodo({ variables: { id } })} />
+        )}</Mutation>
     );
 }
     
