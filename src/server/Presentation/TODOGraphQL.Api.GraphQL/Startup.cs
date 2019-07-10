@@ -17,6 +17,10 @@ using Microsoft.Extensions.DependencyInjection;
 using TODOGraphQL.Persistence.EntityFramework.Contexts.Identity;
 using Google.Apis.Auth.OAuth2;
 using GraphQL.Validation.Complexity;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using GraphQL.Authorization;
+using GraphQL.Validation;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace TODOGraphQL.Api.GraphQL
 {
@@ -63,6 +67,20 @@ namespace TODOGraphQL.Api.GraphQL
                     options.ClientId = googleAuthNSection["ClientId"];
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
+            
+
+            // TODO: just check if authorized 
+            services.TryAddSingleton(s =>
+            {
+                var authSettings = new AuthorizationSettings();
+
+                authSettings.AddPolicy("User", _ => _.RequireClaim("User"));
+
+                return authSettings;
+            });
+
+            services.TryAddSingleton<IAuthorizationEvaluator, AuthorizationEvaluator>();
+            services.AddTransient<IValidationRule, AuthorizationValidationRule>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -110,6 +128,8 @@ namespace TODOGraphQL.Api.GraphQL
                 GraphQLEndPoint = "/graphql"
             });
 
+            app.UseAuthentication();
+
             app.UseCors(options => 
             {
                 options.AllowAnyOrigin();
@@ -119,6 +139,7 @@ namespace TODOGraphQL.Api.GraphQL
 
             app.UseWebSockets();
             app.UseGraphQLWebSockets<TodoSchema>("/graphql");
+            
             app.UseGraphQL<TodoSchema>("/graphql");
 
             app.UseStaticFiles();

@@ -9,12 +9,14 @@ using TODOGraphQL.Application.UseCases.Identity.Requests;
 using System.Linq;
 using TODOGraphQL.Domain.DataTypes.Identity;
 using GraphQL.DataLoader;
+using GraphQL.Authorization;
 
 namespace TODOGraphQL.Api.GraphQL.GraphTypes
 {
     public class TodoType : ObjectGraphType<KeyValuePair<Id, Tuple<Todo, Id>>>
     {
         private const string UsersByTaskKey = "GetUserByTask";
+
         public TodoType(IHttpContextAccessor accessor, IDataLoaderContextAccessor dataLoaderContextAccessor)
         {
             Field<IdGraphType>()
@@ -27,6 +29,7 @@ namespace TODOGraphQL.Api.GraphQL.GraphTypes
                 .Resolve(x => x.Source.Value.Item1.Status);
             Field<UserType, KeyValuePair<Id, User>?>()
                 .Name("AssignedUser")
+                .AuthorizeWith("User")
                 .ResolveAsync(async x => 
                 {
                     var todoId = x.Source.Key;

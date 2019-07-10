@@ -12,6 +12,7 @@ using TODOGraphQL.Api.GraphQL.Contexts.Todos.GraphTypes;
 using TODOGraphQL.Domain.DataTypes.Todos;
 using TODOGraphQL.Domain.DataTypes.Identity;
 using TODOGraphQL.Application.UseCases.Identity.Requests;
+using GraphQL.Authorization;
 
 namespace TODOGraphQL.Api.GraphQL.Queries
 {

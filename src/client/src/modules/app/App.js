@@ -11,6 +11,7 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider, StylesProvider } from "@material-ui/styles";
 import AppRouter from '../appRouter';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { setContext } from 'apollo-link-context';
 import { components as SignIn } from "../SignIn";
 import './App.css';
 import { compose } from 'recompose';
@@ -18,6 +19,18 @@ import { compose } from 'recompose';
 // Create an http link:
 const httpLink = new HttpLink({
   uri: process.env.REACT_APP_API_HTTP
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('todo-graph-ql:google');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
 });
 
 const wsClient = new SubscriptionClient(process.env.REACT_APP_API_WS, { reconnect: true });
@@ -34,7 +47,7 @@ const link = split(
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
-  httpLink,
+  authLink.concat(httpLink)
 );
 
 const cache = new InMemoryCache({
