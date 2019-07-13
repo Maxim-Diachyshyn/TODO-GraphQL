@@ -1,20 +1,24 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
-import { IconButton, AppBar, Typography, Tooltip, useMediaQuery } from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
+import { IconButton, AppBar, Typography, Tooltip } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 import UserMenu from "./UserMenu"
 
 const styles = {
+    appBar: {
+        top: 'auto',
+        bottom: 0,
+        background: "transparent",
+        boxShadow: "none"
+    },
     container: {
         display: "grid",
         gridTemplateColumns: "48px 1fr 48px",
-        gridColumnGap: "4px",
         gridTemplateRows: "48px",
         padding: "8px 8px",
-        background: "darkblue"
+        // background: "darkblue"
     },
     titleContainer: {
         display: "flex",
@@ -37,18 +41,17 @@ const texts = {
     create: "Create task"
 }
 
-const TopPanel = props => {
-    const theme = useTheme();
-
-    const smallHeader = useMediaQuery(theme.breakpoints.down('xs'));
+const BottomPanel = props => {
     return (        
-        <AppBar>
+        <AppBar style={styles.appBar}>
             <div style={styles.container}>
                 <div />
-                <div style={styles.titleContainer}>
-                    <Typography variant={smallHeader ? "h6" : "h5"} style={styles.title}>{texts.title}</Typography>
-                </div>
-                <UserMenu />
+                <div />
+                <IconButton style={styles.button} aria-label={texts.create} onClick={props.createTodo}>
+                <Tooltip title={texts.create}>
+                    <Create />
+                </Tooltip>
+                </IconButton>
             </div>
         </AppBar>
     )
@@ -57,6 +60,6 @@ const TopPanel = props => {
 export default withRouter(props => {
     const { history } = props;
     return (
-        <TopPanel {...props} createTodo={() => history.push(ROUTES.CREATE_FILM)} />
+        <BottomPanel {...props} createTodo={() => history.push(ROUTES.CREATE_FILM)} />
     );
 });

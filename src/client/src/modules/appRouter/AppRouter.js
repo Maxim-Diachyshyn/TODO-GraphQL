@@ -3,6 +3,7 @@ import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import ROUTES from "./routes";
 import { components as boardComponents } from "../Board";
 import TopPanel from '../Board/components/TopPanel';
+import BottomPanel from '../Board/components/BottomPanel';
 
 class AppRouter extends Component {
     render() {
@@ -16,6 +17,7 @@ class AppRouter extends Component {
               <Route exact path={ROUTES.EDIT_FILM.route} component={boardComponents.default}/>
               <Redirect to={ROUTES.HOME} />
             </Switch>
+            <BottomPanel />
           </React.Fragment>
         </BrowserRouter>
       );

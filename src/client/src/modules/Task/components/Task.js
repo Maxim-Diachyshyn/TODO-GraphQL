@@ -40,7 +40,6 @@ const texts = {
 const Task = props => {
     const { loading, todoId, todo, updateTodo, onDelete, createTodo, onClose, onCreate } = props;
     const theme = useTheme();
-    console.log(useMediaQuery);
     const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
     
     return (
