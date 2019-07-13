@@ -6,6 +6,7 @@ query($status: TodoStatus){
       id
       name
       status
+      createdAt
       assignedUser {
         id
         username

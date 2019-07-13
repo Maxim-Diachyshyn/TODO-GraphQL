@@ -1,4 +1,4 @@
-﻿using GraphQL.Types;
+using GraphQL.Types;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,9 @@ namespace TODOGraphQL.Api.GraphQL.GraphTypes
             Field<TodoStatusType>()
                 .Name(nameof(Todo.Status))
                 .Resolve(x => x.Source.Value.Item1.Status);
+            Field<DateTimeGraphType, DateTime>()
+                .Name("createdAt")
+                .Resolve(x => x.Source.Value.Item1.CreatedAt);
             Field<UserType, KeyValuePair<Id, User>?>()
                 .Name("AssignedUser")
                 .AuthorizeWith("User")

@@ -24,7 +24,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
         public async Task<IDictionary<Id, Tuple<Todo, Id>>> Handle(UpdateTodosCommand command, CancellationToken cancellationToken)
         {
             var entities = new List<TodoEntity>();
-            foreach (var todo in command.Todos)
+            foreach (var todo in command.Updates)
             {
                 var oldTodo = command.OldTodos[todo.Key];
                 var todoEntity = new TodoEntity
@@ -32,7 +32,8 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
                     Id = todo.Key
                 };
                 todoEntity.FromModel(oldTodo.Item1, oldTodo.Item2);
-                todoEntity = _unitOfWork.Update<TodoEntity>(todoEntity, e => e.FromModel(todo.Value.Item1, todo.Value.Item2));
+                var model = todo.Value.Item1.ToModel(oldTodo.Item1);
+                todoEntity = _unitOfWork.Update<TodoEntity>(todoEntity, e => e.FromModel(model, todo.Value.Item2));
                 entities.Add(todoEntity);
             }
 

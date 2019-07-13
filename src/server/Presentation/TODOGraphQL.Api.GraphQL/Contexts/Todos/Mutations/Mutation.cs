@@ -65,7 +65,7 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                     var request = input.ToCommand();
                     var currentItemsRequest = new GetTodosListRequest
                     {
-                        SpecifiedIds = request.Todos.Keys
+                        SpecifiedIds = request.Updates.Keys
                     };
                     var oldTodos = await mediator.Send(currentItemsRequest);
                     request.OldTodos = oldTodos;

@@ -28,7 +28,8 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Commands
             foreach (var todo in command.Todos)
             {
                 var entity = new TodoEntity();
-                entity.FromModel(todo.Item1, todo.Item2);
+                var model = todo.Item1.ToModel();
+                entity.FromModel(model, todo.Item2);
                 entity.AssignedUserId = todo.Item2;
                 _unitOfWork.Add(entity);
                 addedTodos.Add(entity);

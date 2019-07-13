@@ -47,6 +47,9 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
                     .Where(x => x.AssignedUserId.HasValue && idList.Contains(x.AssignedUserId.Value));
             }
 
+            query = query
+                .OrderBy(x => x.CreatedAt);
+
             var entities = await query
                 .ToListAsync(cancellationToken);
             return entities.ToDictionary(x => (Id)x.Id, x => Tuple.Create(x.ToModel(), (Id)x.AssignedUserId));

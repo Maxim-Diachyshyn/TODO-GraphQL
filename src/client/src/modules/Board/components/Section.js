@@ -109,7 +109,7 @@ const withData = WrappedComponent => props => {
                             if (todoAdded.status === status) {
                                 return {
                                     ...prev,
-                                    todos: [...prev.todos, todoAdded]
+                                    todos: _.sortBy([...prev.todos, todoAdded], x => x.createdAt)
                                 }
                             }
                             return {
@@ -142,7 +142,7 @@ const withData = WrappedComponent => props => {
                             if (todoUpdated.status === status) {
                                 return {
                                     ...prev,
-                                    todos: [...newTodos, todoUpdated]
+                                    todos: _.orderBy([...newTodos, todoUpdated], "createdAt")
                                 }
                             }
                             return {

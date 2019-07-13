@@ -12,6 +12,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities
         public string Description { get; set; }
         public TodoStatus Status { get; set; }
         public Guid? AssignedUserId { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public Todo ToModel()
         {
@@ -19,7 +20,8 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities
             {
                 Name = Name,
                 Description = Description,
-                Status = Status
+                Status = Status,
+                CreatedAt = CreatedAt,
             };
         }
 
@@ -28,6 +30,7 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Todos.Entities
             Name = model.Name;
             Description = model.Description;
             Status = model.Status;
+            CreatedAt = model.CreatedAt;
 
             AssignedUserId = assignedUserId;
         }

@@ -53,7 +53,7 @@ const withData = WrappedComponent => props => {
                             
                             if (!_.isEqual(exitingTodo, newTodo)) {                                
                                 client.writeData({ data: { todo: newTodo } });
-                                const todoToSend = omitDeep(newTodo, "__typename");
+                                const todoToSend = _.omit(omitDeep(newTodo, "__typename"), "createdAt");
                                 updateFunc = () => updateTodo({ variables: { todo: todoToSend } })
                             }
 

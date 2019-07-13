@@ -7,6 +7,7 @@ subscription{
       name
       description
       status
+      createdAt
       assignedUser {
         id
       }
@@ -28,6 +29,7 @@ subscription{
       name
       description
       status
+      createdAt
       assignedUser {
         id
       }

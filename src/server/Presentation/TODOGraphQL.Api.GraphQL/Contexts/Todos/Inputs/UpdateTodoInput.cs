@@ -4,6 +4,7 @@ using TODOGraphQL.Api.GraphQL.Contexts.Common.Inputs;
 using TODOGraphQL.Application.UseCases.Todos.Commands;
 using TODOGraphQL.Domain.DataTypes.Common;
 using TODOGraphQL.Domain.DataTypes.Todos;
+using TODOGraphQL.Domain.DataTypes.Todos.DTO;
 
 namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
 {
@@ -19,9 +20,9 @@ namespace TODOGraphQL.Api.GraphQL.Contexts.Todos.Inputs
         {
             return new UpdateTodosCommand
             {
-                Todos = new Dictionary<Id, Tuple<Todo, Id>>
+                Updates = new Dictionary<Id, Tuple<UpdateTodo, Id>>
                 {
-                    [Id] = Tuple.Create(new Todo
+                    [Id] = Tuple.Create(new UpdateTodo
                     {
                         Name = Name,
                         Description = Description,
