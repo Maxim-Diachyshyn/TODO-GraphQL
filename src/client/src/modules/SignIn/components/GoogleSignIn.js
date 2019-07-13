@@ -85,6 +85,7 @@ export default compose(
                 }
             });
             client.resetStore();
+            return <GoogleSignIn {...props} onSignIn={onSignIn} onError={onError} />
         }
        
         if ((data || loading) && !error) return <WrappedComponent {...props}>{props.children}</WrappedComponent>
