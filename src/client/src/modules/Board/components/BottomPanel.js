@@ -5,6 +5,7 @@ import { IconButton, AppBar, Typography, Tooltip } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 import UserMenu from "./UserMenu"
+import { compose, withHandlers } from 'recompose';
 
 const styles = {
     appBar: {
@@ -57,9 +58,12 @@ const BottomPanel = props => {
     )
 };
 
-export default withRouter(props => {
-    const { history } = props;
-    return (
-        <BottomPanel {...props} createTodo={() => history.push(ROUTES.CREATE_FILM)} />
-    );
-});
+export default compose(
+    withRouter,
+    withHandlers({
+        createTodo: props => () => {
+            const { history } = props;
+            history.push(ROUTES.CREATE_FILM)
+        }
+    })
+)(BottomPanel);

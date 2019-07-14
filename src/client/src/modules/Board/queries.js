@@ -24,6 +24,7 @@ query {
       email
       picture
       logoutRequested
+      menuOpened
     }
 }`;
 

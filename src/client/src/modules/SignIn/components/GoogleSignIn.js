@@ -50,7 +50,8 @@ const withData = WrappedComponent => props => (
                     data: { 
                         currentUser: {
                             ...signIn,
-                            logoutRequested: false
+                            logoutRequested: false,
+                            menuOpened: false
                         }  
                     },
                 });

@@ -70,7 +70,7 @@ class Section extends Component {
                     <CardContent style={styles.scrollbarContainer}>
                         <Scrollbars autoHide={true}>
                             <List style={styles.list}>
-                                {_.map(data.todos, (t, i) => (
+                                {_.map(_.get(data, "todos", []), (t, i) => (
                                     <React.Fragment>
                                         <BoardTask {...t}
                                             onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}

@@ -1,20 +1,38 @@
 import React, { Component } from 'react';
 import _ from "lodash";
-import { Grid } from '@material-ui/core';
+import clsx from "clsx";
+import { Grid, makeStyles, useTheme } from '@material-ui/core';
 import { Scrollbars } from 'react-custom-scrollbars';
 import TopPanel from "./TopPanel";
 import { UpdateTask, CreateTask } from "../../Task/components";
 import Section from "./Section";
 import { TASK_STATUSES } from "../../Task/constants"
 import { withSignIn } from '../../SignIn/components';
-import { compose } from 'recompose';
+import { compose, withHandlers } from 'recompose';
 import withLoader from '../../shared/withLoader';
+import SideBar from './SideBar';
+import { currentUserQuery } from '../queries';
+import { Query } from 'react-apollo';
 
-const styles = {
-    scrollContainer: {
-        display: "grid",
-        gridTemplateRows: "calc(100vh - 68px)",
-        marginTop: "64px"
+const useStyles = makeStyles(theme => ({
+    boardWrapper: {
+        marginTop: "64px",
+        transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    boardWrapperShift: {
+        marginLeft: 240,
+        width: `calc(100% - ${240}px)`,  
+        transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    board: {
+      display: "grid",
+      gridTemplateRows: "calc(100vh - 68px)", 
     },
     sectionsContainer: {
         display: "grid",
@@ -22,6 +40,10 @@ const styles = {
         gridTemplateRows: "minmax(calc(100vh - 68px), 200px)",
         // height: "100%"
     },
+    sectionsContainerShift: {}
+}));
+
+const styles = {
     sections: {
         display: "grid",
         gridAutoColumns: "minmax(350px, 1fr)",
@@ -37,14 +59,32 @@ const styles = {
     }
 }
 
-class Board extends Component {
-    render() {
-        const { id } = this.props.match.params;
-        const { isCreating } = this.props;
-        return (
-            <React.Fragment>
-                <Scrollbars style={styles.scrollContainer} autoHide={true} >
-                    <div style={styles.sectionsContainer}>
+const withData = WrappedComponent => props => (
+    <Query query={currentUserQuery} fetchPolicy="cache-only">{({ data }) => (
+        <WrappedComponent {...props} currentUser={_.get(data, "currentUser", {})} />
+    )}</Query>
+);
+
+const Board = props => {
+    const { id } = props.match.params;
+    const { isCreating, currentUser } = props;
+
+    const classes = useStyles();
+    const theme = useTheme();
+
+    const menuOpened = _.get(currentUser, "menuOpened", false);
+
+    return (
+        <React.Fragment>
+            <div />
+            <div className={clsx(classes.boardWrapper, {
+                [classes.boardWrapperShift]: menuOpened,
+            })}>
+                <Scrollbars className={classes.board}
+            autoHide={true} >
+                    <div className={clsx(classes.sectionsContainer, {
+                        [classes.sectionsContainerShift]: menuOpened
+                    })}>
                         <div />
                         <div style={styles.sections}>
                             {_.map(TASK_STATUSES, st => <Section status={st} />)}
@@ -52,19 +92,22 @@ class Board extends Component {
                         <div />
                     </div>
                 </Scrollbars>
-                {id || isCreating ? (
-                <div style={styles.modalContainer}>
-                    {id ? <UpdateTask id="modal" todoId={id} /> : null}
-                    {isCreating ? <CreateTask /> : null}
-                </div>
-                ) : null}
+            </div>
 
-            </React.Fragment>
-        )
-    }
+            <SideBar />
+            {id || isCreating ? (
+            <div style={styles.modalContainer}>
+                {id ? <UpdateTask id="modal" todoId={id} /> : null}
+                {isCreating ? <CreateTask /> : null}
+            </div>
+            ) : null}
+
+        </React.Fragment>
+    )
 }
 
 export default compose(
     withSignIn,
     withLoader,
+    withData
 )(Board);

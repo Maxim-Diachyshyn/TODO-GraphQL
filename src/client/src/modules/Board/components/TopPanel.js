@@ -1,11 +1,42 @@
 import React from 'react';
+import clsx from "clsx";
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
 import { IconButton, AppBar, Typography, Tooltip, useMediaQuery } from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
-import { Create } from '@material-ui/icons';
+import { useTheme, makeStyles } from '@material-ui/styles';
+import { Menu as MenuIcon } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 import UserMenu from "./UserMenu"
+import { compose, withHandlers } from 'recompose';
+import { currentUserQuery } from '../queries';
+import { withApollo, Query } from 'react-apollo';
+
+const useStyles = makeStyles(theme => ({
+    root: {
+      display: 'flex',
+    },
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      marginLeft: 240,
+      width: `calc(100% - ${240}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    menuButton: {
+        // marginRight: 36,
+    },
+    hide: {
+        visibility: "collapse",
+    },
+}));
 
 const styles = {
     container: {
@@ -38,13 +69,29 @@ const texts = {
 }
 
 const TopPanel = props => {
+    const { handleOpen, currentUser } = props;
+    const classes = useStyles();
     const theme = useTheme();
+
+    const menuOpened = _.get(currentUser, "menuOpened", false);
 
     const smallHeader = useMediaQuery(theme.breakpoints.down('xs'));
     return (        
-        <AppBar>
+        <AppBar className={clsx(classes.appBar, {
+            [classes.appBarShift]: menuOpened,
+          })}>
             <div style={styles.container}>
-                <div />
+            <IconButton
+                color="inherit"
+                aria-label="Open drawer"
+                onClick={handleOpen}
+                edge="start"
+                className={clsx(classes.menuButton, {
+                    [classes.hide]: menuOpened,
+                })}
+            >
+                <MenuIcon />
+            </IconButton>
                 <div style={styles.titleContainer}>
                     <Typography variant={smallHeader ? "h6" : "h5"} style={styles.title}>{texts.title}</Typography>
                 </div>
@@ -54,9 +101,28 @@ const TopPanel = props => {
     )
 };
 
-export default withRouter(props => {
-    const { history } = props;
-    return (
-        <TopPanel {...props} createTodo={() => history.push(ROUTES.CREATE_FILM)} />
-    );
-});
+const withData = WrappedComponent => props => (
+    <Query query={currentUserQuery} fetchPolicy="cache-only">{({ data }) => (
+        <WrappedComponent {...props} currentUser={_.get(data, "currentUser", {})} />
+    )}</Query>
+);
+
+export default compose(
+    withApollo,
+    withData,
+    withHandlers({
+        handleOpen: props => () => {
+            const { client, currentUser } = props;
+            
+            client.writeQuery({
+                query: currentUserQuery,
+                data: {
+                    currentUser: {
+                        ...currentUser,
+                        menuOpened: true
+                    }
+                }
+            });
+        }
+    })
+)(TopPanel);
