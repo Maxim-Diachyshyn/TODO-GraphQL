@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from "lodash";
 import clsx from "clsx";
-import { Grid, makeStyles, useTheme } from '@material-ui/core';
+import { Grid, makeStyles, useTheme, useMediaQuery } from '@material-ui/core';
 import { Scrollbars } from 'react-custom-scrollbars';
 import TopPanel from "./TopPanel";
 import { UpdateTask, CreateTask } from "../../Task/components";
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         duration: theme.transitions.duration.leavingScreen,
       }),
     },
-    boardWrapperShift: {
+    boardWrapperShiftLeft: {
         marginLeft: 240,
         width: `calc(100% - ${240}px)`,  
         transition: theme.transitions.create(['width', 'margin'], {
@@ -74,11 +74,13 @@ const Board = props => {
 
     const menuOpened = _.get(currentUser, "menuOpened", false);
 
+    const drawerAnchorTop = useMediaQuery(theme.breakpoints.down('xs'));
+
     return (
         <React.Fragment>
             <div />
             <div className={clsx(classes.boardWrapper, {
-                [classes.boardWrapperShift]: menuOpened,
+                [classes.boardWrapperShiftLeft]: menuOpened && !drawerAnchorTop,
             })}>
                 <Scrollbars className={classes.board}
             autoHide={true} >
@@ -93,8 +95,8 @@ const Board = props => {
                     </div>
                 </Scrollbars>
             </div>
-
             <SideBar />
+
             {id || isCreating ? (
             <div style={styles.modalContainer}>
                 {id ? <UpdateTask id="modal" todoId={id} /> : null}

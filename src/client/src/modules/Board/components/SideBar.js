@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
 import clsx from 'clsx';
-import { IconButton, AppBar, Typography, Avatar, Menu, MenuItem, Tooltip, Drawer, TextField } from '@material-ui/core';
+import { IconButton, AppBar, Typography, Avatar, Menu, MenuItem, Tooltip, Drawer, TextField, useMediaQuery } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -44,18 +44,27 @@ const useStyles = makeStyles(theme => ({
   hide: {
     display: 'none',
   },
-  drawer: {
+  drawerLeft: {
     width: drawerWidth,
-    flexShrink: 0,
+     flexShrink: 0,
   },
-  drawerOpen: {
+  drawerTop: {
+    width: "auto"
+  },
+  drawerLeftOpen: {
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  drawerClose: {
+  drawerTopOpen: {
+    transition: theme.transitions.create('height', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerLeftClose: {
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -66,6 +75,12 @@ const useStyles = makeStyles(theme => ({
       width: theme.spacing(9) + 1,
     },
   },
+  drawerTopClose: {
+    transition: theme.transitions.create('height', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    })
+  },
   toolbar: {
     display: 'grid',
     alignItems: 'center',
@@ -73,6 +88,9 @@ const useStyles = makeStyles(theme => ({
     gridColumnGap: 4,
     padding: '0 8px',
     ...theme.mixins.toolbar,
+  },
+  toolbarTop: {
+    marginTop: 64,
   },
   content: {
     flexGrow: 1,
@@ -88,22 +106,34 @@ const SideBar = (props) => {
 
     const menuOpened = _.get(currentUser, "menuOpened", false);
 
+    const drawerAnchorTop = useMediaQuery(theme.breakpoints.down('xs'));
+
     return (
         <Drawer
+        anchor={drawerAnchorTop ? "top" : "left"}
         variant="persistent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: menuOpened,
-          [classes.drawerClose]: !menuOpened,
+        className={clsx({
+            [classes.drawerLeft]: !drawerAnchorTop,
+            [classes.drawerTop]: drawerAnchorTop,
+            [classes.drawerLeftOpen]: menuOpened && !drawerAnchorTop,
+            [classes.drawerLeftClose]: !menuOpened && !drawerAnchorTop,
+            [classes.drawerTopOpen]: menuOpened && drawerAnchorTop,
+            [classes.drawerTopClose]: !menuOpened && drawerAnchorTop,
         })}
         classes={{
-          paper: clsx({
-            [classes.drawerOpen]: menuOpened,
-            [classes.drawerClose]: !menuOpened,
-          }),
-        }}
+            paper: clsx({
+                [classes.drawerLeft]: !drawerAnchorTop,
+                [classes.drawerTop]: drawerAnchorTop,
+                [classes.drawerLeftOpen]: menuOpened && !drawerAnchorTop,
+                [classes.drawerLeftClose]: !menuOpened && !drawerAnchorTop,
+                [classes.drawerTopOpen]: menuOpened && drawerAnchorTop,
+                [classes.drawerTopClose]: !menuOpened && drawerAnchorTop,
+        })}}
         open={menuOpened}
       >
-        <div className={classes.toolbar}>
+        <div className={clsx(classes.toolbar, {
+            [classes.toolbarTop]: drawerAnchorTop
+        })}>
             <TextField
                 // style={styles.input}
                 // disabled={loading}

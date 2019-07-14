@@ -75,10 +75,12 @@ const TopPanel = props => {
 
     const menuOpened = _.get(currentUser, "menuOpened", false);
 
+    const drawerAnchorTop = useMediaQuery(theme.breakpoints.down('xs'));
+
     const smallHeader = useMediaQuery(theme.breakpoints.down('xs'));
     return (        
         <AppBar className={clsx(classes.appBar, {
-            [classes.appBarShift]: menuOpened,
+            [classes.appBarShift]: menuOpened && !drawerAnchorTop,
           })}>
             <div style={styles.container}>
             <IconButton
