@@ -2,9 +2,9 @@ import React from 'react';
 import clsx from "clsx";
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
-import { IconButton, AppBar, Typography, Tooltip, useMediaQuery } from '@material-ui/core';
+import { IconButton, AppBar, Typography, Tooltip, ButtonGroup, useMediaQuery } from '@material-ui/core';
 import { useTheme, makeStyles } from '@material-ui/styles';
-import { Search as SearchIcon, ChevronLeft as ChevronLeftIcon, ExpandLess as ExpandLessIcon } from '@material-ui/icons';
+import { Search as SearchIcon, ChevronLeft as ChevronLeftIcon, ExpandLess as ExpandLessIcon, Clear as ClearIcon } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 import UserMenu from "./UserMenu"
 import { compose, withHandlers } from 'recompose';
@@ -38,6 +38,9 @@ const useStyles = makeStyles(theme => ({
     hide: {
         visibility: "collapse",
     },
+    buttonGroup: {
+        boxShadow: "none"
+    }
 }));
 
 const styles = {
@@ -71,11 +74,13 @@ const texts = {
 }
 
 const TopPanel = props => {
-    const { handleOpen, handleClose, currentUser } = props;
+    const { handleOpen, handleClose, currentUser, onReset } = props;
     const classes = useStyles();
     const theme = useTheme();
 
     const menuOpened = _.get(currentUser, "menuOpened", false);
+    const searchText = _.get(currentUser, "searchText", "");
+    const searchUser = _.get(currentUser, "searchUser", null);
 
     const drawerAnchorTop = useMediaQuery(theme.breakpoints.down('xs'));
 
@@ -85,22 +90,29 @@ const TopPanel = props => {
             [classes.appBarShift]: menuOpened && !drawerAnchorTop,
           })}>
             <div style={styles.container}>
-                <IconButton
-                    color="inherit"
-                    aria-label="Search"
-                    onClick={menuOpened ? handleClose : handleOpen}
-                    edge="start"
-                    className={classes.menuButton}
-                >
-                    {menuOpened ? 
-                        drawerAnchorTop ? (
-                            <ExpandLessIcon />
+                <ButtonGroup variant="contained" className={classes.buttonGroup} disableRipple={true} color="primary" aria-label="split button">
+                    <IconButton
+                        color="inherit"
+                        aria-label="Search"
+                        onClick={menuOpened ? handleClose : handleOpen}
+                        edge="start"
+                        className={classes.menuButton}
+                    >
+                        {menuOpened ? 
+                            drawerAnchorTop ? (
+                                <ExpandLessIcon />
+                            ) : (
+                                <ChevronLeftIcon />
                         ) : (
-                            <ChevronLeftIcon />
-                    ) : (
-                        <SearchIcon />
-                    )}
-                </IconButton>
+                            <SearchIcon />
+                        )}
+                        </IconButton>
+                    {searchText || searchUser ? (
+                    <IconButton onClick={onReset} className={classes.menuButton}>
+                        <ClearIcon/>
+                    </IconButton>
+                    ) : null}
+                </ButtonGroup>                
                 <div style={styles.titleContainer}>
                     <Typography variant={smallHeader ? "h6" : "h5"} style={styles.title}>{texts.title}</Typography>
                 </div>
@@ -142,6 +154,20 @@ export default compose(
                     currentUser: {
                         ...currentUser,
                         menuOpened: false
+                    }
+                }
+            });
+        },
+        onReset: props => () => {
+            const { client, currentUser } = props;
+  
+            client.writeQuery({
+                query: currentUserQuery,
+                data: {
+                    currentUser: {
+                    ...currentUser,
+                      searchText: "",
+                      searchUser: ""
                     }
                 }
             });

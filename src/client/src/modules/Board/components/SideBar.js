@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
 import clsx from 'clsx';
@@ -132,13 +132,13 @@ const SideBar = (props) => {
       onChange({ searchText, searchUser: value });
     };
 
-    const onClearHandler = () => {
+    useEffect(() => {
       if (timer) {
         clearTimeout(timer);
       }
-      setSearchText("");
-      onChange({ searchText: "", searchUser: "" });
-    };
+      setSearchText(searchTextProp);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchTextProp]);
 
     return (
         <Drawer
@@ -178,20 +178,6 @@ const SideBar = (props) => {
                 />
             </div>
             ) : null}
-            <Divider />
-            <List>
-            <ListItem button={true} onClick={onClearHandler} key={keys.unassigned} value={keys.unassigned} className={classes.iconButton}>
-                <ListItemIcon>
-                  <Avatar className={classes.clearButton}>
-                    <ClearIcon/>
-                  </Avatar>
-                </ListItemIcon>
-                <ListItemText>
-                    <Typography variant="button">{texts.clear}</Typography>
-                </ListItemText>
-            </ListItem>
-            </List>
-
             <Divider />
             <List>
             <ListItem button={true} onClick={() => onChangeUserHandler("unassigned")} selected={searchUserProp === keys.unassigned} key={keys.unassigned} value={keys.unassigned} className={classes.iconButton}>
