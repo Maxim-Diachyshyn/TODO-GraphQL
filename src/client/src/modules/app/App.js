@@ -1,5 +1,6 @@
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider as ApolloProviderHooks } from '@apollo/react-hooks';
 import { ApolloClient } from 'apollo-client';
 import { split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
@@ -68,7 +69,9 @@ wsClient.onReconnecting(client.resetStore);
 
 const withApollo = WrappedComponent => props => (
   <ApolloProvider client={client}>
-    <WrappedComponent {...props}>{props.children}</WrappedComponent>
+    <ApolloProviderHooks client={client}>
+      <WrappedComponent {...props}>{props.children}</WrappedComponent>
+    </ApolloProviderHooks>
   </ApolloProvider>
 );
 

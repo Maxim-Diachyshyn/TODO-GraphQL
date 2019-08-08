@@ -24,12 +24,14 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
         public async Task<IDictionary<Id, Tuple<Todo, Id>>> Handle(GetTodosListRequest request, CancellationToken cancellationToken)
         {
             var query = _items;
+
             if (request.Status.HasValue)
             {
                 var val = request.Status.Value;
                 query = query
                     .Where(x => x.Status == val);
             }
+
             if (request.SpecifiedIds != null)
             {            
                 var idList = request.SpecifiedIds
@@ -38,13 +40,25 @@ namespace TODOGraphQL.Persistence.EntityFramework.Contexts.Films.Requests
                 query = query
                     .Where(x => idList.Contains(x.Id));
             }
-            if (request.AssignedUserIds != null) 
+            
+            if (request.OnlyUnassigned)
+            {
+                query = query
+                    .Where(x => !x.AssignedUserId.HasValue);
+            }
+            else if (request.AssignedUserIds != null) 
             {
                 var idList = request.AssignedUserIds
                     .Select(x => (Guid)x)
                     .ToList();
                 query = query
                     .Where(x => x.AssignedUserId.HasValue && idList.Contains(x.AssignedUserId.Value));
+            }
+
+            if (!string.IsNullOrEmpty(request.SearchText))
+            {
+                query = query
+                    .Where(x => x.Name.Contains(request.SearchText));
             }
 
             query = query

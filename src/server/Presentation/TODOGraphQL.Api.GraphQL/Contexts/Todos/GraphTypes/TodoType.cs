@@ -1,4 +1,4 @@
-using GraphQL.Types;
+﻿using GraphQL.Types;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace TODOGraphQL.Api.GraphQL.GraphTypes
                 .Resolve(x => x.Source.Value.Item1.CreatedAt);
             Field<UserType, KeyValuePair<Id, User>?>()
                 .Name("AssignedUser")
-                .AuthorizeWith("User")
+                // .AuthorizeWith("User")
                 .ResolveAsync(async x => 
                 {
                     var todoId = x.Source.Key;

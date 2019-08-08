@@ -51,7 +51,9 @@ const withData = WrappedComponent => props => (
                         currentUser: {
                             ...signIn,
                             logoutRequested: false,
-                            menuOpened: false
+                            menuOpened: false,
+                            searchText: "",
+                            searchUser: ""
                         }  
                     },
                 });
@@ -66,7 +68,7 @@ export default compose(
     withApollo,
     withData,
     withError,
-    withLoader,
+    // withLoader,
     WrappedComponent => props => {
         const { loading, data, error, signIn, client } = props;
 

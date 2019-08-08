@@ -1,8 +1,8 @@
 import { gql } from "apollo-boost";
 
 const todosQuery = gql`
-query($status: TodoStatus){
-    todos(status:$status){
+query($status: TodoStatus, $searchText: String, $assignedUser: String){
+    todos(status: $status, searchText: $searchText, assignedUser: $assignedUser){
       id
       name
       status
@@ -25,6 +25,8 @@ query {
       picture
       logoutRequested
       menuOpened
+      searchText
+      searchUser
     }
 }`;
 

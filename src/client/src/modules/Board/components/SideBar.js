@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
 import clsx from 'clsx';
@@ -8,16 +8,12 @@ import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { PersonAdd as PersonAddIcon, Clear as ClearIcon } from '@material-ui/icons';
+import { Scrollbars } from 'react-custom-scrollbars';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Delete as DeleteIcon, PersonAdd as PersonAddIcon } from '@material-ui/icons';
-import { Create } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 import { Mutation, Query, withApollo } from 'react-apollo';
 import { signIn } from '../../SignIn/mutations';
@@ -34,7 +30,8 @@ const keys = {
 };
 
 const texts = {
-    unassigned: "Unassigned"
+    unassigned: "Unassigned",
+    clear: "Clear All"
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,14 +39,18 @@ const useStyles = makeStyles(theme => ({
     marginRight: 36,
   },
   hide: {
-    display: 'none',
+    visibility: 'hidden',
   },
   drawerLeft: {
-    width: drawerWidth,
-     flexShrink: 0,
+    width: drawerWidth,     
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    paddingTop: 72
   },
   drawerTop: {
-    width: "auto"
+    width: "auto",
+    height: "calc(100vh - 64px)",
+    marginTop: 64
   },
   drawerLeftOpen: {
     width: drawerWidth,
@@ -57,12 +58,13 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    paddingTop: 0
   },
   drawerTopOpen: {
     transition: theme.transitions.create('height', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
-    }),
+    })
   },
   drawerLeftClose: {
     transition: theme.transitions.create('width', {
@@ -84,34 +86,64 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     display: 'grid',
     alignItems: 'center',
-    gridTemplateColumns: '1fr auto',
-    gridColumnGap: 4,
     padding: '0 8px',
     ...theme.mixins.toolbar,
-  },
-  toolbarTop: {
-    marginTop: 64,
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  iconButton: {
+    fontSize: 18
+  },
+  clearButton: {
+    background: "#f44336"
+  }
 }));
 
 const SideBar = (props) => {
-    const { currentUser, handleClose, users } = props;
+    const { currentUser, onChange, handleClose, handleOpen, users } = props;
 
     const classes = useStyles();
     const theme = useTheme();
 
     const menuOpened = _.get(currentUser, "menuOpened", false);
+    const searchTextProp = _.get(currentUser, "searchText", "");
+    const searchUserProp = _.get(currentUser, "searchUser", null);
 
     const drawerAnchorTop = useMediaQuery(theme.breakpoints.down('xs'));
+
+    const [searchText, setSearchText] = useState(searchTextProp);
+    const [timer, setTimer] = useState(null);
+
+    const onChangeHandler = e => {
+      const { id, value } = e.target;
+      if (timer) {
+        clearTimeout(timer);
+      }
+      setSearchText(value);
+      setTimer(setTimeout(() => onChange({[id]: value}), 500))
+    };
+
+    const onChangeUserHandler = value => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      onChange({ searchText, searchUser: value });
+    };
+
+    const onClearHandler = () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      setSearchText("");
+      onChange({ searchText: "", searchUser: "" });
+    };
 
     return (
         <Drawer
         anchor={drawerAnchorTop ? "top" : "left"}
-        variant="persistent"
+        variant={drawerAnchorTop ? "persistent" : "permanent"}
         className={clsx({
             [classes.drawerLeft]: !drawerAnchorTop,
             [classes.drawerTop]: drawerAnchorTop,
@@ -131,44 +163,60 @@ const SideBar = (props) => {
         })}}
         open={menuOpened}
       >
-        <div className={clsx(classes.toolbar, {
-            [classes.toolbarTop]: drawerAnchorTop
-        })}>
-            <TextField
-                // style={styles.input}
-                // disabled={loading}
-                label="Filter"
-                // value={name}
-                margin="normal"
-                variant="standard"
-                // onChange={onChange} 
-            />
-            <IconButton onClick={handleClose}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-        </div>
-        <Divider />
-        <List>
-        <ListItem key={keys.unassigned} value={keys.unassigned}>
-            <ListItemIcon>
-                <PersonAddIcon/>
-            </ListItemIcon>
-            <ListItemText>
-                <Typography variant="button">{texts.unassigned}</Typography>
-            </ListItemText>
-        </ListItem>
-            {_.map(users, u => (
-                <ListItem key={u.id} value={u.id}>
-                    <ListItemIcon>
-                        <Avatar src={u.picture} />
-                    </ListItemIcon>
-                    <ListItemText>
-                        <Typography variant="button">{u.username}</Typography>
-                    </ListItemText>
-                </ListItem>)
-            )}        
-        </List>
-        <Divider />
+        <Scrollbars>
+          {menuOpened ? (
+            <div className={clsx(classes.toolbar, {
+                [classes.toolbarTop]: drawerAnchorTop
+            })}>
+                <TextField
+                    id="searchText"
+                    label="Search"
+                    value={searchText}
+                    margin="normal"
+                    variant="standard"
+                    onChange={onChangeHandler} 
+                />
+            </div>
+            ) : null}
+            <Divider />
+            <List>
+            <ListItem button={true} onClick={onClearHandler} key={keys.unassigned} value={keys.unassigned} className={classes.iconButton}>
+                <ListItemIcon>
+                  <Avatar className={classes.clearButton}>
+                    <ClearIcon/>
+                  </Avatar>
+                </ListItemIcon>
+                <ListItemText>
+                    <Typography variant="button">{texts.clear}</Typography>
+                </ListItemText>
+            </ListItem>
+            </List>
+
+            <Divider />
+            <List>
+            <ListItem button={true} onClick={() => onChangeUserHandler("unassigned")} selected={searchUserProp === keys.unassigned} key={keys.unassigned} value={keys.unassigned} className={classes.iconButton}>
+                <ListItemIcon>
+                  <Avatar>
+                    <PersonAddIcon/>
+                  </Avatar>
+                </ListItemIcon>
+                <ListItemText>
+                    <Typography variant="button">{texts.unassigned}</Typography>
+                </ListItemText>
+            </ListItem>
+                {_.map(users, u => (
+                    <ListItem button={true} onClick={() => onChangeUserHandler(u.id)} selected={searchUserProp === u.id} key={u.id} value={u.id}>
+                        <ListItemIcon>
+                            <Avatar src={u.picture} />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <Typography variant="button">{u.username}</Typography>
+                        </ListItemText>
+                    </ListItem>)
+                )}        
+            </List>
+            <Divider />
+        </Scrollbars>
       </Drawer>               
     )
 };
@@ -204,7 +252,7 @@ export default compose(
     withApollo,
     withRouter,
     withData,
-    withLoader,
+    // withLoader,
     withHandlers({
         handleClose: props => () => {
             const { client, currentUser } = props;
@@ -218,6 +266,32 @@ export default compose(
                     }
                 }
             });
+        },
+        handleOpen: props => () => {
+          const { client, currentUser } = props;
+
+          client.writeQuery({
+              query: currentUserQuery,
+              data: {
+                  currentUser: {
+                      ...currentUser,
+                      menuOpened: true
+                  }
+              }
+          });
+        },
+        onChange: props => updates => {
+          const { client, currentUser } = props;
+
+          client.writeQuery({
+              query: currentUserQuery,
+              data: {
+                  currentUser: {
+                    ...currentUser,
+                    ...updates
+                  }
+              }
+          });
         }
     })
 )(SideBar);

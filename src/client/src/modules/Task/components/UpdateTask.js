@@ -47,13 +47,18 @@ const withData = WrappedComponent => props => {
                 
                             const exitingTodo = data.todo;
 
-                            const newTodo = _.assign(_.cloneDeep(exitingTodo), updates);
+                            const newTodo = _.merge(_.cloneDeep(exitingTodo), updates);
 
                             let updateFunc = () => {};
                             
-                            if (!_.isEqual(exitingTodo, newTodo)) {                                
+                            if (!_.isEqual(exitingTodo, newTodo)) {
                                 client.writeData({ data: { todo: newTodo } });
-                                const todoToSend = _.omit(omitDeep(newTodo, "__typename"), "createdAt");
+                                const todoToSend = {
+                                    ..._.omit(omitDeep(newTodo, "__typename"), "createdAt"),
+                                    assignedUser: !newTodo.assignedUser
+                                        ? null
+                                        : { id: newTodo.assignedUser.id }
+                                };
                                 updateFunc = () => updateTodo({ variables: { todo: todoToSend } })
                             }
 
@@ -84,6 +89,6 @@ const withData = WrappedComponent => props => {
 export default compose(
     withRouter,
     withData,
-    withLoader,
+    // withLoader,
     withError
 )(UpdateTask);

@@ -15,24 +15,9 @@ import { currentUserQuery } from '../queries';
 import { Query } from 'react-apollo';
 
 const useStyles = makeStyles(theme => ({
-    boardWrapper: {
-        marginTop: "64px",
-        transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    boardWrapperShiftLeft: {
-        marginLeft: 240,
-        width: `calc(100% - ${240}px)`,  
-        transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
     board: {
       display: "grid",
-      gridTemplateRows: "calc(100vh - 68px)", 
+      gridTemplateRows: "calc(100vh - 68px)" 
     },
     sectionsContainer: {
         display: "grid",
@@ -73,29 +58,24 @@ const Board = props => {
     const theme = useTheme();
 
     const menuOpened = _.get(currentUser, "menuOpened", false);
-
-    const drawerAnchorTop = useMediaQuery(theme.breakpoints.down('xs'));
+    const searchText = _.get(currentUser, "searchText", "");
+    const searchUser = _.get(currentUser, "searchUser", "");
 
     return (
         <React.Fragment>
             <div />
-            <div className={clsx(classes.boardWrapper, {
-                [classes.boardWrapperShiftLeft]: menuOpened && !drawerAnchorTop,
-            })}>
-                <Scrollbars className={classes.board}
-            autoHide={true} >
-                    <div className={clsx(classes.sectionsContainer, {
-                        [classes.sectionsContainerShift]: menuOpened
-                    })}>
-                        <div />
-                        <div style={styles.sections}>
-                            {_.map(TASK_STATUSES, st => <Section status={st} />)}
-                        </div>
-                        <div />
+            <Scrollbars className={classes.board}
+                autoHide={true} >
+                <div className={clsx(classes.sectionsContainer, {
+                    [classes.sectionsContainerShift]: menuOpened
+                })}>
+                    <div />
+                    <div style={styles.sections}>
+                        {_.map(TASK_STATUSES, st => <Section status={st} searchText={searchText} searchUser={searchUser}/>)}
                     </div>
-                </Scrollbars>
-            </div>
-            <SideBar />
+                    <div />
+                </div>
+            </Scrollbars>
 
             {id || isCreating ? (
             <div style={styles.modalContainer}>
@@ -110,6 +90,6 @@ const Board = props => {
 
 export default compose(
     withSignIn,
-    withLoader,
+    // withLoader,
     withData
 )(Board);

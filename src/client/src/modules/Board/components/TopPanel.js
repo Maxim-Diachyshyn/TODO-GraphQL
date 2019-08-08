@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import _ from "lodash";
 import { IconButton, AppBar, Typography, Tooltip, useMediaQuery } from '@material-ui/core';
 import { useTheme, makeStyles } from '@material-ui/styles';
-import { Menu as MenuIcon } from '@material-ui/icons';
+import { Search as SearchIcon, ChevronLeft as ChevronLeftIcon, ExpandLess as ExpandLessIcon } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 import UserMenu from "./UserMenu"
 import { compose, withHandlers } from 'recompose';
@@ -32,6 +32,8 @@ const useStyles = makeStyles(theme => ({
     },
     menuButton: {
         // marginRight: 36,
+        fontSize: 18,
+        color: "white"
     },
     hide: {
         visibility: "collapse",
@@ -69,7 +71,7 @@ const texts = {
 }
 
 const TopPanel = props => {
-    const { handleOpen, currentUser } = props;
+    const { handleOpen, handleClose, currentUser } = props;
     const classes = useStyles();
     const theme = useTheme();
 
@@ -83,17 +85,22 @@ const TopPanel = props => {
             [classes.appBarShift]: menuOpened && !drawerAnchorTop,
           })}>
             <div style={styles.container}>
-            <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={handleOpen}
-                edge="start"
-                className={clsx(classes.menuButton, {
-                    [classes.hide]: menuOpened,
-                })}
-            >
-                <MenuIcon />
-            </IconButton>
+                <IconButton
+                    color="inherit"
+                    aria-label="Search"
+                    onClick={menuOpened ? handleClose : handleOpen}
+                    edge="start"
+                    className={classes.menuButton}
+                >
+                    {menuOpened ? 
+                        drawerAnchorTop ? (
+                            <ExpandLessIcon />
+                        ) : (
+                            <ChevronLeftIcon />
+                    ) : (
+                        <SearchIcon />
+                    )}
+                </IconButton>
                 <div style={styles.titleContainer}>
                     <Typography variant={smallHeader ? "h6" : "h5"} style={styles.title}>{texts.title}</Typography>
                 </div>
@@ -122,6 +129,19 @@ export default compose(
                     currentUser: {
                         ...currentUser,
                         menuOpened: true
+                    }
+                }
+            });
+        },
+        handleClose: props => () => {
+            const { client, currentUser } = props;
+            
+            client.writeQuery({
+                query: currentUserQuery,
+                data: {
+                    currentUser: {
+                        ...currentUser,
+                        menuOpened: false
                     }
                 }
             });

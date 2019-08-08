@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/react-hooks";
 import _ from "lodash";
 import { List, CircularProgress, Divider, Card, CardHeader, CardContent } from '@material-ui/core';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -9,7 +9,7 @@ import { queries, subscriptions } from "../../Board";
 import BoardTask from './SectionTask';
 import { TASK_STATUSES } from "../../Task/constants";
 import withLoader from '../../shared/withLoader';
-import { compose } from 'recompose';
+import { compose, lifecycle } from 'recompose';
 
 const styles = {
     spinnerContainer: {
@@ -51,11 +51,7 @@ const styles = {
     }
 };
 
-class Section extends Component {    
-    componentDidMount() {
-        this.props.onLoaded();
-    }
-
+class Section extends Component {
     render() {
         const { history, loading, data, status } = this.props;
         return (
@@ -89,76 +85,92 @@ class Section extends Component {
     }
 }
 
-const withData = WrappedComponent => props => {
-    const { status, match: { params: { id } } } = props;
+const SectionWithData = props => {
+    const { status, searchText, searchUser, match: { params: { id } } } = props;
+
+    const { loading, error, data, subscribeToMore } = useQuery(queries.todosQuery, { variables: { status, searchText, assignedUser: searchUser } });
+
+    const [unsubscribe, setUnsubscribe] = useState(null);
+
+    useEffect(() => {
+        unsubscribe && unsubscribe();
+        setUnsubscribe(() => {
+            const unsubscribe1 = subscribeToMore({
+                document: subscriptions.todoAdded,
+                variables: { searchText, assignedUser: searchUser },
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data) return prev;
+                    const { todoAdded } = subscriptionData.data;
+                    if (todoAdded.status === status) {
+                        return {
+                            ...prev,
+                            todos: _.sortBy([...prev.todos, todoAdded], x => x.createdAt)
+                        }
+                    }
+                    return {
+                        ...prev,
+                    }
+                },
+            });
+            
+            const unsubscribe2 = subscribeToMore({
+                document: subscriptions.deleteTodo,
+                variables: { searchText, assignedUser: searchUser },
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data) return prev;
+                    const { todoDeleted } = subscriptionData.data;
+                    if (todoDeleted.status === status) {
+                        return {
+                            ...prev,
+                            todos: _.reject(prev.todos, t => t.id === todoDeleted.id)
+                        }
+                    }
+                    return {
+                        ...prev,
+                    }
+                },
+            });
+            const unsubscribe3 = subscribeToMore({
+                document: subscriptions.todoUpdated,
+                variables: { searchText, assignedUser: searchUser },
+                updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data) return prev;
+                    const { todoUpdated } = subscriptionData.data;
+                    const newTodos = _.reject(prev.todos, { id: todoUpdated.id });
+    
+                    if (todoUpdated.status === status) {
+                        return {
+                            ...prev,
+                            todos: _.orderBy([...newTodos, todoUpdated], "createdAt")
+                        }
+                    }
+                    return {
+                        ...prev,
+                        todos: newTodos
+                    };
+                },
+            });
+            return () => {
+                unsubscribe1();
+                unsubscribe2();
+                unsubscribe3();
+            };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        })}, [searchText, searchUser]);
 
     return (
-        <Query query={queries.todosQuery} variables={{ status }}>
-        {({ loading, error, data, subscribeToMore }) => (
-            <WrappedComponent
-                {...props}
-                id={id}
-                loading={loading} 
-                data={data} 
-                onLoaded={() => {
-                    subscribeToMore({
-                        document: subscriptions.todoAdded,
-                        updateQuery: (prev, { subscriptionData }) => {
-                            if (!subscriptionData.data) return prev;
-                            const { todoAdded } = subscriptionData.data;
-                            if (todoAdded.status === status) {
-                                return {
-                                    ...prev,
-                                    todos: _.sortBy([...prev.todos, todoAdded], x => x.createdAt)
-                                }
-                            }
-                            return {
-                                ...prev,
-                            }
-                        },
-                    });
-                    subscribeToMore({
-                        document: subscriptions.deleteTodo,
-                        updateQuery: (prev, { subscriptionData }) => {
-                            if (!subscriptionData.data) return prev;
-                            const { todoDeleted } = subscriptionData.data;
-                            if (todoDeleted.status === status) {
-                                return {
-                                    ...prev,
-                                    todos: _.reject(prev.todos, t => t.id === todoDeleted.id)
-                                }
-                            }
-                            return {
-                                ...prev,
-                            }
-                        },
-                    });
-                    subscribeToMore({
-                        document: subscriptions.todoUpdated,
-                        updateQuery: (prev, { subscriptionData }) => {
-                            if (!subscriptionData.data) return prev;
-                            const { todoUpdated } = subscriptionData.data;
-                            const newTodos = _.reject(prev.todos, t => t.id === todoUpdated.id);
-                            if (todoUpdated.status === status) {
-                                return {
-                                    ...prev,
-                                    todos: _.orderBy([...newTodos, todoUpdated], "createdAt")
-                                }
-                            }
-                            return {
-                                ...prev,
-                                todos: newTodos
-                            };
-                        },
-                    });
-                }}
-            >{props.children}</WrappedComponent>
-        )}</Query>
+        <Section
+            {...props}
+            id={id}
+            loading={loading}
+            data={data}
+            searchText={searchText}
+        />
     );
 }
 
 export default compose(
     withRouter,
-    withData,
+    // withData,
     withLoader
-)(Section);
+)(SectionWithData);

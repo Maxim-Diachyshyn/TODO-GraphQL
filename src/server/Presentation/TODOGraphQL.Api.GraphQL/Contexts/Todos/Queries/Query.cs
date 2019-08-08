@@ -24,11 +24,31 @@ namespace TODOGraphQL.Api.GraphQL.Queries
             Field<ListGraphType<TodoType>, IDictionary<Id, Tuple<Todo, Id>>>()
                 .Name("todos")
                 .Argument<TodoStatusType, TodoStatus?>("status", "Todo status.")
+                .Argument<StringGraphType, string>("searchText", "Search text.")
+                .Argument<StringGraphType, string>("assignedUser", "Assigned user.")
                 .ResolveAsync(async context =>
                 {
                     var mediator = (IMediator)accessor.HttpContext.RequestServices.GetService(typeof(IMediator));
                     var status = context.GetArgument<TodoStatus?>("status");
-                    return await mediator.Send(new GetTodosListRequest() { Status = status });
+                    var searchText = context.GetArgument<string>("searchText");
+                    var assignedUser = context.GetArgument<string>("assignedUser");
+                    var request = new GetTodosListRequest
+                    { 
+                        Status = status,
+                        SearchText = searchText
+                    };
+                    if (assignedUser == "unassigned")
+                    {
+                        request.OnlyUnassigned = true;
+                    }
+                    if (Guid.TryParse(assignedUser, out var userId))
+                    {
+                        request.AssignedUserIds = new []
+                        {
+                            (Id)userId
+                        };
+                    }
+                    return await mediator.Send(request);
                 });
 
             Field<TodoType, KeyValuePair<Id, Tuple<Todo, Id>>>()

@@ -33,7 +33,7 @@ const styles = {
     button: {
         fontSize: 18,
         color: "white",
-        background: "#f44336"
+        background: "#087f23"
     }
 };
 

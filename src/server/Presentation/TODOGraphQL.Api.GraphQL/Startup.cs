@@ -1,10 +1,7 @@
 ﻿using Autofac;
 using TODOGraphQL.Api.GraphQL.Schemas;
 using TODOGraphQL.Persistence.EntityFramework.Contexts.Todos;
-using GraphiQl;
 using GraphQL;
-using GraphQL.DataLoader;
-
 using GraphQL.Server;
 using GraphQL.Server.Ui.GraphiQL;
 using GraphQL.Server.Ui.Playground;
@@ -14,13 +11,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TODOGraphQL.Persistence.EntityFramework.Contexts.Identity;
 using Google.Apis.Auth.OAuth2;
 using GraphQL.Validation.Complexity;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using GraphQL.Authorization;
 using GraphQL.Validation;
-using Microsoft.AspNetCore.Authentication.Google;
 
 namespace TODOGraphQL.Api.GraphQL
 {
@@ -47,7 +42,9 @@ namespace TODOGraphQL.Api.GraphQL
                 // TODO: use this for security
                 options.ComplexityConfiguration = new ComplexityConfiguration
                 {
-                    MaxDepth = 20
+                    MaxDepth = 20,
+                    MaxComplexity = 60,
+                    FieldImpact = 2
                 };
                 options.SetFieldMiddleware = false;
             })
@@ -99,6 +96,21 @@ namespace TODOGraphQL.Api.GraphQL
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseGraphQLPlayground(new GraphQLPlaygroundOptions
+                {
+                    Path = "/ui/playground",
+                    GraphQLEndPoint = "/graphql"
+                });
+                app.UseGraphiQLServer(new GraphiQLOptions
+                {
+                    GraphiQLPath = "/ui/graphiql",
+                    GraphQLEndPoint = "/graphql"
+                });
+                app.UseGraphQLVoyager(new GraphQLVoyagerOptions
+                {
+                    Path = "/ui/voyager",
+                    GraphQLEndPoint = "/graphql"
+                });
             }
             else 
             {
@@ -111,22 +123,6 @@ namespace TODOGraphQL.Api.GraphQL
             });
 
             app.UseHttpsRedirection();
-
-            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()
-            {
-                Path = "/ui/playground",
-                GraphQLEndPoint = "/graphql"
-            });
-            app.UseGraphiQLServer(new GraphiQLOptions
-            {
-                GraphiQLPath = "/ui/graphiql",
-                GraphQLEndPoint = "/graphql"
-            });
-            app.UseGraphQLVoyager(new GraphQLVoyagerOptions()
-            {
-                Path = "/ui/voyager",
-                GraphQLEndPoint = "/graphql"
-            });
 
             app.UseAuthentication();
 
