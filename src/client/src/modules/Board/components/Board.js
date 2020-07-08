@@ -13,6 +13,7 @@ import withLoader from '../../shared/withLoader';
 import SideBar from './SideBar';
 import { currentUserQuery } from '../queries';
 import { Query } from 'react-apollo';
+import { SectionTaskPreview } from './SectionTaskPreview';
 
 const useStyles = makeStyles(theme => ({
     board: {
@@ -72,6 +73,7 @@ const Board = props => {
                     <div />
                     <div style={styles.sections}>
                         {_.map(TASK_STATUSES, st => <Section status={st} searchText={searchText} searchUser={searchUser} />)}
+                        <SectionTaskPreview />
                     </div>
                     <div />
                 </div>

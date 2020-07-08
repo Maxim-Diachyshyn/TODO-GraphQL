@@ -14,7 +14,7 @@ import AppRouter from '../appRouter';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { setContext } from 'apollo-link-context';
 import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { TouchBackend } from 'react-dnd-touch-backend'
 import { components as SignIn } from "../SignIn";
 import './App.css';
 import { compose } from 'recompose';
@@ -90,7 +90,7 @@ const withStyles = WrappedComponent => props => (
 );
 
 const withDragAndDrop = WrappedComponent => props => (
-  <DndProvider backend={HTML5Backend}>
+  <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
      <WrappedComponent {...props}>{props.children}</WrappedComponent>
   </DndProvider>
 

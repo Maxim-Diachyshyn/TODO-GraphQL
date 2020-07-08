@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import _ from "lodash";
 import { useDrag, useDragLayer } from 'react-dnd'
+import { usePreview } from 'react-dnd-preview';
 import { ListItemSecondaryAction, ListItemText, IconButton, ListItemIcon, ListSubheader, ListItemAvatar, Avatar, Tooltip } from '@material-ui/core';
 import { Delete as DeleteIcon, PersonAdd as PersonAddIcon } from '@material-ui/icons';
 import { ListItem } from '@material-ui/core';
@@ -56,36 +57,19 @@ const texts = {
     unassigned: "Unassigned"
 };
 
-const SectionTask = props => {
-    const { id, name, status, onSelect, onDelete, assignedUser } = props;
-
-    const elementRef = useRef(null);
-
-    const [{ isDragging }, dragRef] = useDrag({
-        item: { type: CARD_DRAG_ID, id },
-        collect: (monitor) => ({
-          isDragging: !!monitor.isDragging(),
-        }),
-        begin: monitor => ({
-            type: CARD_DRAG_ID,
-            id,
-            name,
-            status,
-            assignedUser,
-            width: _.get(elementRef, 'current.clientWidth', 0)
-        })
-    });
-
-    dragRef(elementRef);
-
-    if (isDragging) {
+export const SectionTaskPreview = () => {
+    const { style, display, item } = usePreview();
+    if (!display) {
         return null;
     }
+    
+    console.log(item);
+    const { name, status, assignedUser, width } = item;
 
     const username = _.get(assignedUser, 'username' ,texts.unassigned);
     const picture = _.get(assignedUser, 'picture', null);
     return (
-        <ListItem ref={elementRef} button={true} style={{ ...styles.link(isDragging) }} onClick={onSelect}>
+        <ListItem button={true} style={{...style, ...styles.link(false), width}}>
             <Tooltip title={username}>
                 <ListItemAvatar style={{...styles.listItemAvatar, ...styles[`status${status}`]}}>
                     <Avatar src={picture}>
@@ -99,13 +83,3 @@ const SectionTask = props => {
         </ListItem>
     )
 };
-
-export default props => {
-    const { id } = props;
-    return (
-        <Mutation mutation={deleteTodo}>{(deleteTodo) => (
-            <SectionTask {...props} onDelete={() => deleteTodo({ variables: { id } })} />
-        )}</Mutation>
-    );
-}
-    
