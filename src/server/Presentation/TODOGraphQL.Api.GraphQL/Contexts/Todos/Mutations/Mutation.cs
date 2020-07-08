@@ -63,12 +63,21 @@ namespace TODOGraphQL.Api.GraphQL.Mutations
                         return new KeyValuePair<Id, Tuple<Todo, Id>>(null, null);
                     }
                     var request = input.ToCommand();
+
                     var currentItemsRequest = new GetTodosListRequest
                     {
                         SpecifiedIds = request.Updates.Keys
                     };
                     var oldTodos = await mediator.Send(currentItemsRequest);
                     request.OldTodos = oldTodos;
+
+                    var todoContext = context.Arguments["todo"] as Dictionary<string, object>;
+
+                    if (!todoContext.ContainsKey("description")) {
+                        var oldItem = oldTodos[input.Id].Item1;
+                        request.Updates[input.Id].Item1.Description = oldItem.Description;
+                    }
+
                     var result = await mediator.Send(request);
                     return result.Single();
                 });

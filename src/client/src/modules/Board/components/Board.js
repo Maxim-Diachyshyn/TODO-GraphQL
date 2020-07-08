@@ -16,8 +16,8 @@ import { Query } from 'react-apollo';
 
 const useStyles = makeStyles(theme => ({
     board: {
-      display: "grid",
-      gridTemplateRows: "calc(100vh - 68px)" 
+        display: "grid",
+        gridTemplateRows: "calc(100vh - 68px)"
     },
     sectionsContainer: {
         display: "grid",
@@ -71,17 +71,17 @@ const Board = props => {
                 })}>
                     <div />
                     <div style={styles.sections}>
-                        {_.map(TASK_STATUSES, st => <Section status={st} searchText={searchText} searchUser={searchUser}/>)}
+                        {_.map(TASK_STATUSES, st => <Section status={st} searchText={searchText} searchUser={searchUser} />)}
                     </div>
                     <div />
                 </div>
             </Scrollbars>
 
             {id || isCreating ? (
-            <div style={styles.modalContainer}>
-                {id ? <UpdateTask id="modal" todoId={id} /> : null}
-                {isCreating ? <CreateTask /> : null}
-            </div>
+                <div style={styles.modalContainer}>
+                    {id ? <UpdateTask id="modal" todoId={id} /> : null}
+                    {isCreating ? <CreateTask /> : null}
+                </div>
             ) : null}
 
         </React.Fragment>

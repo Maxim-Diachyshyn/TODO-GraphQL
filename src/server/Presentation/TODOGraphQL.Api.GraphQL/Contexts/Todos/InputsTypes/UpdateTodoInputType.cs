@@ -11,7 +11,9 @@ namespace TODOGraphQL.Api.GraphQL.InputTypes
             Field<IdGraphType>()
                 .Name(nameof(UpdateTodoInput.Id));
             Field(x => x.Name);
-            Field(x => x.Description);
+            Field<StringGraphType>()
+                .Name(nameof(UpdateTodoInput.Description))
+                .DefaultValue(null);
             Field<TodoStatusType>()
                 .Name(nameof(UpdateTodoInput.Status));
             Field<OnlyIdObjectType>()

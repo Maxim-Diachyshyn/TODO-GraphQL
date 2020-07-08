@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import _ from "lodash";
 import { IconButton, AppBar, Typography, Tooltip } from '@material-ui/core';
-import { Create } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 import ROUTES from "../../appRouter/routes";
 import UserMenu from "./UserMenu"
 import { compose, withHandlers } from 'recompose';
@@ -50,7 +50,7 @@ const BottomPanel = props => {
                 <div />
                 <IconButton style={styles.button} aria-label={texts.create} onClick={props.createTodo}>
                 <Tooltip title={texts.create}>
-                    <Create />
+                    <Add />
                 </Tooltip>
                 </IconButton>
             </div>

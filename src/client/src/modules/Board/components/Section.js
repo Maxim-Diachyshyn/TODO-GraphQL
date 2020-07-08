@@ -1,15 +1,18 @@
 import React, { Component, useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import _ from "lodash";
 import { List, CircularProgress, Divider, Card, CardHeader, CardContent } from '@material-ui/core';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { useDrop } from 'react-dnd'
 import ROUTES from "../../appRouter/routes";
 import { queries, subscriptions } from "../../Board";
 import BoardTask from './SectionTask';
 import { TASK_STATUSES } from "../../Task/constants";
 import withLoader from '../../shared/withLoader';
 import { compose, lifecycle } from 'recompose';
+import { CARD_DRAG_ID } from '../constants';
+import { updateTodo } from '../mutations';
 
 const styles = {
     spinnerContainer: {
@@ -41,54 +44,78 @@ const styles = {
     [`headerText${TASK_STATUSES.Done}`]: {
         color: "#388e3c"
     },
-    scrollbarContainer: {
+    scrollbarContainer: isOver => ({
         paddingLeft: 0,
         paddingRight: 0,
-        overflowY : "hidden"
-    },
+        overflowY : "hidden",
+        backgroundColor: isOver ? '#ececec' : null
+    }),
     list: {
-        padding: "0px 8px"
+        padding: "0px 8px",
     }
 };
 
-class Section extends Component {
-    render() {
-        const { history, loading, data, status } = this.props;
-        return (
-            <Card style={styles.boardTasksContainer}>
-                <CardHeader style={styles.header} title={(
-                    <div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
-                        {_.findKey(TASK_STATUSES, x => x === status)}
-                    </div>)} 
-                />
-                <Divider />
-                {loading ? null : (
-                    <CardContent style={styles.scrollbarContainer}>
-                        <Scrollbars autoHide={true}>
-                            <List style={styles.list}>
-                                {_.map(_.get(data, "todos", []), (t, i) => (
-                                    <React.Fragment>
-                                        <BoardTask {...t}
-                                            onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
-                                        />
-                                        {i !== data.todos.length - 1 ? (
-                                            <Divider variant="inset" component="li" />
-                                        ) : null}
-                                    </React.Fragment>
-                                ))}
-                            </List>
-                        </Scrollbars>
-                    </CardContent>
-                )}                
-            </Card>
-        );
-    }
+const Section = ({ history, loading, data, status, updateTodo }) => {
+
+    const [{ isOver }, drop] = useDrop({
+        accept: CARD_DRAG_ID,
+        drop: item => {
+            if (item.status === status) {
+                return;
+            }
+            const todo = {
+                name: item.name,
+                description: undefined,
+                id: item.id,
+                assignedUser: !item.assignedUser
+                    ? null
+                    : {
+                        id: item.assignedUser.id,
+                    },
+                status
+            };
+            updateTodo({ variables: { todo } })
+        },
+        collect: monitor => ({
+          isOver: !!monitor.isOver(),
+        }),
+      })
+
+    return (
+        <Card style={styles.boardTasksContainer}>
+            <CardHeader style={styles.header} title={(
+                <div style={{...styles.headerText, ...styles[`headerText${status}`]}}>
+                    {_.findKey(TASK_STATUSES, x => x === status)}
+                </div>)} 
+            />
+            <Divider />
+            {loading ? null : (
+                <CardContent ref={drop} style={styles.scrollbarContainer(isOver)}>
+                    <Scrollbars autoHide={true}>
+                        <List style={styles.list}>
+                            {_.map(_.get(data, "todos", []), (t, i) => (
+                                <React.Fragment>
+                                    <BoardTask {...t}
+                                        onSelect={() => history.push(ROUTES.EDIT_FILM.build(t.id))}
+                                    />
+                                    {i !== data.todos.length - 1 ? (
+                                        <Divider variant="inset" component="li" />
+                                    ) : null}
+                                </React.Fragment>
+                            ))}
+                        </List>
+                    </Scrollbars>
+                </CardContent>
+            )}                
+        </Card>
+    );
 }
 
 const SectionWithData = props => {
     const { status, searchText, searchUser, match: { params: { id } } } = props;
 
     const { loading, error, data, subscribeToMore } = useQuery(queries.todosQuery, { variables: { status, searchText, assignedUser: searchUser } });
+    const [updateTodoMutation] = useMutation(updateTodo);
 
     const [unsubscribe, setUnsubscribe] = useState(null);
 
@@ -165,6 +192,7 @@ const SectionWithData = props => {
             loading={loading}
             data={data}
             searchText={searchText}
+            updateTodo={updateTodoMutation}
         />
     );
 }
